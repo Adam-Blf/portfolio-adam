@@ -85,7 +85,7 @@ function MagneticElement({ children, className, as: Component = 'div', ...props 
 
 export default function Hero() {
   const containerRef = useRef<HTMLElement>(null)
-  const scrollRef = useRef<HTMLDivElement>(null)
+  const scrollRef = useRef<HTMLButtonElement>(null)
   const [mousePos, setMousePos] = useState({ x: 0, y: 0 })
   const [githubStats, setGithubStats] = useState<GitHubStats>({
     projectCount: 37,
