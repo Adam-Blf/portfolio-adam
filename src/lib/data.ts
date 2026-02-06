@@ -5,9 +5,9 @@ export const logoMap: Record<string, string> = {
   // Entreprises
   "Groupe Hospitalier Fondation Vallee - Paul Guiraud": "/logos/groupe_hospitalier_paul_guiraud_logo.jpg",
   "GHT Psy Sud": "/logos/groupe_hospitalier_paul_guiraud_logo.jpg",
-  "EPSM Lille-Metropole - GHT Psy NPdC": "/logos/LOGO EPSM LILLE.jpg",
+  "EPSM Lille-Metropole - GHT Psy NPdC": "/logos/epsm_lille_logo.jpg",
   "BNP Paribas": "/logos/bnp_paribas_logo.jpg",
-  "Marine Nationale": "/logos/Logo Marine nationale.jpg",
+  "Marine Nationale": "/logos/marine_nationale_logo.jpg",
   "DE NOUVEL ARCHITECT POUR COMMUNICATION": "/logos/boneit_logo.jpg",
 
   // Ecoles
@@ -25,11 +25,11 @@ export const logoMap: Record<string, string> = {
 
   // Associations
   "BDE Efrei": "/logos/bdeefrei_logo.jpg",
-  "BDE ISIT": "/logos/LOGO BDE ISIT.jpg",
-  "Efrei Rugby": "/logos/Logo Efrei Rugby.jpg",
+  "BDE ISIT": "/logos/bde_isit_logo.jpg",
+  "Efrei Rugby": "/logos/efrei_rugby_logo.jpg",
   "Efrei Poker": "/logos/efrei_poker_logo.jpg",
-  "Efreestyle": "/logos/Logo Efreestyle.jpg",
-  "Bureau Des Arts Efrei": "/logos/Logo BDA.jpg",
+  "Efreestyle": "/logos/efreestyle_logo.jpg",
+  "Bureau Des Arts Efrei": "/logos/bda_efrei_logo.jpg",
   "Bureau Des Sports EFREI": "/logos/bureau_des_sports_efrei_paris_logo.jpg",
   "Prom'Efrei": "/logos/promefrei_logo.svg",
 }
