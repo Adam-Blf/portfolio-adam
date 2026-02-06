@@ -64,7 +64,11 @@ export default function RootLayout({
         {/* Preconnect to Google Fonts for faster loading */}
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
-        {/* Prevent flash of wrong theme */}
+        {/* 
+          Inline theme detection script - prevents flash of wrong theme (FOUC).
+          This is a static, self-contained script with no user input, so dangerouslySetInnerHTML
+          is acceptable here. The CSP allows 'unsafe-inline' specifically for this use case.
+        */}
         <script
           dangerouslySetInnerHTML={{
             __html: `
@@ -76,6 +80,7 @@ export default function RootLayout({
                   if (theme === 'system') {
                     resolved = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
                   }
+                  if (resolved !== 'dark' && resolved !== 'light') resolved = 'dark';
                   document.documentElement.classList.add(resolved);
                   document.documentElement.style.colorScheme = resolved;
                 } catch (e) {

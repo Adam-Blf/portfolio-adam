@@ -19,18 +19,82 @@ export default function Contact() {
     message: '',
   })
   const [isSubmitted, setIsSubmitted] = useState(false)
+  const [errors, setErrors] = useState<Record<string, string>>({})
   const headerRef = useRef<HTMLDivElement>(null)
   const contentRef = useRef<HTMLDivElement>(null)
 
+  // Input sanitization - strip HTML tags and limit length
+  function sanitize(input: string, maxLength: number = 500): string {
+    return input
+      .replace(/<[^>]*>/g, '') // strip HTML tags
+      .replace(/[<>]/g, '')    // strip remaining angle brackets
+      .slice(0, maxLength)
+  }
+
+  // Email validation
+  function isValidEmail(email: string): boolean {
+    const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/
+    return emailRegex.test(email) && email.length <= 254
+  }
+
+  // Form validation
+  function validateForm(): boolean {
+    const newErrors: Record<string, string> = {}
+
+    if (!formState.name.trim() || formState.name.trim().length < 2) {
+      newErrors.name = 'Le nom doit contenir au moins 2 caractères'
+    }
+    if (formState.name.length > 100) {
+      newErrors.name = 'Le nom ne peut pas dépasser 100 caractères'
+    }
+
+    if (!formState.email.trim()) {
+      newErrors.email = "L'email est requis"
+    } else if (!isValidEmail(formState.email.trim())) {
+      newErrors.email = "Format d'email invalide"
+    }
+
+    if (!formState.subject.trim() || formState.subject.trim().length < 3) {
+      newErrors.subject = 'Le sujet doit contenir au moins 3 caractères'
+    }
+    if (formState.subject.length > 200) {
+      newErrors.subject = 'Le sujet ne peut pas dépasser 200 caractères'
+    }
+
+    if (!formState.message.trim() || formState.message.trim().length < 10) {
+      newErrors.message = 'Le message doit contenir au moins 10 caractères'
+    }
+    if (formState.message.length > 5000) {
+      newErrors.message = 'Le message ne peut pas dépasser 5000 caractères'
+    }
+
+    setErrors(newErrors)
+    return Object.keys(newErrors).length === 0
+  }
+
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()
-    const mailtoLink = `mailto:${personalInfo.email}?subject=${encodeURIComponent(formState.subject)}&body=${encodeURIComponent(`De: ${formState.name}\nEmail: ${formState.email}\n\n${formState.message}`)}`
+
+    if (!validateForm()) return
+
+    // Sanitize inputs before constructing mailto link
+    const cleanName = sanitize(formState.name, 100)
+    const cleanEmail = sanitize(formState.email, 254)
+    const cleanSubject = sanitize(formState.subject, 200)
+    const cleanMessage = sanitize(formState.message, 5000)
+
+    const mailtoLink = `mailto:${personalInfo.email}?subject=${encodeURIComponent(cleanSubject)}&body=${encodeURIComponent(`De: ${cleanName}\nEmail: ${cleanEmail}\n\n${cleanMessage}`)}`
     window.location.href = mailtoLink
     setIsSubmitted(true)
   }
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-    setFormState(prev => ({ ...prev, [e.target.name]: e.target.value }))
+    const { name, value } = e.target
+    setFormState(prev => ({ ...prev, [name]: value }))
+    // Clear error on change
+    if (errors[name]) {
+      setErrors(prev => ({ ...prev, [name]: '' }))
+    }
   }
 
   // Animations
@@ -207,12 +271,16 @@ export default function Contact() {
                       name="name"
                       required
                       aria-required="true"
+                      aria-invalid={!!errors.name}
+                      aria-describedby={errors.name ? 'name-error' : undefined}
                       autoComplete="name"
+                      maxLength={100}
                       value={formState.name}
                       onChange={handleChange}
-                      className="w-full px-4 py-3 bg-transparent border border-[--border] text-[--text-primary] placeholder:text-[--text-muted] focus:outline-none focus:border-accent transition-colors rounded-sm"
+                      className={`w-full px-4 py-3 bg-transparent border ${errors.name ? 'border-red-500' : 'border-[--border]'} text-[--text-primary] placeholder:text-[--text-muted] focus:outline-none focus:border-accent transition-colors rounded-sm`}
                       placeholder="Votre nom"
                     />
+                    {errors.name && <p id="name-error" className="text-red-500 text-sm mt-1" role="alert">{errors.name}</p>}
                   </div>
 
                   <div>
@@ -226,12 +294,16 @@ export default function Contact() {
                       name="email"
                       required
                       aria-required="true"
+                      aria-invalid={!!errors.email}
+                      aria-describedby={errors.email ? 'email-error' : undefined}
                       autoComplete="email"
+                      maxLength={254}
                       value={formState.email}
                       onChange={handleChange}
-                      className="w-full px-4 py-3 bg-transparent border border-[--border] text-[--text-primary] placeholder:text-[--text-muted] focus:outline-none focus:border-accent transition-colors rounded-sm"
+                      className={`w-full px-4 py-3 bg-transparent border ${errors.email ? 'border-red-500' : 'border-[--border]'} text-[--text-primary] placeholder:text-[--text-muted] focus:outline-none focus:border-accent transition-colors rounded-sm`}
                       placeholder="votre@email.com"
                     />
+                    {errors.email && <p id="email-error" className="text-red-500 text-sm mt-1" role="alert">{errors.email}</p>}
                   </div>
 
                   <div>
@@ -245,11 +317,15 @@ export default function Contact() {
                       name="subject"
                       required
                       aria-required="true"
+                      aria-invalid={!!errors.subject}
+                      aria-describedby={errors.subject ? 'subject-error' : undefined}
+                      maxLength={200}
                       value={formState.subject}
                       onChange={handleChange}
-                      className="w-full px-4 py-3 bg-transparent border border-[--border] text-[--text-primary] placeholder:text-[--text-muted] focus:outline-none focus:border-accent transition-colors rounded-sm"
+                      className={`w-full px-4 py-3 bg-transparent border ${errors.subject ? 'border-red-500' : 'border-[--border]'} text-[--text-primary] placeholder:text-[--text-muted] focus:outline-none focus:border-accent transition-colors rounded-sm`}
                       placeholder="Objet de votre message"
                     />
+                    {errors.subject && <p id="subject-error" className="text-red-500 text-sm mt-1" role="alert">{errors.subject}</p>}
                   </div>
 
                   <div>
@@ -262,12 +338,16 @@ export default function Contact() {
                       name="message"
                       required
                       aria-required="true"
+                      aria-invalid={!!errors.message}
+                      aria-describedby={errors.message ? 'message-error' : undefined}
                       rows={5}
+                      maxLength={5000}
                       value={formState.message}
                       onChange={handleChange}
-                      className="w-full px-4 py-3 bg-transparent border border-[--border] text-[--text-primary] placeholder:text-[--text-muted] focus:outline-none focus:border-accent transition-colors resize-none rounded-sm"
+                      className={`w-full px-4 py-3 bg-transparent border ${errors.message ? 'border-red-500' : 'border-[--border]'} text-[--text-primary] placeholder:text-[--text-muted] focus:outline-none focus:border-accent transition-colors resize-none rounded-sm`}
                       placeholder="Votre message..."
                     />
+                    {errors.message && <p id="message-error" className="text-red-500 text-sm mt-1" role="alert">{errors.message}</p>}
                   </div>
 
                   <button

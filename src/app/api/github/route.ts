@@ -1,7 +1,35 @@
-import { NextResponse } from 'next/server'
+import { NextRequest, NextResponse } from 'next/server'
 
 const GITHUB_USERNAME = 'Adam-Blf'
 const excludedRepos = ['Adam-Blf', 'portfolio', 'Logo', 'Keep-Alive', 'portfolio-adam']
+
+// Rate limiting: track requests per IP
+const rateLimitMap = new Map<string, { count: number; resetTime: number }>()
+const RATE_LIMIT_WINDOW = 60 * 1000 // 1 minute
+const RATE_LIMIT_MAX = 30 // max 30 requests per minute
+
+function isRateLimited(ip: string): boolean {
+  const now = Date.now()
+  const entry = rateLimitMap.get(ip)
+
+  if (!entry || now > entry.resetTime) {
+    rateLimitMap.set(ip, { count: 1, resetTime: now + RATE_LIMIT_WINDOW })
+    return false
+  }
+
+  entry.count++
+  return entry.count > RATE_LIMIT_MAX
+}
+
+// Clean up old rate limit entries periodically
+setInterval(() => {
+  const now = Date.now()
+  for (const [key, value] of rateLimitMap.entries()) {
+    if (now > value.resetTime) {
+      rateLimitMap.delete(key)
+    }
+  }
+}, 60 * 1000)
 
 interface GitHubRepo {
   id: number
@@ -92,12 +120,31 @@ function categorizeProject(repo: GitHubRepo): string {
   return 'Autres'
 }
 
-export async function GET() {
+export async function GET(request: NextRequest) {
+  // Rate limiting
+  const ip = request.headers.get('x-forwarded-for')?.split(',')[0]?.trim() ||
+    request.headers.get('x-real-ip') ||
+    'unknown'
+
+  if (isRateLimited(ip)) {
+    return NextResponse.json(
+      { error: 'Too many requests. Please try again later.' },
+      {
+        status: 429,
+        headers: {
+          'Retry-After': '60',
+          'X-RateLimit-Limit': String(RATE_LIMIT_MAX),
+        },
+      }
+    )
+  }
+
   // Check cache
   if (cachedData && Date.now() - cachedData.timestamp < CACHE_DURATION) {
     return NextResponse.json(cachedData, {
       headers: {
         'Cache-Control': 'public, s-maxage=1800, stale-while-revalidate=3600',
+        'X-Content-Type-Options': 'nosniff',
       },
     })
   }
@@ -181,13 +228,20 @@ export async function GET() {
     return NextResponse.json(cachedData, {
       headers: {
         'Cache-Control': 'public, s-maxage=1800, stale-while-revalidate=3600',
+        'X-Content-Type-Options': 'nosniff',
       },
     })
   } catch (error) {
-    console.error('GitHub API error:', error)
+    // Log error without exposing details to client
+    console.error('GitHub API error:', error instanceof Error ? error.message : 'Unknown error')
     return NextResponse.json(
-      { error: 'Failed to fetch GitHub data' },
-      { status: 500 }
+      { error: 'An internal error occurred' },
+      {
+        status: 500,
+        headers: {
+          'X-Content-Type-Options': 'nosniff',
+        },
+      }
     )
   }
 }

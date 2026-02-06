@@ -1,28 +1,11 @@
 'use client'
 
 import { useEffect, useRef } from 'react'
-import { animate, stagger } from 'animejs'
+import { animate } from 'animejs'
 import Link from 'next/link'
 import { ArrowUpRight } from 'lucide-react'
 
-const expertise = [
-  {
-    title: 'Data Engineering',
-    desc: 'Pipelines ETL/ELT, architecture data, Oracle, PostgreSQL, Python',
-  },
-  {
-    title: 'Machine Learning',
-    desc: 'NLP, Deep Learning, LLMs, Computer Vision, Scikit-learn',
-  },
-  {
-    title: 'Fullstack Dev',
-    desc: 'React, Next.js, Node.js, TypeScript, APIs REST',
-  },
-  {
-    title: 'Cloud & DevOps',
-    desc: 'AWS, Azure, Docker, CI/CD, Git',
-  },
-]
+
 
 const highlights = [
   { label: 'Formation', value: 'M1 Data Engineering & IA - EFREI Paris' },
@@ -50,8 +33,7 @@ export default function AboutPreview() {
             const bio = section.querySelector('.about-bio')
             const highlightItems = section.querySelectorAll('.highlight-item')
             const cta = section.querySelector('.about-cta')
-            const expertiseCaption = section.querySelector('.expertise-caption')
-            const expertiseItems = section.querySelectorAll('.expertise-item')
+
 
             if (caption) {
               animate(caption, {
@@ -83,12 +65,16 @@ export default function AboutPreview() {
             }
 
             if (highlightItems.length > 0) {
-              animate(highlightItems, {
-                translateX: [-20, 0],
-                opacity: [0, 1],
-                duration: 500,
-                easing: 'cubicBezier(0.16, 1, 0.3, 1)',
-                delay: stagger(80, { start: 300 }),
+              let delayVal = 300
+              highlightItems.forEach((item) => {
+                animate(item, {
+                  translateX: [-20, 0],
+                  opacity: [0, 1],
+                  duration: 500,
+                  easing: 'cubicBezier(0.16, 1, 0.3, 1)',
+                  delay: delayVal,
+                })
+                delayVal += 80
               })
             }
 
@@ -102,24 +88,7 @@ export default function AboutPreview() {
               })
             }
 
-            if (expertiseCaption) {
-              animate(expertiseCaption, {
-                opacity: [0, 1],
-                duration: 400,
-                easing: 'cubicBezier(0.16, 1, 0.3, 1)',
-                delay: 200,
-              })
-            }
 
-            if (expertiseItems.length > 0) {
-              animate(expertiseItems, {
-                translateY: [20, 0],
-                opacity: [0, 1],
-                duration: 500,
-                easing: 'cubicBezier(0.16, 1, 0.3, 1)',
-                delay: stagger(100, { start: 300 }),
-              })
-            }
 
             observer.unobserve(section)
           }
@@ -133,26 +102,7 @@ export default function AboutPreview() {
     return () => observer.disconnect()
   }, [])
 
-  // Hover animation using WAAPI
-  const handleMouseEnter = (e: React.MouseEvent<HTMLDivElement>) => {
-    e.currentTarget.animate(
-      [
-        { transform: 'translateX(0)' },
-        { transform: 'translateX(8px)' }
-      ],
-      { duration: 200, fill: 'forwards', easing: 'cubic-bezier(0.16, 1, 0.3, 1)' }
-    )
-  }
 
-  const handleMouseLeave = (e: React.MouseEvent<HTMLDivElement>) => {
-    e.currentTarget.animate(
-      [
-        { transform: 'translateX(8px)' },
-        { transform: 'translateX(0)' }
-      ],
-      { duration: 200, fill: 'forwards', easing: 'cubic-bezier(0.16, 1, 0.3, 1)' }
-    )
-  }
 
   return (
     <section ref={sectionRef} className="section border-t border-[--border]">
@@ -168,8 +118,8 @@ export default function AboutPreview() {
           </h2>
         </div>
 
-        {/* Content Grid */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-16">
+        {/* Content */}
+        <div className="grid grid-cols-1 gap-16">
 
           {/* Left - Bio */}
           <div>
@@ -209,32 +159,7 @@ export default function AboutPreview() {
             </div>
           </div>
 
-          {/* Right - Expertise */}
-          <div>
-            <p className="expertise-caption text-caption mb-8" style={{ opacity: 0 }}>
-              Domaines d'expertise
-            </p>
 
-            <div className="space-y-0">
-              {expertise.map((item, i) => (
-                <div
-                  key={item.title}
-                  className="expertise-item group py-6 border-b border-[--border] cursor-default"
-                  style={{ opacity: 0 }}
-                  onMouseEnter={handleMouseEnter}
-                  onMouseLeave={handleMouseLeave}
-                >
-                  <div className="flex justify-between items-start mb-2">
-                    <h3 className="text-xl font-bold group-hover:text-accent transition-colors">
-                      {item.title}
-                    </h3>
-                    <span className="text-caption font-mono">0{i + 1}</span>
-                  </div>
-                  <p className="text-[--text-secondary] text-sm">{item.desc}</p>
-                </div>
-              ))}
-            </div>
-          </div>
         </div>
       </div>
     </section>

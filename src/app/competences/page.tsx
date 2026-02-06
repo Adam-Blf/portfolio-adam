@@ -4,7 +4,7 @@ import { useState, useEffect, useRef } from 'react'
 import dynamic from 'next/dynamic'
 import { animate, stagger } from 'animejs'
 import { Github, Code2, Database, Cloud, Brain, Blocks, Server, Palette, GitCommit } from 'lucide-react'
-import { skills as staticSkills, certifications, expertise } from '@/lib/data'
+import { skills as staticSkills, certifications } from '@/lib/data'
 
 const PageBackground = dynamic(() => import('@/components/three/PageBackground'), {
   ssr: false,
@@ -655,33 +655,6 @@ export default function Competences() {
                 </div>
               </div>
             ))}
-          </section>
-
-          {/* Expertise section */}
-          <section className="mt-16 pt-16 border-t border-[--border]">
-            <h2 className="text-title mb-8">Domaines d'expertise</h2>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              {expertise.map((exp, i) => (
-                <div key={exp.domain} className="bg-[--bg-surface] p-6 border border-[--border]">
-                  <div className="flex items-center justify-between mb-4">
-                    <h3 className="font-semibold">{exp.domain}</h3>
-                    <span className="text-accent font-mono text-sm">{exp.level}%</span>
-                  </div>
-                  <div className="h-1 bg-[--bg-elevated] rounded-full mb-4">
-                    <div
-                      className="h-full bg-accent rounded-full transition-all duration-1000"
-                      style={{ width: `${exp.level}%` }}
-                    />
-                  </div>
-                  <p className="text-sm text-[--text-secondary] mb-3">{exp.description}</p>
-                  <div className="flex flex-wrap gap-1">
-                    {exp.projects.map((proj) => (
-                      <span key={proj} className="text-xs text-[--text-muted]">{proj}</span>
-                    ))}
-                  </div>
-                </div>
-              ))}
-            </div>
           </section>
 
           {/* Certifications */}

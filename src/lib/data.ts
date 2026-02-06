@@ -142,32 +142,7 @@ export const keyAchievements = [
   },
 ]
 
-export const expertise = [
-  {
-    domain: "Data Engineering",
-    description: "Architecture de donnees, pipelines ETL/ELT, Data Warehousing, Oracle, PostgreSQL",
-    level: 85,
-    projects: ["Pipelines hospitaliers", "Infocentre PMSI", "Business Intelligence"],
-  },
-  {
-    domain: "Intelligence Artificielle",
-    description: "Machine Learning, NLP, Deep Learning, LLMs, Computer Vision",
-    level: 80,
-    projects: ["LLM-Council", "Langue des signes IA", "Recommandation NLP"],
-  },
-  {
-    domain: "Fullstack Development",
-    description: "React/Next.js, Node.js, TypeScript, Python, APIs REST/GraphQL",
-    level: 85,
-    projects: ["Taskmate MERN", "PWA Echo", "Applications Streamlit"],
-  },
-  {
-    domain: "Cloud & DevOps",
-    description: "AWS, Azure, Docker, CI/CD, Git, Kubernetes basics",
-    level: 70,
-    projects: ["Containerisation", "Deployement automatise", "Infrastructure as Code"],
-  },
-]
+
 
 export const experiences = [
   {
