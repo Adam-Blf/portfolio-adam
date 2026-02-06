@@ -57,16 +57,18 @@ export default function Footer() {
                 target="_blank"
                 rel="noopener noreferrer"
                 className="text-sm text-[--text-secondary] hover:text-accent transition-colors"
+                aria-label="GitHub d'Adam Beloucif (nouvelle fenetre)"
               >
-                GitHub
+                GitHub<span className="sr-only"> (ouvre dans une nouvelle fenetre)</span>
               </a>
               <a
                 href="https://www.linkedin.com/in/adambeloucif/"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="text-sm text-[--text-secondary] hover:text-accent transition-colors"
+                aria-label="LinkedIn d'Adam Beloucif (nouvelle fenetre)"
               >
-                LinkedIn
+                LinkedIn<span className="sr-only"> (ouvre dans une nouvelle fenetre)</span>
               </a>
             </div>
           </div>

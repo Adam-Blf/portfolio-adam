@@ -165,7 +165,11 @@ export default function Header() {
 
                 {/* Theme Dropdown */}
                 {showThemeMenu && (
-                  <div className="absolute right-0 top-full mt-2 py-2 px-1 bg-[--bg-surface] border border-[--border] rounded-lg shadow-lg min-w-[140px]">
+                  <div
+                    role="menu"
+                    aria-label="Selection du theme"
+                    className="absolute right-0 top-full mt-2 py-2 px-1 bg-[--bg-surface] border border-[--border] rounded-lg shadow-lg min-w-[140px]"
+                  >
                     {[
                       { value: 'light', icon: Sun, label: 'Clair' },
                       { value: 'dark', icon: Moon, label: 'Sombre' },
@@ -177,6 +181,8 @@ export default function Header() {
                           setTheme(option.value as 'light' | 'dark' | 'system')
                           setShowThemeMenu(false)
                         }}
+                        role="menuitemradio"
+                        aria-checked={theme === option.value}
                         className={`flex items-center gap-2 w-full px-3 py-2 text-sm rounded-md transition-colors ${
                           theme === option.value
                             ? 'bg-accent/10 text-accent'
@@ -251,13 +257,15 @@ export default function Header() {
             {/* Mobile theme options */}
             <div className="flex gap-4 mt-8 mobile-link" style={{ opacity: 0 }}>
               {[
-                { value: 'light', icon: Sun },
-                { value: 'dark', icon: Moon },
-                { value: 'system', icon: Monitor },
+                { value: 'light', icon: Sun, label: 'Theme clair' },
+                { value: 'dark', icon: Moon, label: 'Theme sombre' },
+                { value: 'system', icon: Monitor, label: 'Theme systeme' },
               ].map((option) => (
                 <button
                   key={option.value}
                   onClick={() => setTheme(option.value as 'light' | 'dark' | 'system')}
+                  aria-label={option.label}
+                  aria-pressed={theme === option.value}
                   className={`p-3 rounded-xl border transition-all ${
                     theme === option.value
                       ? 'border-accent bg-accent/10 text-accent'

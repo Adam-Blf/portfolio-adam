@@ -355,17 +355,20 @@ export default function FrisePage() {
       <PageBackground variant="grid" />
 
       {/* Fixed Year Navigator */}
-      <div
+      <nav
         ref={yearIndicatorRef}
+        aria-label="Navigation par annee"
         className="fixed left-8 top-1/2 -translate-y-1/2 z-40 hidden lg:flex flex-col items-center gap-1"
       >
-        <div className="text-caption text-[--text-muted] mb-4 -rotate-90 origin-center whitespace-nowrap">
+        <div className="text-caption text-[--text-muted] mb-4 -rotate-90 origin-center whitespace-nowrap" aria-hidden="true">
           Navigation
         </div>
         {years.map((year) => (
           <button
             key={year}
             onClick={() => scrollToYear(year)}
+            aria-label={`Aller a l'annee ${year}`}
+            aria-current={activeYear === year ? 'true' : undefined}
             className={`
               relative w-10 h-10 flex items-center justify-center
               font-mono text-xs transition-all duration-300
@@ -375,16 +378,16 @@ export default function FrisePage() {
             `}
           >
             {activeYear === year && (
-              <span className="absolute inset-0 rounded-full border border-accent opacity-30 animate-ping" />
+              <span className="absolute inset-0 rounded-full border border-accent opacity-30 animate-ping" aria-hidden="true" />
             )}
-            <span className="relative z-10">{year.slice(2)}</span>
+            <span className="relative z-10" aria-hidden="true">{year.slice(2)}</span>
             {activeYear === year && (
-              <span className="absolute inset-2 rounded-full bg-accent/10" />
+              <span className="absolute inset-2 rounded-full bg-accent/10" aria-hidden="true" />
             )}
           </button>
         ))}
-        <ChevronDown className="mt-4 text-[--text-muted] animate-bounce" size={16} />
-      </div>
+        <ChevronDown className="mt-4 text-[--text-muted] animate-bounce" size={16} aria-hidden="true" />
+      </nav>
 
       <main className="pt-32 pb-24">
         <div className="container-wide">
@@ -395,8 +398,8 @@ export default function FrisePage() {
               <span className="frise-caption text-caption" style={{ opacity: 0 }}>
                 Parcours
               </span>
-              <span className="w-12 h-px bg-accent/50" />
-              <Sparkles className="w-4 h-4 text-accent animate-pulse" />
+              <span className="w-12 h-px bg-accent/50" aria-hidden="true" />
+              <Sparkles className="w-4 h-4 text-accent animate-pulse" aria-hidden="true" />
             </div>
 
             <h1 className="frise-title text-display mb-6" style={{ opacity: 0 }}>
@@ -409,9 +412,10 @@ export default function FrisePage() {
             </p>
 
             {/* Filters */}
-            <div className="flex flex-wrap gap-3">
+            <div className="flex flex-wrap gap-3" role="group" aria-label="Filtrer par categorie">
               <button
                 onClick={() => setFilter('all')}
+                aria-pressed={filter === 'all'}
                 className={`
                   filter-pill px-5 py-2.5 text-sm font-medium rounded-full
                   transition-all duration-300 border flex items-center gap-2
@@ -422,9 +426,10 @@ export default function FrisePage() {
                 style={{ opacity: 0 }}
               >
                 Tout
-                <span className="px-1.5 py-0.5 text-xs rounded bg-[--bg-elevated]">
+                <span className="px-1.5 py-0.5 text-xs rounded bg-[--bg-elevated]" aria-hidden="true">
                   {allEvents.length}
                 </span>
+                <span className="sr-only">({allEvents.length} elements)</span>
               </button>
 
               {(Object.keys(eventConfig) as EventType[]).map((type) => {
@@ -435,6 +440,7 @@ export default function FrisePage() {
                   <button
                     key={type}
                     onClick={() => setFilter(type)}
+                    aria-pressed={filter === type}
                     className={`
                       filter-pill px-5 py-2.5 text-sm font-medium rounded-full
                       transition-all duration-300 border flex items-center gap-2
@@ -444,11 +450,12 @@ export default function FrisePage() {
                     `}
                     style={{ opacity: 0 }}
                   >
-                    <config.icon size={14} style={{ color: filter === type ? 'currentColor' : config.color }} />
+                    <config.icon size={14} style={{ color: filter === type ? 'currentColor' : config.color }} aria-hidden="true" />
                     {config.label}
-                    <span className="px-1.5 py-0.5 text-xs rounded bg-[--bg-elevated]">
+                    <span className="px-1.5 py-0.5 text-xs rounded bg-[--bg-elevated]" aria-hidden="true">
                       {count}
                     </span>
+                    <span className="sr-only">({count} elements)</span>
                   </button>
                 )
               })}
@@ -517,10 +524,19 @@ export default function FrisePage() {
 
                         {/* Card */}
                         <div
+                          role="button"
+                          tabIndex={0}
+                          aria-expanded={isExpanded}
                           onClick={() => setExpandedCard(isExpanded ? null : event.id)}
+                          onKeyDown={(e) => {
+                            if (e.key === 'Enter' || e.key === ' ') {
+                              e.preventDefault()
+                              setExpandedCard(isExpanded ? null : event.id)
+                            }
+                          }}
                           className="group relative bg-[--bg-surface] border border-[--border] p-6 md:p-8
                                      hover:border-opacity-50 transition-all duration-500 cursor-pointer
-                                     hover:shadow-lg hover:shadow-accent/5"
+                                     hover:shadow-lg hover:shadow-accent/5 focus-visible:outline-2 focus-visible:outline-accent focus-visible:outline-offset-2"
                           style={{
                             borderColor: `${config.color}20`,
                             '--hover-color': config.color
@@ -581,13 +597,13 @@ export default function FrisePage() {
                           {/* Meta */}
                           <div className="flex flex-wrap items-center gap-4 text-sm text-[--text-muted] mb-3">
                             <span className="flex items-center gap-1.5 font-mono">
-                              <Calendar size={12} />
-                              {event.period}
+                              <Calendar size={12} aria-hidden="true" />
+                              <span className="sr-only">Periode: </span>{event.period}
                             </span>
                             {event.location && (
                               <span className="flex items-center gap-1">
-                                <MapPin size={12} />
-                                {event.location}
+                                <MapPin size={12} aria-hidden="true" />
+                                <span className="sr-only">Lieu: </span>{event.location}
                               </span>
                             )}
                           </div>

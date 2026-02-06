@@ -99,12 +99,21 @@ export const personalInfo = {
   bio: `Passionne par la data et l'innovation, je construis des systemes intelligents qui transforment les donnees en decisions strategiques. Mon parcours unique combine expertise technique (Data Engineering, IA, Fullstack) et competences humaines (President BDE 5700+ etudiants, PMM Marine Nationale). Actuellement en M1 Data Engineering & IA a l'EFREI Paris, je developpe des solutions data pour le secteur hospitalier.`,
 }
 
+// Stats are now dynamically fetched from GitHub API
+// These are fallback values if API is unavailable
 export const stats = [
-  { label: "Projets GitHub", value: "37", icon: "code" },
-  { label: "Certifications", value: "8", icon: "award" },
-  { label: "Annees Experience", value: "3+", icon: "briefcase" },
-  { label: "Technologies", value: "25+", icon: "layers" },
+  { label: "Projets GitHub", value: "35+", icon: "code" },
+  { label: "Commits", value: "500+", icon: "git-commit" },
+  { label: "Années d'expérience", value: "3+", icon: "briefcase" },
+  { label: "Technologies", value: "30+", icon: "layers" },
 ]
+
+export const staticMetrics = {
+  yearsExperience: 3,
+  certifications: 8,
+  volunteerRoles: 6,
+  languages: ["Français (Natif)", "Anglais (Professionnel)", "Espagnol (Professionnel)"],
+}
 
 export const keyAchievements = [
   {

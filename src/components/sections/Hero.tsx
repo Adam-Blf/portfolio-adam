@@ -11,6 +11,8 @@ import { personalInfo } from '@/lib/data'
 interface GitHubStats {
   projectCount: number
   languageCount: number
+  totalCommits: number
+  totalStars: number
 }
 
 const HeroBackground = dynamic(() => import('@/components/three/HeroBackground'), {
@@ -85,16 +87,43 @@ export default function Hero() {
   const containerRef = useRef<HTMLElement>(null)
   const scrollRef = useRef<HTMLDivElement>(null)
   const [mousePos, setMousePos] = useState({ x: 0, y: 0 })
-  const [githubStats, setGithubStats] = useState<GitHubStats>({ projectCount: 37, languageCount: 25 })
+  const [githubStats, setGithubStats] = useState<GitHubStats>({
+    projectCount: 37,
+    languageCount: 25,
+    totalCommits: 500,
+    totalStars: 0
+  })
+  const [isLoading, setIsLoading] = useState(true)
 
-  // Fetch GitHub stats
+  // Fetch GitHub stats with caching
   useEffect(() => {
+    const CACHE_KEY = 'github-stats'
+    const CACHE_DURATION = 1000 * 60 * 30 // 30 minutes
+
     async function fetchGitHubStats() {
+      // Check cache first
+      try {
+        const cached = localStorage.getItem(CACHE_KEY)
+        if (cached) {
+          const { data, timestamp } = JSON.parse(cached)
+          if (Date.now() - timestamp < CACHE_DURATION) {
+            setGithubStats(data)
+            setIsLoading(false)
+            return
+          }
+        }
+      } catch (e) {
+        // Cache read failed, continue with fetch
+      }
+
       try {
         const response = await fetch('https://api.github.com/users/Adam-Blf/repos?per_page=100&sort=updated', {
           headers: { 'Accept': 'application/vnd.github.v3+json' },
         })
-        if (!response.ok) return
+        if (!response.ok) {
+          setIsLoading(false)
+          return
+        }
 
         const repos = await response.json()
         const excludedRepos = ['Adam-Blf', 'portfolio', 'Logo', 'Keep-Alive', 'portfolio-adam']
@@ -108,15 +137,56 @@ export default function Hero() {
         const languages = new Set<string>()
         filteredRepos.forEach((repo: any) => {
           if (repo.language) languages.add(repo.language)
-          if (repo.topics) repo.topics.forEach((t: string) => languages.add(t))
         })
 
-        setGithubStats({
+        // Total stars
+        const totalStars = filteredRepos.reduce((sum: number, repo: any) => sum + (repo.stargazers_count || 0), 0)
+
+        // Fetch commit counts (limited to avoid rate limiting)
+        let totalCommits = 0
+        const topRepos = filteredRepos.slice(0, 15) // Top 15 repos only
+        await Promise.all(
+          topRepos.map(async (repo: any) => {
+            try {
+              const contribRes = await fetch(
+                `https://api.github.com/repos/Adam-Blf/${repo.name}/contributors?per_page=1`,
+                { headers: { 'Accept': 'application/vnd.github.v3+json' } }
+              )
+              if (contribRes.ok) {
+                const contributors = await contribRes.json()
+                if (Array.isArray(contributors)) {
+                  totalCommits += contributors.reduce((s: number, c: any) => s + (c.contributions || 0), 0)
+                }
+              }
+            } catch {
+              // Skip failed repos
+            }
+          })
+        )
+
+        // Estimate total commits for all repos
+        const avgCommitsPerRepo = totalCommits / topRepos.length
+        const estimatedTotal = Math.round(avgCommitsPerRepo * filteredRepos.length)
+
+        const stats = {
           projectCount: filteredRepos.length,
-          languageCount: Math.min(languages.size, 30)
-        })
+          languageCount: languages.size,
+          totalCommits: estimatedTotal,
+          totalStars
+        }
+
+        setGithubStats(stats)
+
+        // Cache the results
+        try {
+          localStorage.setItem(CACHE_KEY, JSON.stringify({ data: stats, timestamp: Date.now() }))
+        } catch (e) {
+          // Cache write failed, continue
+        }
       } catch (err) {
         console.error('Failed to fetch GitHub stats:', err)
+      } finally {
+        setIsLoading(false)
       }
     }
     fetchGitHubStats()
@@ -280,8 +350,8 @@ export default function Hero() {
                 <TypeWriter text="~/adam-beloucif/portfolio" delay={800} speed={30} />
               </span>
             </div>
-            <div className="status-online">
-              <span className="status-dot" />
+            <div className="status-online" aria-label="Disponible pour des opportunites">
+              <span className="status-dot" aria-hidden="true" />
               <span className="font-mono text-xs">AVAILABLE</span>
             </div>
           </div>
@@ -323,7 +393,7 @@ export default function Hero() {
 
               {/* Role */}
               <div className="hero-role flex items-center gap-4" style={{ opacity: 0 }}>
-                <div className="divider-accent" />
+                <div className="divider-accent" aria-hidden="true" />
                 <p className="text-title text-[--text-secondary]">
                   Data Engineer
                   <span className="text-[--text-muted]"> & </span>
@@ -396,17 +466,27 @@ export default function Hero() {
           </div>
 
           {/* Metrics row */}
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-6 mt-16 pt-8 border-t border-[--border]">
+          <div
+            className="grid grid-cols-2 md:grid-cols-4 gap-6 mt-16 pt-8 border-t border-[--border]"
+            aria-live="polite"
+            aria-busy={isLoading}
+          >
             {[
-              { value: String(githubStats.projectCount), label: 'Projets GitHub', suffix: '+' },
-              { value: '3', label: 'Ans d\'experience', suffix: '+' },
-              { value: '8', label: 'Certifications', suffix: '' },
-              { value: String(githubStats.languageCount), label: 'Technologies', suffix: '+' },
-            ].map((metric, i) => (
+              { value: String(githubStats.projectCount), label: 'Projets GitHub', suffix: '+', loading: isLoading },
+              { value: String(githubStats.totalCommits), label: 'Commits', suffix: '+', loading: isLoading },
+              { value: '3', label: 'Ans d\'experience', suffix: '+', loading: false },
+              { value: String(githubStats.languageCount), label: 'Technologies', suffix: '', loading: isLoading },
+            ].map((metric) => (
               <div key={metric.label} className="hero-metric metric" style={{ opacity: 0 }}>
-                <p className="metric-value">
-                  {metric.value}
-                  <span className="text-[--text-muted] text-lg">{metric.suffix}</span>
+                <p className="metric-value" aria-label={`${metric.value}${metric.suffix} ${metric.label}`}>
+                  {metric.loading ? (
+                    <span className="inline-block w-8 h-8 bg-[--bg-elevated] rounded animate-pulse" aria-hidden="true" />
+                  ) : (
+                    <>
+                      <span aria-hidden="true">{metric.value}</span>
+                      <span className="text-[--text-muted] text-lg" aria-hidden="true">{metric.suffix}</span>
+                    </>
+                  )}
                 </p>
                 <p className="metric-label">{metric.label}</p>
               </div>

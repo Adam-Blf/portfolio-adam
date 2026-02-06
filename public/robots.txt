@@ -1,0 +1,6 @@
+# Robots.txt for Adam Beloucif Portfolio
+User-agent: *
+Allow: /
+
+# Sitemap
+Sitemap: https://adam-beloucif.dev/sitemap.xml

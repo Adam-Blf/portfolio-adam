@@ -13,6 +13,7 @@ export const metadata: Metadata = {
   keywords: ['Data Engineer', 'Fullstack Developer', 'Python', 'React', 'Next.js', 'Machine Learning', 'EFREI', 'Paris', 'IA', 'Portfolio', 'Développeur'],
   authors: [{ name: 'Adam Beloucif', url: 'https://github.com/Adam-Blf' }],
   creator: 'Adam Beloucif',
+  manifest: '/manifest.json',
   robots: {
     index: true,
     follow: true,
@@ -60,6 +61,9 @@ export default function RootLayout({
   return (
     <html lang="fr" suppressHydrationWarning>
       <head>
+        {/* Preconnect to Google Fonts for faster loading */}
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
         {/* Prevent flash of wrong theme */}
         <script
           dangerouslySetInnerHTML={{

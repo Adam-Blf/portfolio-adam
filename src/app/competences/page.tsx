@@ -3,7 +3,8 @@
 import { useState, useEffect, useRef } from 'react'
 import dynamic from 'next/dynamic'
 import { animate, stagger } from 'animejs'
-import { Loader2, Github, Code2, Database, Cloud, Brain, Blocks } from 'lucide-react'
+import { Github, Code2, Database, Cloud, Brain, Blocks, Server, Palette, GitCommit } from 'lucide-react'
+import { skills as staticSkills, certifications, expertise } from '@/lib/data'
 
 const PageBackground = dynamic(() => import('@/components/three/PageBackground'), {
   ssr: false,
@@ -13,14 +14,11 @@ const PageBackground = dynamic(() => import('@/components/three/PageBackground')
 interface GitHubRepo {
   id: number
   name: string
+  description: string | null
   language: string | null
   topics: string[]
   fork: boolean
   archived: boolean
-}
-
-interface LanguageStats {
-  [key: string]: number
 }
 
 interface SkillCategory {
@@ -30,98 +28,268 @@ interface SkillCategory {
   skills: { name: string; count: number }[]
 }
 
-// Badge config for shields.io
+// Extended badge config for shields.io
 const skillBadges: Record<string, { logo: string; color: string; logoColor?: string }> = {
+  // Languages
   'Python': { logo: 'python', color: '3776AB' },
   'TypeScript': { logo: 'typescript', color: '3178C6' },
   'JavaScript': { logo: 'javascript', color: 'F7DF1E', logoColor: 'black' },
   'Java': { logo: 'openjdk', color: 'ED8B00' },
   'C': { logo: 'c', color: 'A8B9CC', logoColor: 'black' },
   'C++': { logo: 'cplusplus', color: '00599C' },
+  'C#': { logo: 'csharp', color: '512BD4' },
   'HTML': { logo: 'html5', color: 'E34F26' },
   'CSS': { logo: 'css3', color: '1572B6' },
+  'SCSS': { logo: 'sass', color: 'CC6699' },
   'SQL': { logo: 'postgresql', color: '4169E1' },
+  'PL/SQL': { logo: 'oracle', color: 'F80000' },
   'Shell': { logo: 'gnubash', color: '4EAA25' },
-  'Jupyter Notebook': { logo: 'jupyter', color: 'F37626' },
+  'Bash': { logo: 'gnubash', color: '4EAA25' },
+  'PHP': { logo: 'php', color: '777BB4' },
   'R': { logo: 'r', color: '276DC3' },
+  'Go': { logo: 'go', color: '00ADD8' },
+  'Rust': { logo: 'rust', color: '000000' },
+  'Ruby': { logo: 'ruby', color: 'CC342D' },
+  'Kotlin': { logo: 'kotlin', color: '7F52FF' },
+  'Swift': { logo: 'swift', color: 'F05138' },
+  'Jupyter Notebook': { logo: 'jupyter', color: 'F37626' },
   // Frameworks & Libraries
   'React': { logo: 'react', color: '61DAFB', logoColor: 'black' },
   'Next.js': { logo: 'nextdotjs', color: '000000' },
+  'Vue.js': { logo: 'vuedotjs', color: '4FC08D' },
+  'Angular': { logo: 'angular', color: 'DD0031' },
+  'Svelte': { logo: 'svelte', color: 'FF3E00' },
   'Node.js': { logo: 'nodedotjs', color: '339933' },
+  'Express': { logo: 'express', color: '000000' },
   'FastAPI': { logo: 'fastapi', color: '009688' },
   'Flask': { logo: 'flask', color: '000000' },
   'Django': { logo: 'django', color: '092E20' },
+  'Streamlit': { logo: 'streamlit', color: 'FF4B4B' },
+  '.NET': { logo: 'dotnet', color: '512BD4' },
   'TailwindCSS': { logo: 'tailwindcss', color: '06B6D4' },
+  'Bootstrap': { logo: 'bootstrap', color: '7952B3' },
   'Three.js': { logo: 'threedotjs', color: '000000' },
+  'anime.js': { logo: 'javascript', color: 'FF6F00' },
   // Data & ML
   'TensorFlow': { logo: 'tensorflow', color: 'FF6F00' },
   'PyTorch': { logo: 'pytorch', color: 'EE4C2C' },
+  'Keras': { logo: 'keras', color: 'D00000' },
   'Pandas': { logo: 'pandas', color: '150458' },
   'NumPy': { logo: 'numpy', color: '013243' },
   'Scikit-learn': { logo: 'scikitlearn', color: 'F7931E' },
   'Hugging Face': { logo: 'huggingface', color: 'FFD21E', logoColor: 'black' },
+  'OpenAI': { logo: 'openai', color: '412991' },
+  'LangChain': { logo: 'chainlink', color: '375BD2' },
+  'Matplotlib': { logo: 'plotly', color: '3F4F75' },
+  'Plotly': { logo: 'plotly', color: '3F4F75' },
+  'Seaborn': { logo: 'python', color: '3776AB' },
+  'MediaPipe': { logo: 'google', color: '4285F4' },
+  'NLTK': { logo: 'python', color: '3776AB' },
+  'spaCy': { logo: 'spacy', color: '09A3D5' },
+  'Transformers': { logo: 'huggingface', color: 'FFD21E', logoColor: 'black' },
+  'SBERT': { logo: 'huggingface', color: 'FFD21E', logoColor: 'black' },
   // Cloud & DevOps
   'Docker': { logo: 'docker', color: '2496ED' },
+  'Kubernetes': { logo: 'kubernetes', color: '326CE5' },
   'Git': { logo: 'git', color: 'F05032' },
   'GitHub': { logo: 'github', color: '181717' },
+  'GitLab': { logo: 'gitlab', color: 'FC6D26' },
   'Linux': { logo: 'linux', color: 'FCC624', logoColor: 'black' },
+  'AWS': { logo: 'amazonwebservices', color: '232F3E' },
+  'Azure': { logo: 'microsoftazure', color: '0078D4' },
+  'GCP': { logo: 'googlecloud', color: '4285F4' },
+  'Vercel': { logo: 'vercel', color: '000000' },
+  'Netlify': { logo: 'netlify', color: '00C7B7' },
+  'Heroku': { logo: 'heroku', color: '430098' },
+  'CI/CD': { logo: 'githubactions', color: '2088FF' },
+  'GitHub Actions': { logo: 'githubactions', color: '2088FF' },
+  // Databases
   'Oracle': { logo: 'oracle', color: 'F80000' },
   'PostgreSQL': { logo: 'postgresql', color: '4169E1' },
+  'MySQL': { logo: 'mysql', color: '4479A1' },
   'MongoDB': { logo: 'mongodb', color: '47A248' },
-  'Vercel': { logo: 'vercel', color: '000000' },
+  'Redis': { logo: 'redis', color: 'DC382D' },
+  'SQLite': { logo: 'sqlite', color: '003B57' },
+  'Firebase': { logo: 'firebase', color: 'FFCA28', logoColor: 'black' },
+  'Supabase': { logo: 'supabase', color: '3ECF8E' },
+  // Tools
+  'Jupyter': { logo: 'jupyter', color: 'F37626' },
+  'VS Code': { logo: 'visualstudiocode', color: '007ACC' },
+  'Figma': { logo: 'figma', color: 'F24E1E' },
+  'Postman': { logo: 'postman', color: 'FF6C37' },
+  'Notion': { logo: 'notion', color: '000000' },
+  'Jira': { logo: 'jira', color: '0052CC' },
+  'Confluence': { logo: 'confluence', color: '172B4D' },
+  'Business Objects': { logo: 'sap', color: '0FAAFF' },
 }
 
-// Map topics/keywords to known technologies
+// Extended topic mapping
 const topicToSkill: Record<string, string> = {
+  // Frameworks
   'react': 'React',
+  'reactjs': 'React',
   'nextjs': 'Next.js',
   'next-js': 'Next.js',
+  'next': 'Next.js',
+  'vue': 'Vue.js',
+  'vuejs': 'Vue.js',
+  'angular': 'Angular',
+  'svelte': 'Svelte',
   'nodejs': 'Node.js',
   'node-js': 'Node.js',
+  'node': 'Node.js',
+  'express': 'Express',
+  'expressjs': 'Express',
   'fastapi': 'FastAPI',
   'flask': 'Flask',
   'django': 'Django',
+  'streamlit': 'Streamlit',
+  'dotnet': '.NET',
   'tailwindcss': 'TailwindCSS',
   'tailwind': 'TailwindCSS',
+  'bootstrap': 'Bootstrap',
   'threejs': 'Three.js',
   'three-js': 'Three.js',
+  // Data & ML
   'tensorflow': 'TensorFlow',
   'pytorch': 'PyTorch',
+  'keras': 'Keras',
   'pandas': 'Pandas',
   'numpy': 'NumPy',
   'scikit-learn': 'Scikit-learn',
   'sklearn': 'Scikit-learn',
   'huggingface': 'Hugging Face',
-  'transformers': 'Hugging Face',
-  'docker': 'Docker',
-  'git': 'Git',
-  'linux': 'Linux',
-  'oracle': 'Oracle',
-  'postgresql': 'PostgreSQL',
-  'postgres': 'PostgreSQL',
-  'mongodb': 'MongoDB',
-  'mongo': 'MongoDB',
-  'vercel': 'Vercel',
+  'transformers': 'Transformers',
+  'openai': 'OpenAI',
+  'langchain': 'LangChain',
+  'matplotlib': 'Matplotlib',
+  'plotly': 'Plotly',
+  'seaborn': 'Seaborn',
+  'mediapipe': 'MediaPipe',
+  'nltk': 'NLTK',
+  'spacy': 'spaCy',
+  'sbert': 'SBERT',
+  'sentence-transformers': 'SBERT',
+  // Concepts
   'machine-learning': 'Machine Learning',
   'deep-learning': 'Deep Learning',
   'nlp': 'NLP',
+  'natural-language-processing': 'NLP',
   'computer-vision': 'Computer Vision',
   'data-science': 'Data Science',
   'data-engineering': 'Data Engineering',
+  'artificial-intelligence': 'AI',
+  'ai': 'AI',
+  'ml': 'Machine Learning',
+  'llm': 'LLM',
+  'rag': 'RAG',
+  'chatbot': 'Chatbot',
+  'recommendation': 'Recommendation Systems',
+  // Cloud & DevOps
+  'docker': 'Docker',
+  'kubernetes': 'Kubernetes',
+  'k8s': 'Kubernetes',
+  'git': 'Git',
+  'github': 'GitHub',
+  'gitlab': 'GitLab',
+  'linux': 'Linux',
+  'aws': 'AWS',
+  'azure': 'Azure',
+  'gcp': 'GCP',
+  'vercel': 'Vercel',
+  'netlify': 'Netlify',
+  'heroku': 'Heroku',
+  'ci-cd': 'CI/CD',
+  'github-actions': 'GitHub Actions',
+  // Databases
+  'oracle': 'Oracle',
+  'postgresql': 'PostgreSQL',
+  'postgres': 'PostgreSQL',
+  'mysql': 'MySQL',
+  'mongodb': 'MongoDB',
+  'mongo': 'MongoDB',
+  'redis': 'Redis',
+  'sqlite': 'SQLite',
+  'firebase': 'Firebase',
+  'supabase': 'Supabase',
+  // PWA & Web
+  'pwa': 'PWA',
+  'progressive-web-app': 'PWA',
+  'api': 'REST API',
+  'rest': 'REST API',
+  'graphql': 'GraphQL',
+  'websocket': 'WebSocket',
+  // Games & Graphics
+  'game': 'Game Dev',
+  'game-development': 'Game Dev',
+  'canvas': 'Canvas',
+  'webgl': 'WebGL',
+  // Mobile
+  'react-native': 'React Native',
+  'flutter': 'Flutter',
+  'ios': 'iOS',
+  'android': 'Android',
+}
+
+// Description keywords to skill mapping
+const descriptionKeywords: Record<string, string> = {
+  'machine learning': 'Machine Learning',
+  'deep learning': 'Deep Learning',
+  'neural network': 'Deep Learning',
+  'recommendation': 'Recommendation Systems',
+  'nlp': 'NLP',
+  'natural language': 'NLP',
+  'semantic': 'NLP',
+  'sbert': 'SBERT',
+  'sentence-transformers': 'SBERT',
+  'transformer': 'Transformers',
+  'computer vision': 'Computer Vision',
+  'mediapipe': 'MediaPipe',
+  'openai': 'OpenAI',
+  'gpt': 'OpenAI',
+  'llm': 'LLM',
+  'rag': 'RAG',
+  'langchain': 'LangChain',
+  'streamlit': 'Streamlit',
+  'fastapi': 'FastAPI',
+  'flask': 'Flask',
+  'django': 'Django',
+  'react': 'React',
+  'next': 'Next.js',
+  'vue': 'Vue.js',
+  'mern': 'MERN Stack',
+  'mongodb': 'MongoDB',
+  'express': 'Express',
+  'node': 'Node.js',
+  'docker': 'Docker',
+  'pandas': 'Pandas',
+  'numpy': 'NumPy',
+  'scikit': 'Scikit-learn',
+  'tensorflow': 'TensorFlow',
+  'pytorch': 'PyTorch',
+  'pwa': 'PWA',
+  'api': 'REST API',
+  'websocket': 'WebSocket',
+  'real-time': 'Real-time',
+  'canvas': 'Canvas',
+  'simulation': 'Simulation',
+  'game': 'Game Dev',
 }
 
 // Categorize skills
 const categorizeSkill = (skill: string): string => {
-  const languages = ['Python', 'TypeScript', 'JavaScript', 'Java', 'C', 'C++', 'HTML', 'CSS', 'SQL', 'Shell', 'R']
-  const frameworks = ['React', 'Next.js', 'Node.js', 'FastAPI', 'Flask', 'Django', 'TailwindCSS', 'Three.js']
-  const data = ['Pandas', 'NumPy', 'Jupyter Notebook', 'Data Science', 'Data Engineering']
-  const ai = ['TensorFlow', 'PyTorch', 'Scikit-learn', 'Hugging Face', 'Machine Learning', 'Deep Learning', 'NLP', 'Computer Vision']
-  const cloud = ['Docker', 'Git', 'GitHub', 'Linux', 'Oracle', 'PostgreSQL', 'MongoDB', 'Vercel']
+  const languages = ['Python', 'TypeScript', 'JavaScript', 'Java', 'C', 'C++', 'C#', 'HTML', 'CSS', 'SCSS', 'SQL', 'PL/SQL', 'Shell', 'Bash', 'PHP', 'R', 'Go', 'Rust', 'Ruby', 'Kotlin', 'Swift', 'Jupyter Notebook']
+  const frameworks = ['React', 'Next.js', 'Vue.js', 'Angular', 'Svelte', 'Node.js', 'Express', 'FastAPI', 'Flask', 'Django', 'Streamlit', '.NET', 'TailwindCSS', 'Bootstrap', 'Three.js', 'anime.js', 'MERN Stack', 'PWA']
+  const data = ['Pandas', 'NumPy', 'Jupyter', 'Matplotlib', 'Plotly', 'Seaborn', 'Data Science', 'Data Engineering']
+  const ai = ['TensorFlow', 'PyTorch', 'Keras', 'Scikit-learn', 'Hugging Face', 'OpenAI', 'LangChain', 'MediaPipe', 'NLTK', 'spaCy', 'Transformers', 'SBERT', 'Machine Learning', 'Deep Learning', 'NLP', 'Computer Vision', 'AI', 'LLM', 'RAG', 'Chatbot', 'Recommendation Systems']
+  const cloud = ['Docker', 'Kubernetes', 'Git', 'GitHub', 'GitLab', 'Linux', 'AWS', 'Azure', 'GCP', 'Vercel', 'Netlify', 'Heroku', 'CI/CD', 'GitHub Actions']
+  const databases = ['Oracle', 'PostgreSQL', 'MySQL', 'MongoDB', 'Redis', 'SQLite', 'Firebase', 'Supabase', 'Business Objects']
 
   if (languages.includes(skill)) return 'languages'
   if (frameworks.includes(skill)) return 'frameworks'
   if (data.includes(skill)) return 'data'
   if (ai.includes(skill)) return 'ai'
+  if (databases.includes(skill)) return 'databases'
   if (cloud.includes(skill)) return 'cloud'
   return 'other'
 }
@@ -130,7 +298,7 @@ const categorizeSkill = (skill: string): string => {
 const getBadgeUrl = (name: string) => {
   const badge = skillBadges[name]
   if (!badge) return null
-  const displayName = name.replace(/\//g, '%2F').replace(/ /g, '%20').replace(/\+/g, '%2B')
+  const displayName = name.replace(/\//g, '%2F').replace(/ /g, '%20').replace(/\+/g, '%2B').replace(/#/g, '%23')
   const logoColor = badge.logoColor || 'white'
   return `https://img.shields.io/badge/${displayName}-${badge.color}?style=for-the-badge&logo=${badge.logo}&logoColor=${logoColor}`
 }
@@ -140,22 +308,38 @@ export default function Competences() {
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
   const [totalRepos, setTotalRepos] = useState(0)
+  const [totalCommits, setTotalCommits] = useState(0)
   const headerRef = useRef<HTMLDivElement>(null)
   const gridRef = useRef<HTMLElement>(null)
 
   useEffect(() => {
+    const CACHE_KEY = 'github-skills'
+    const CACHE_DURATION = 1000 * 60 * 30 // 30 minutes
+
     async function fetchSkills() {
+      // Check cache first
+      try {
+        const cached = localStorage.getItem(CACHE_KEY)
+        if (cached) {
+          const { data, timestamp } = JSON.parse(cached)
+          if (Date.now() - timestamp < CACHE_DURATION) {
+            setCategories(data.categories)
+            setTotalRepos(data.totalRepos)
+            setTotalCommits(data.totalCommits || 0)
+            setLoading(false)
+            return
+          }
+        }
+      } catch (e) {
+        // Cache read failed
+      }
+
       try {
         const response = await fetch('https://api.github.com/users/Adam-Blf/repos?per_page=100&sort=updated', {
-          headers: {
-            'Accept': 'application/vnd.github.v3+json',
-          },
-          next: { revalidate: 3600 }
+          headers: { 'Accept': 'application/vnd.github.v3+json' },
         })
 
-        if (!response.ok) {
-          throw new Error('Erreur lors de la recuperation des repos')
-        }
+        if (!response.ok) throw new Error('Erreur GitHub API')
 
         const repos: GitHubRepo[] = await response.json()
 
@@ -168,7 +352,7 @@ export default function Competences() {
 
         setTotalRepos(filteredRepos.length)
 
-        // Aggregate skills from languages and topics
+        // Aggregate skills
         const skillCounts: Record<string, number> = {}
 
         for (const repo of filteredRepos) {
@@ -186,7 +370,32 @@ export default function Competences() {
               }
             }
           }
+
+          // Analyze description for keywords
+          if (repo.description) {
+            const desc = repo.description.toLowerCase()
+            for (const [keyword, skill] of Object.entries(descriptionKeywords)) {
+              if (desc.includes(keyword)) {
+                skillCounts[skill] = (skillCounts[skill] || 0) + 1
+              }
+            }
+          }
         }
+
+        // Add static skills from data.ts with minimum counts
+        const allStaticSkills = [
+          ...staticSkills.languages.map(s => s.name),
+          ...staticSkills.frameworks.map(s => s.name),
+          ...staticSkills.data.map(s => s.name),
+          ...staticSkills.cloud.map(s => s.name),
+          ...staticSkills.ai.map(s => s.name),
+        ]
+
+        allStaticSkills.forEach(skill => {
+          if (!skillCounts[skill]) {
+            skillCounts[skill] = 1 // At least 1 mention for known skills
+          }
+        })
 
         // Organize into categories
         const categorized: Record<string, { name: string; count: number }[]> = {
@@ -194,6 +403,7 @@ export default function Competences() {
           frameworks: [],
           data: [],
           ai: [],
+          databases: [],
           cloud: [],
         }
 
@@ -204,21 +414,54 @@ export default function Competences() {
           }
         }
 
-        // Sort each category by count
+        // Sort by count
         for (const key of Object.keys(categorized)) {
           categorized[key].sort((a, b) => b.count - a.count)
         }
 
-        // Build final categories array
+        // Build final categories
         const finalCategories: SkillCategory[] = [
           { key: 'languages', title: 'Langages', icon: <Code2 size={18} />, skills: categorized.languages },
-          { key: 'frameworks', title: 'Frameworks', icon: <Blocks size={18} />, skills: categorized.frameworks },
-          { key: 'data', title: 'Data', icon: <Database size={18} />, skills: categorized.data },
-          { key: 'ai', title: 'AI / ML', icon: <Brain size={18} />, skills: categorized.ai },
+          { key: 'frameworks', title: 'Frameworks & Libraries', icon: <Blocks size={18} />, skills: categorized.frameworks },
+          { key: 'data', title: 'Data & Viz', icon: <Database size={18} />, skills: categorized.data },
+          { key: 'ai', title: 'AI / ML / NLP', icon: <Brain size={18} />, skills: categorized.ai },
+          { key: 'databases', title: 'Databases', icon: <Server size={18} />, skills: categorized.databases },
           { key: 'cloud', title: 'Cloud & DevOps', icon: <Cloud size={18} />, skills: categorized.cloud },
         ].filter(cat => cat.skills.length > 0)
 
         setCategories(finalCategories)
+
+        // Estimate commits
+        let commits = 0
+        const topRepos = filteredRepos.slice(0, 10)
+        await Promise.all(
+          topRepos.map(async (repo) => {
+            try {
+              const res = await fetch(
+                `https://api.github.com/repos/Adam-Blf/${repo.name}/contributors?per_page=1`,
+                { headers: { 'Accept': 'application/vnd.github.v3+json' } }
+              )
+              if (res.ok) {
+                const contributors = await res.json()
+                if (Array.isArray(contributors)) {
+                  commits += contributors.reduce((s: number, c: any) => s + (c.contributions || 0), 0)
+                }
+              }
+            } catch {}
+          })
+        )
+        const avgPerRepo = topRepos.length > 0 ? commits / topRepos.length : 15
+        const estimatedCommits = Math.round(avgPerRepo * filteredRepos.length)
+        setTotalCommits(estimatedCommits)
+
+        // Cache
+        try {
+          localStorage.setItem(CACHE_KEY, JSON.stringify({
+            data: { categories: finalCategories, totalRepos: filteredRepos.length, totalCommits: estimatedCommits },
+            timestamp: Date.now()
+          }))
+        } catch {}
+
         setLoading(false)
       } catch (err) {
         console.error('GitHub API error:', err)
@@ -235,38 +478,14 @@ export default function Competences() {
     if (loading) return
     const header = headerRef.current
     if (header) {
-      const caption = header.querySelector('.page-caption')
-      const title = header.querySelector('.page-title')
-      const description = header.querySelector('.page-description')
-
-      if (caption) {
-        animate(caption, {
-          translateY: [20, 0],
-          opacity: [0, 1],
-          duration: 600,
-          easing: 'cubicBezier(0.16, 1, 0.3, 1)',
-        })
-      }
-
-      if (title) {
-        animate(title, {
-          translateY: [40, 0],
-          opacity: [0, 1],
-          duration: 800,
-          easing: 'cubicBezier(0.16, 1, 0.3, 1)',
-          delay: 100,
-        })
-      }
-
-      if (description) {
-        animate(description, {
-          translateY: [20, 0],
-          opacity: [0, 1],
-          duration: 600,
-          easing: 'cubicBezier(0.16, 1, 0.3, 1)',
-          delay: 200,
-        })
-      }
+      const elements = header.querySelectorAll('[data-animate]')
+      animate(elements, {
+        translateY: [20, 0],
+        opacity: [0, 1],
+        duration: 600,
+        easing: 'cubicBezier(0.16, 1, 0.3, 1)',
+        delay: stagger(100),
+      })
     }
   }, [loading])
 
@@ -304,34 +523,22 @@ export default function Competences() {
         <PageBackground variant="data" />
         <main className="pt-32 pb-24">
           <div className="container-wide">
-            {/* Header Skeleton */}
             <div className="layout-offset mb-16">
               <div className="h-4 w-40 bg-[--bg-elevated] rounded animate-pulse mb-4" />
               <div className="h-12 w-56 bg-[--bg-elevated] rounded animate-pulse mb-6" />
               <div className="h-6 w-80 bg-[--bg-elevated] rounded animate-pulse" />
             </div>
 
-            {/* Stats Skeleton */}
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-6 mb-16">
-              {[1, 2, 3, 4].map((i) => (
-                <div key={i} className="bg-[--bg-surface] p-6 rounded-lg">
-                  <div className="h-8 w-16 bg-[--bg-elevated] rounded animate-pulse mb-2" />
-                  <div className="h-4 w-24 bg-[--bg-elevated] rounded animate-pulse" />
-                </div>
-              ))}
-            </div>
-
-            {/* Skills Grid Skeleton */}
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-px bg-[--border]">
               {[1, 2, 3, 4, 5, 6].map((i) => (
-                <div key={i} className="bg-[--bg-surface] p-6 rounded-lg">
+                <div key={i} className="bg-[--bg-surface] p-8">
                   <div className="flex items-center gap-3 mb-6">
-                    <div className="h-8 w-8 bg-[--bg-elevated] rounded animate-pulse" />
-                    <div className="h-6 w-32 bg-[--bg-elevated] rounded animate-pulse" />
+                    <div className="h-6 w-6 bg-[--bg-elevated] rounded animate-pulse" />
+                    <div className="h-5 w-32 bg-[--bg-elevated] rounded animate-pulse" />
                   </div>
-                  <div className="space-y-3">
+                  <div className="flex flex-wrap gap-2">
                     {[1, 2, 3, 4].map((j) => (
-                      <div key={j} className="h-7 bg-[--bg-elevated] rounded animate-pulse" style={{ width: `${70 + Math.random() * 30}%` }} />
+                      <div key={j} className="h-7 w-20 bg-[--bg-elevated] rounded animate-pulse" />
                     ))}
                   </div>
                 </div>
@@ -375,12 +582,33 @@ export default function Competences() {
 
           {/* Header */}
           <div ref={headerRef} className="layout-offset mb-20">
-            <p className="page-caption text-caption mb-4" style={{ opacity: 0 }}>Stack Technique</p>
-            <h1 className="page-title text-display mb-6" style={{ opacity: 0 }}>Competences</h1>
-            <p className="page-description text-body max-w-xl" style={{ opacity: 0 }}>
-              {totalSkills} technologies detectees dans {totalRepos} projets GitHub.
+            <p data-animate className="page-caption text-caption mb-4" style={{ opacity: 0 }}>Stack Technique</p>
+            <h1 data-animate className="page-title text-display mb-6" style={{ opacity: 0 }}>Competences</h1>
+            <p data-animate className="page-description text-body max-w-xl mb-8" style={{ opacity: 0 }}>
+              {totalSkills}+ technologies maitrisees dans {totalRepos}+ projets GitHub.
               Donnees en temps reel extraites de mes repositories.
             </p>
+
+            {/* Stats row */}
+            <div data-animate className="flex flex-wrap items-center gap-6" style={{ opacity: 0 }}>
+              <div className="flex items-center gap-2 text-sm text-[--text-secondary]">
+                <Github size={16} className="text-accent" />
+                <span className="font-mono font-semibold">{totalRepos}+</span>
+                <span>projets</span>
+              </div>
+              {totalCommits > 0 && (
+                <div className="flex items-center gap-2 text-sm text-[--text-secondary]">
+                  <GitCommit size={16} className="text-accent" />
+                  <span className="font-mono font-semibold">{totalCommits}+</span>
+                  <span>commits</span>
+                </div>
+              )}
+              <div className="flex items-center gap-2 text-sm text-[--text-secondary]">
+                <Code2 size={16} className="text-accent" />
+                <span className="font-mono font-semibold">{totalSkills}+</span>
+                <span>technologies</span>
+              </div>
+            </div>
           </div>
 
           {/* Skills Grid */}
@@ -388,14 +616,14 @@ export default function Competences() {
             {categories.map((category) => (
               <div
                 key={category.key}
-                className="skill-category bg-[--bg-primary] p-8 group"
+                className="skill-category bg-[--bg-primary] p-8"
                 style={{ opacity: 0 }}
               >
                 <div className="flex items-center gap-3 mb-6">
                   <span className="text-accent">{category.icon}</span>
                   <h2 className="text-lg font-medium">{category.title}</h2>
-                  <span className="text-xs text-[--text-muted] ml-auto">
-                    {category.skills.length} tech{category.skills.length > 1 ? 's' : ''}
+                  <span className="text-xs text-[--text-muted] ml-auto font-mono">
+                    {category.skills.length}
                   </span>
                 </div>
 
@@ -410,7 +638,7 @@ export default function Competences() {
                           className="h-7 hover:scale-105 transition-transform cursor-default"
                           loading="lazy"
                         />
-                        <span className="absolute -top-6 left-1/2 -translate-x-1/2 bg-[--bg-elevated] text-xs px-2 py-1 rounded opacity-0 group-hover/skill:opacity-100 transition-opacity whitespace-nowrap">
+                        <span className="absolute -top-6 left-1/2 -translate-x-1/2 bg-[--bg-elevated] text-xs px-2 py-1 rounded opacity-0 group-hover/skill:opacity-100 transition-opacity whitespace-nowrap z-10 pointer-events-none">
                           {skill.count} projet{skill.count > 1 ? 's' : ''}
                         </span>
                       </div>
@@ -427,6 +655,54 @@ export default function Competences() {
                 </div>
               </div>
             ))}
+          </section>
+
+          {/* Expertise section */}
+          <section className="mt-16 pt-16 border-t border-[--border]">
+            <h2 className="text-title mb-8">Domaines d'expertise</h2>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              {expertise.map((exp, i) => (
+                <div key={exp.domain} className="bg-[--bg-surface] p-6 border border-[--border]">
+                  <div className="flex items-center justify-between mb-4">
+                    <h3 className="font-semibold">{exp.domain}</h3>
+                    <span className="text-accent font-mono text-sm">{exp.level}%</span>
+                  </div>
+                  <div className="h-1 bg-[--bg-elevated] rounded-full mb-4">
+                    <div
+                      className="h-full bg-accent rounded-full transition-all duration-1000"
+                      style={{ width: `${exp.level}%` }}
+                    />
+                  </div>
+                  <p className="text-sm text-[--text-secondary] mb-3">{exp.description}</p>
+                  <div className="flex flex-wrap gap-1">
+                    {exp.projects.map((proj) => (
+                      <span key={proj} className="text-xs text-[--text-muted]">{proj}</span>
+                    ))}
+                  </div>
+                </div>
+              ))}
+            </div>
+          </section>
+
+          {/* Certifications */}
+          <section className="mt-16 pt-16 border-t border-[--border]">
+            <div className="flex items-center justify-between mb-8">
+              <h2 className="text-title">Certifications</h2>
+              <span className="text-accent font-mono">{certifications.length}</span>
+            </div>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+              {certifications.slice(0, 6).map((cert) => (
+                <div key={cert.name} className="flex items-start gap-3 p-4 bg-[--bg-surface] border border-[--border]">
+                  <div className="w-8 h-8 rounded-full bg-accent/10 flex items-center justify-center flex-shrink-0">
+                    <span className="text-accent text-xs font-mono">{cert.year.slice(-2)}</span>
+                  </div>
+                  <div>
+                    <p className="font-medium text-sm line-clamp-1">{cert.name}</p>
+                    <p className="text-xs text-[--text-muted]">{cert.issuer}</p>
+                  </div>
+                </div>
+              ))}
+            </div>
           </section>
 
           {/* GitHub link */}

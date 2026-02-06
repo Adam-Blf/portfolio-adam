@@ -122,6 +122,7 @@ export default function Contact() {
 
             {/* Contact Info */}
             <div className="contact-info" style={{ opacity: 0 }}>
+              <h2 className="sr-only">Informations de contact</h2>
               <div className="space-y-8 mb-12">
                 <a
                   href={`mailto:${personalInfo.email}`}
@@ -151,35 +152,38 @@ export default function Contact() {
 
               {/* Social Links */}
               <div>
-                <p className="text-caption mb-4">Réseaux</p>
+                <p className="text-caption mb-4">Reseaux</p>
                 <div className="flex gap-6">
                   <a
                     href={personalInfo.linkedin}
                     target="_blank"
                     rel="noopener noreferrer"
                     className="flex items-center gap-2 text-[--text-secondary] hover:text-accent transition-colors"
+                    aria-label="Profil LinkedIn (nouvelle fenetre)"
                   >
                     <span>LinkedIn</span>
-                    <ArrowUpRight size={14} />
+                    <ArrowUpRight size={14} aria-hidden="true" />
                   </a>
                   <a
                     href={personalInfo.github}
                     target="_blank"
                     rel="noopener noreferrer"
                     className="flex items-center gap-2 text-[--text-secondary] hover:text-accent transition-colors"
+                    aria-label="Profil GitHub (nouvelle fenetre)"
                   >
                     <span>GitHub</span>
-                    <ArrowUpRight size={14} />
+                    <ArrowUpRight size={14} aria-hidden="true" />
                   </a>
                 </div>
               </div>
             </div>
 
             {/* Contact Form */}
-            <div className="contact-form" style={{ opacity: 0 }}>
+            <div className="contact-form" style={{ opacity: 0 }} aria-live="polite">
+              <h2 className="sr-only">Formulaire de contact</h2>
               {isSubmitted ? (
-                <div className="border border-[--border] p-8 text-center">
-                  <p className="text-title mb-2">Message prêt à envoyer</p>
+                <div className="border border-[--border] p-8 text-center" role="status" aria-live="assertive">
+                  <p className="text-title mb-2">Message pret a envoyer</p>
                   <p className="text-[--text-secondary] mb-6">
                     Votre client email va s'ouvrir pour finaliser l'envoi.
                   </p>

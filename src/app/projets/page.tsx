@@ -1,30 +1,14 @@
 'use client'
 
-import { useState, useEffect, useRef } from 'react'
+import { useState, useEffect, useRef, useMemo } from 'react'
 import dynamic from 'next/dynamic'
 import { animate, stagger } from 'animejs'
-import { ArrowUpRight, Github, Star, GitFork, Loader2 } from 'lucide-react'
+import { ArrowUpRight, Github, Star, GitFork, GitCommit } from 'lucide-react'
 
 const PageBackground = dynamic(() => import('@/components/three/PageBackground'), {
   ssr: false,
   loading: () => null,
 })
-
-interface GitHubRepo {
-  id: number
-  name: string
-  description: string | null
-  html_url: string
-  language: string | null
-  stargazers_count: number
-  forks_count: number
-  topics: string[]
-  created_at: string
-  updated_at: string
-  pushed_at: string
-  fork: boolean
-  archived: boolean
-}
 
 interface ProcessedProject {
   name: string
@@ -34,13 +18,12 @@ interface ProcessedProject {
   url: string
   stars: number
   forks: number
+  commits: number
+  category: string
 }
 
-// Repos to exclude
-const excludedRepos = ['Adam-Blf', 'portfolio', 'Logo', 'Keep-Alive', 'portfolio-adam']
-
 export default function Projets() {
-  const [projects, setProjects] = useState<Record<string, ProcessedProject[]>>({})
+  const [projects, setProjects] = useState<ProcessedProject[]>([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
   const [activeCategory, setActiveCategory] = useState<string | null>(null)
@@ -48,46 +31,99 @@ export default function Projets() {
   const headerRef = useRef<HTMLDivElement>(null)
   const projectsRef = useRef<HTMLDivElement>(null)
 
-  // Fetch repos from GitHub API
+  // Fetch repos from API route
   useEffect(() => {
+    const CACHE_KEY = 'github-projects'
+    const CACHE_DURATION = 1000 * 60 * 30 // 30 minutes
+
     async function fetchRepos() {
+      // Check localStorage cache first
+      try {
+        const cached = localStorage.getItem(CACHE_KEY)
+        if (cached) {
+          const { projects, timestamp } = JSON.parse(cached)
+          if (Date.now() - timestamp < CACHE_DURATION) {
+            setProjects(projects)
+            setLoading(false)
+            return
+          }
+        }
+      } catch (e) {
+        // Cache read failed, continue
+      }
+
+      try {
+        // Try API route first
+        const response = await fetch('/api/github', {
+          next: { revalidate: 1800 }
+        })
+
+        if (response.ok) {
+          const data = await response.json()
+          setProjects(data.projects)
+
+          // Cache to localStorage
+          try {
+            localStorage.setItem(CACHE_KEY, JSON.stringify({
+              projects: data.projects,
+              timestamp: Date.now()
+            }))
+          } catch (e) {
+            // Cache write failed
+          }
+
+          setLoading(false)
+          return
+        }
+      } catch (e) {
+        console.warn('API route failed, falling back to direct GitHub API')
+      }
+
+      // Fallback to direct GitHub API
       try {
         const response = await fetch('https://api.github.com/users/Adam-Blf/repos?per_page=100&sort=updated', {
-          headers: {
-            'Accept': 'application/vnd.github.v3+json',
-          },
-          next: { revalidate: 3600 }
+          headers: { 'Accept': 'application/vnd.github.v3+json' },
         })
 
         if (!response.ok) {
           throw new Error('Erreur lors de la récupération des repos')
         }
 
-        const repos: GitHubRepo[] = await response.json()
+        const repos = await response.json()
+        const excludedRepos = ['Adam-Blf', 'portfolio', 'Logo', 'Keep-Alive', 'portfolio-adam']
 
-        // Filter and process repos
-        const filteredRepos = repos.filter(repo =>
+        const filteredRepos = repos.filter((repo: any) =>
           !excludedRepos.includes(repo.name) &&
           !repo.fork &&
           !repo.archived
         )
 
-        // Categorize repos
-        const categories: Record<string, ProcessedProject[]> = {
-          'IA / Machine Learning': [],
-          'Fullstack / Web': [],
-          'Autres': [],
-        }
-
-        for (const repo of filteredRepos) {
+        const processedProjects: ProcessedProject[] = filteredRepos.map((repo: any) => {
           const lowerName = repo.name.toLowerCase()
           const lowerDesc = (repo.description || '').toLowerCase()
+
+          let category = 'Autres'
+          if (
+            lowerName.includes('ia') || lowerName.includes('ai') ||
+            lowerName.includes('ml') || lowerName.includes('nlp') ||
+            lowerName.includes('llm') || lowerName.includes('langue-des-signes') ||
+            lowerDesc.includes('machine learning') || lowerDesc.includes('deep learning') ||
+            lowerDesc.includes('nlp') || lowerDesc.includes('sbert') || lowerDesc.includes('semantic')
+          ) {
+            category = 'IA / Machine Learning'
+          } else if (
+            repo.language === 'TypeScript' || repo.language === 'JavaScript' ||
+            repo.language === 'HTML' || repo.language === 'CSS' ||
+            lowerDesc.includes('pwa') || lowerDesc.includes('web') || lowerDesc.includes('app')
+          ) {
+            category = 'Fullstack / Web'
+          }
 
           const tags: string[] = []
           if (repo.language) tags.push(repo.language)
           if (repo.topics) tags.push(...repo.topics.slice(0, 4))
 
-          const project: ProcessedProject = {
+          return {
             name: repo.name,
             desc: repo.description || `Projet ${repo.language || 'personnel'}`,
             lang: repo.language || 'Multi',
@@ -95,49 +131,12 @@ export default function Projets() {
             url: repo.html_url,
             stars: repo.stargazers_count,
             forks: repo.forks_count,
+            commits: 0, // Not available without API route
+            category,
           }
+        })
 
-          // Categorize based on name/description keywords
-          if (
-            lowerName.includes('ia') ||
-            lowerName.includes('ai') ||
-            lowerName.includes('ml') ||
-            lowerName.includes('nlp') ||
-            lowerName.includes('llm') ||
-            lowerName.includes('langue-des-signes') ||
-            lowerDesc.includes('machine learning') ||
-            lowerDesc.includes('deep learning') ||
-            lowerDesc.includes('neural') ||
-            lowerDesc.includes('nlp') ||
-            lowerDesc.includes('sbert') ||
-            lowerDesc.includes('semantic') ||
-            lowerDesc.includes('recommendation') ||
-            lowerDesc.includes('ai')
-          ) {
-            categories['IA / Machine Learning'].push(project)
-          } else if (
-            repo.language === 'TypeScript' ||
-            repo.language === 'JavaScript' ||
-            repo.language === 'HTML' ||
-            repo.language === 'CSS' ||
-            lowerDesc.includes('pwa') ||
-            lowerDesc.includes('web') ||
-            lowerDesc.includes('app') ||
-            lowerDesc.includes('frontend') ||
-            lowerDesc.includes('backend')
-          ) {
-            categories['Fullstack / Web'].push(project)
-          } else {
-            categories['Autres'].push(project)
-          }
-        }
-
-        // Remove empty categories
-        const nonEmptyCategories = Object.fromEntries(
-          Object.entries(categories).filter(([_, projects]) => projects.length > 0)
-        )
-
-        setProjects(nonEmptyCategories)
+        setProjects(processedProjects)
         setLoading(false)
       } catch (err) {
         console.error('GitHub API error:', err)
@@ -149,27 +148,50 @@ export default function Projets() {
     fetchRepos()
   }, [])
 
-  const categories = Object.keys(projects)
+  // Group projects by category
+  const projectsByCategory = useMemo(() => {
+    const grouped: Record<string, ProcessedProject[]> = {}
+    projects.forEach((project) => {
+      if (!grouped[project.category]) {
+        grouped[project.category] = []
+      }
+      grouped[project.category].push(project)
+    })
+    // Sort categories
+    const orderedCategories = ['IA / Machine Learning', 'Fullstack / Web', 'Autres']
+    const ordered: Record<string, ProcessedProject[]> = {}
+    orderedCategories.forEach((cat) => {
+      if (grouped[cat]?.length > 0) {
+        ordered[cat] = grouped[cat]
+      }
+    })
+    return ordered
+  }, [projects])
+
+  const categories = Object.keys(projectsByCategory)
 
   const filteredProjects = activeCategory
-    ? { [activeCategory]: projects[activeCategory] }
-    : projects
+    ? { [activeCategory]: projectsByCategory[activeCategory] }
+    : projectsByCategory
 
-  const searchFilteredProjects = Object.entries(filteredProjects).reduce((acc, [category, categoryProjects]) => {
-    if (!categoryProjects) return acc
-    const filtered = categoryProjects.filter(p =>
-      p.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      p.desc.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      p.tags.some(t => t.toLowerCase().includes(searchTerm.toLowerCase()))
-    )
-    if (filtered.length > 0) {
-      acc[category] = filtered
-    }
-    return acc
-  }, {} as Record<string, ProcessedProject[]>)
+  const searchFilteredProjects = useMemo(() => {
+    return Object.entries(filteredProjects).reduce((acc, [category, categoryProjects]) => {
+      if (!categoryProjects) return acc
+      const filtered = categoryProjects.filter(p =>
+        p.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        p.desc.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        p.tags.some(t => t.toLowerCase().includes(searchTerm.toLowerCase()))
+      )
+      if (filtered.length > 0) {
+        acc[category] = filtered
+      }
+      return acc
+    }, {} as Record<string, ProcessedProject[]>)
+  }, [filteredProjects, searchTerm])
 
-  const totalProjects = Object.values(projects).flat().length
+  const totalProjects = projects.length
   const displayedProjects = Object.values(searchFilteredProjects).flat().length
+  const totalCommits = projects.reduce((sum, p) => sum + p.commits, 0)
 
   // Header animation
   useEffect(() => {
@@ -179,7 +201,7 @@ export default function Projets() {
       const caption = header.querySelector('.page-caption')
       const title = header.querySelector('.page-title')
       const description = header.querySelector('.page-description')
-      const githubLink = header.querySelector('.github-link')
+      const stats = header.querySelector('.stats-row')
       const filterBtns = header.querySelectorAll('.filter-btn')
 
       if (caption) {
@@ -211,8 +233,8 @@ export default function Projets() {
         })
       }
 
-      if (githubLink) {
-        animate(githubLink, {
+      if (stats) {
+        animate(stats, {
           translateY: [10, 0],
           opacity: [0, 1],
           duration: 500,
@@ -333,17 +355,30 @@ export default function Projets() {
               le Fullstack, et bien plus. Données en temps réel depuis GitHub.
             </p>
 
-            <a
-              href="https://github.com/Adam-Blf"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="github-link inline-flex items-center gap-2 text-accent hover:underline"
-              style={{ opacity: 0 }}
-            >
-              <Github size={18} />
-              <span>Voir sur GitHub</span>
-              <ArrowUpRight size={14} />
-            </a>
+            {/* Stats row */}
+            <div className="stats-row flex flex-wrap items-center gap-6 mb-8" style={{ opacity: 0 }}>
+              <div className="flex items-center gap-2 text-sm text-[--text-secondary]">
+                <Github size={16} className="text-accent" />
+                <span className="font-mono">{totalProjects}</span>
+                <span>repos</span>
+              </div>
+              {totalCommits > 0 && (
+                <div className="flex items-center gap-2 text-sm text-[--text-secondary]">
+                  <GitCommit size={16} className="text-accent" />
+                  <span className="font-mono">{totalCommits}</span>
+                  <span>commits</span>
+                </div>
+              )}
+              <a
+                href="https://github.com/Adam-Blf"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-2 text-accent hover:underline text-sm"
+              >
+                <span>Voir sur GitHub</span>
+                <ArrowUpRight size={14} />
+              </a>
+            </div>
           </div>
 
           {/* Search & Filters */}
@@ -354,14 +389,15 @@ export default function Projets() {
                 placeholder="Rechercher un projet..."
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
-                className="w-full px-4 py-3 bg-transparent border border-[--border] text-[--text-primary] placeholder:text-[--text-muted] focus:outline-none focus:border-accent transition-colors font-mono text-sm"
+                className="w-full px-4 py-3 bg-transparent border border-[--border] text-[--text-primary] placeholder:text-[--text-muted] focus:outline-none focus:border-accent transition-colors font-mono text-sm rounded-sm"
+                aria-label="Rechercher un projet"
               />
             </div>
 
             <div className="flex flex-wrap gap-2">
               <button
                 onClick={() => setActiveCategory(null)}
-                className={`filter-btn tag transition-colors ${
+                className={`filter-btn tag transition-colors cursor-pointer ${
                   activeCategory === null ? 'tag-accent' : 'hover:border-accent'
                 }`}
                 style={{ opacity: 0 }}
@@ -369,12 +405,12 @@ export default function Projets() {
                 Tous ({totalProjects})
               </button>
               {categories.map((cat) => {
-                const count = projects[cat]?.length || 0
+                const count = projectsByCategory[cat]?.length || 0
                 return (
                   <button
                     key={cat}
                     onClick={() => setActiveCategory(cat)}
-                    className={`filter-btn tag transition-colors ${
+                    className={`filter-btn tag transition-colors cursor-pointer ${
                       activeCategory === cat ? 'tag-accent' : 'hover:border-accent'
                     }`}
                     style={{ opacity: 0 }}
@@ -412,20 +448,26 @@ export default function Projets() {
                       href={project.url}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="project-card group bg-[--bg-surface] p-6 hover:bg-[--bg-elevated] transition-colors"
+                      className="project-card group bg-[--bg-surface] p-6 hover:bg-[--bg-elevated] transition-colors cursor-pointer"
                       style={{ opacity: 0 }}
                     >
                       <div className="flex items-start justify-between mb-4">
                         <span className="tag font-mono text-xs">{project.lang}</span>
                         <div className="flex items-center gap-3 text-[--text-muted]">
+                          {project.commits > 0 && (
+                            <span className="flex items-center gap-1 text-xs" title="Commits">
+                              <GitCommit size={12} />
+                              {project.commits}
+                            </span>
+                          )}
                           {project.stars > 0 && (
-                            <span className="flex items-center gap-1 text-xs">
+                            <span className="flex items-center gap-1 text-xs" title="Stars">
                               <Star size={12} />
                               {project.stars}
                             </span>
                           )}
                           {project.forks > 0 && (
-                            <span className="flex items-center gap-1 text-xs">
+                            <span className="flex items-center gap-1 text-xs" title="Forks">
                               <GitFork size={12} />
                               {project.forks}
                             </span>
