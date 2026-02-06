@@ -54,7 +54,12 @@ export function ThemeProvider({
   // Initialize theme from storage or system
   useEffect(() => {
     setMounted(true)
-    const stored = localStorage.getItem(storageKey) as Theme | null
+    let stored: Theme | null = null
+    try {
+      stored = localStorage.getItem(storageKey) as Theme | null
+    } catch (e) {
+      // localStorage may be unavailable in some privacy modes
+    }
     const initialTheme = stored || defaultTheme
     setThemeState(initialTheme)
     setResolvedTheme(resolveTheme(initialTheme))

@@ -109,7 +109,7 @@ export function useCounterAnimation(endValue: number, duration = 2000) {
             animate(obj, {
               value: endValue,
               duration,
-              easing: 'easeOutExpo',
+              easing: 'outExpo',
               onUpdate: () => {
                 element.textContent = Math.round(obj.value).toString()
               },

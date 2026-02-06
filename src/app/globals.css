@@ -5,8 +5,7 @@
 /* === DATA FLOW TERMINAL - Design System === */
 /* Technical dashboard aesthetic for Data Engineer portfolio */
 
-/* Google Fonts - Technical + Human balance */
-@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&family=Fira+Code:wght@400;500;600;700&display=swap');
+/* Google Fonts loaded via <link> in layout.tsx for better reliability */
 
 /* === DARK MODE (Terminal default) === */
 :root,

@@ -70,6 +70,7 @@ const nextConfig = {
               "font-src 'self' https://fonts.gstatic.com",
               "img-src 'self' data: blob: https://img.shields.io https://github-readme-stats.vercel.app https://github-readme-streak-stats.herokuapp.com",
               "connect-src 'self' https://api.github.com https://fonts.googleapis.com https://fonts.gstatic.com",
+              "worker-src 'self' blob:",
               "frame-src 'none'",
               "object-src 'none'",
               "base-uri 'self'",
@@ -82,14 +83,8 @@ const nextConfig = {
             key: 'Cross-Origin-Opener-Policy',
             value: 'same-origin',
           },
-          {
-            key: 'Cross-Origin-Resource-Policy',
-            value: 'same-origin',
-          },
-          {
-            key: 'Cross-Origin-Embedder-Policy',
-            value: 'credentialless',
-          },
+
+
         ],
       },
       // Cache static assets securely

@@ -64,6 +64,10 @@ export default function RootLayout({
         {/* Preconnect to Google Fonts for faster loading */}
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
+        <link
+          href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&family=Fira+Code:wght@400;500;600;700&display=swap"
+          rel="stylesheet"
+        />
         {/* 
           Inline theme detection script - prevents flash of wrong theme (FOUC).
           This is a static, self-contained script with no user input, so dangerouslySetInnerHTML
