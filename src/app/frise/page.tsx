@@ -21,6 +21,7 @@ import {
   Calendar,
   Sparkles
 } from 'lucide-react'
+import ErrorBoundary from '@/components/ErrorBoundary'
 
 const PageBackground = dynamic(() => import('@/components/three/PageBackground'), {
   ssr: false,
@@ -352,7 +353,9 @@ export default function FrisePage() {
 
   return (
     <>
-      <PageBackground variant="grid" />
+      <ErrorBoundary>
+        <PageBackground variant="grid" />
+      </ErrorBoundary>
 
       {/* Fixed Year Navigator */}
       <nav

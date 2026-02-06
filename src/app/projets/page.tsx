@@ -4,6 +4,7 @@ import { useState, useEffect, useRef, useMemo } from 'react'
 import dynamic from 'next/dynamic'
 import { animate, stagger } from 'animejs'
 import { ArrowUpRight, Github, Star, GitFork, GitCommit } from 'lucide-react'
+import ErrorBoundary from '@/components/ErrorBoundary'
 
 const PageBackground = dynamic(() => import('@/components/three/PageBackground'), {
   ssr: false,
@@ -278,7 +279,7 @@ export default function Projets() {
   if (loading) {
     return (
       <>
-        <PageBackground variant="grid" />
+        <ErrorBoundary><PageBackground variant="grid" /></ErrorBoundary>
         <main className="pt-32 pb-24">
           <div className="container-wide">
             {/* Header Skeleton */}
@@ -321,7 +322,7 @@ export default function Projets() {
   if (error) {
     return (
       <>
-        <PageBackground variant="grid" />
+        <ErrorBoundary><PageBackground variant="grid" /></ErrorBoundary>
         <main className="pt-32 pb-24 min-h-screen flex items-center justify-center">
           <div className="text-center">
             <p className="text-red-500 mb-4">{error}</p>
@@ -342,7 +343,7 @@ export default function Projets() {
 
   return (
     <>
-      <PageBackground variant="grid" />
+      <ErrorBoundary><PageBackground variant="grid" /></ErrorBoundary>
       <main className="pt-32 pb-24">
         <div className="container-wide">
 

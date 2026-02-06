@@ -7,6 +7,7 @@ import Link from 'next/link'
 import Image from 'next/image'
 import { ArrowDown, ArrowUpRight, Github, Linkedin, Mail, Terminal, MapPin, Building2 } from 'lucide-react'
 import { personalInfo } from '@/lib/data'
+import ErrorBoundary from '@/components/ErrorBoundary'
 
 interface GitHubStats {
   projectCount: number
@@ -209,6 +210,7 @@ export default function Hero() {
     const container = containerRef.current
     if (!container) return
 
+    try {
     const easing = 'cubicBezier(0.22, 1, 0.36, 1)'
 
     // Terminal header
@@ -306,6 +308,14 @@ export default function Hero() {
       })
     }
 
+    } catch (e) {
+      console.error('Animation error:', e)
+      // Show content even if animations fail
+      container.querySelectorAll('[style*="opacity: 0"]').forEach((el) => {
+        ;(el as HTMLElement).style.opacity = '1'
+      })
+    }
+
     // Scroll indicator WAAPI
     if (scrollRef.current) {
       scrollRef.current.animate([
@@ -333,7 +343,9 @@ export default function Hero() {
           transition: 'transform 0.2s ease-out',
         }}
       >
-        <HeroBackground />
+        <ErrorBoundary>
+          <HeroBackground />
+        </ErrorBoundary>
       </div>
 
       {/* Gradient overlays */}

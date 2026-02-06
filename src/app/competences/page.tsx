@@ -5,6 +5,7 @@ import dynamic from 'next/dynamic'
 import { animate, stagger } from 'animejs'
 import { Github, Code2, Database, Cloud, Brain, Blocks, Server, Palette, GitCommit } from 'lucide-react'
 import { skills as staticSkills, certifications } from '@/lib/data'
+import ErrorBoundary from '@/components/ErrorBoundary'
 
 const PageBackground = dynamic(() => import('@/components/three/PageBackground'), {
   ssr: false,
@@ -520,7 +521,7 @@ export default function Competences() {
   if (loading) {
     return (
       <>
-        <PageBackground variant="data" />
+        <ErrorBoundary><PageBackground variant="data" /></ErrorBoundary>
         <main className="pt-32 pb-24">
           <div className="container-wide">
             <div className="layout-offset mb-16">
@@ -553,7 +554,7 @@ export default function Competences() {
   if (error) {
     return (
       <>
-        <PageBackground variant="data" />
+        <ErrorBoundary><PageBackground variant="data" /></ErrorBoundary>
         <main className="pt-32 pb-24 min-h-screen flex items-center justify-center">
           <div className="text-center">
             <p className="text-red-500 mb-4">{error}</p>
@@ -576,7 +577,7 @@ export default function Competences() {
 
   return (
     <>
-      <PageBackground variant="data" />
+      <ErrorBoundary><PageBackground variant="data" /></ErrorBoundary>
       <main className="pt-32 pb-24">
         <div className="container-wide">
 

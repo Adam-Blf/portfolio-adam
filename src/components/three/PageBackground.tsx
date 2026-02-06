@@ -372,13 +372,26 @@ function Scene({ variant, accentColor, isDark }: { variant: string; accentColor:
 
 export default function PageBackground({ variant = 'default', accentColor = '#e07a5f' }: PageBackgroundProps) {
   const isDark = useResolvedTheme()
+  const [hasWebGL, setHasWebGL] = useState(true)
+
+  useEffect(() => {
+    try {
+      const canvas = document.createElement('canvas')
+      const gl = canvas.getContext('webgl2') || canvas.getContext('webgl')
+      if (!gl) setHasWebGL(false)
+    } catch {
+      setHasWebGL(false)
+    }
+  }, [])
+
+  if (!hasWebGL) return null
 
   return (
     <div className="fixed inset-0 -z-10 pointer-events-none transition-opacity duration-500">
       <Canvas
         camera={{ position: [0, 0, 6], fov: 50 }}
         dpr={[1, 1.5]}
-        gl={{ antialias: true, alpha: true }}
+        gl={{ antialias: true, alpha: true, failIfMajorPerformanceCaveat: true }}
         style={{ opacity: isDark ? 1 : 0.7 }}
       >
         <Suspense fallback={null}>

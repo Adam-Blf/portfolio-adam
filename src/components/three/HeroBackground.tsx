@@ -321,13 +321,30 @@ function Scene({ isDark }: { isDark: boolean }) {
 
 export default function HeroBackground() {
   const isDark = useResolvedTheme()
+  const [hasWebGL, setHasWebGL] = useState(true)
+
+  useEffect(() => {
+    try {
+      const canvas = document.createElement('canvas')
+      const gl = canvas.getContext('webgl2') || canvas.getContext('webgl')
+      if (!gl) setHasWebGL(false)
+    } catch {
+      setHasWebGL(false)
+    }
+  }, [])
+
+  if (!hasWebGL) return null
 
   return (
     <div className="fixed inset-0 -z-10 pointer-events-none">
       <Canvas
         camera={{ position: [0, 0, 10], fov: 45 }}
         dpr={[1, 1.5]}
-        gl={{ antialias: true, alpha: true }}
+        gl={{ antialias: true, alpha: true, failIfMajorPerformanceCaveat: true }}
+        onCreated={(state) => {
+          // Ensure the renderer is ready
+          state.gl.setClearColor(0x000000, 0)
+        }}
       >
         <Scene isDark={isDark} />
       </Canvas>

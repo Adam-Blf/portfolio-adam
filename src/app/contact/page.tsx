@@ -5,6 +5,7 @@ import dynamic from 'next/dynamic'
 import { animate } from 'animejs'
 import { ArrowUpRight } from 'lucide-react'
 import { personalInfo } from '@/lib/data'
+import ErrorBoundary from '@/components/ErrorBoundary'
 
 const PageBackground = dynamic(() => import('@/components/three/PageBackground'), {
   ssr: false,
@@ -165,7 +166,7 @@ export default function Contact() {
 
   return (
     <>
-      <PageBackground variant="minimal" />
+      <ErrorBoundary><PageBackground variant="minimal" /></ErrorBoundary>
       <main className="pt-32 pb-24">
         <div className="container-wide">
           <div className="max-w-4xl mx-auto">
