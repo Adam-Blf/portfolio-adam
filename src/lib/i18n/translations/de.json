@@ -11,15 +11,23 @@
     "tagline": "Ich verwandle {data} in Entscheidungen und {code} in Wirkung.",
     "education": "M1 Data Engineering & KI @ EFREI Paris",
     "status": "VERFÜGBAR",
+    "openTo": "Offen für Chancen",
+    "role": "Data Engineer & Fullstack Developer",
+    "description": "Komplexe Datenströme in intelligente Systeme verwandeln. Brücken zwischen Data Science und produktionsreifen Anwendungen bauen.",
     "metrics": {
       "projects": "GitHub-Projekte",
       "commits": "Commits",
       "experience": "Jahre Erfahrung",
       "technologies": "Technologien"
     },
+    "exploreProjects": "Projekte entdecken",
+    "getInTouch": "Kontakt aufnehmen",
+    "projects": "Projekte",
+    "yearsXp": "Jahre Erfahrung",
+    "technologies": "Technologien",
+    "scroll": "SCROLLEN",
     "cta": "Projekte ansehen",
-    "ctaSecondary": "Kontaktieren",
-    "scroll": "SCROLLEN"
+    "ctaSecondary": "Kontaktieren"
   },
   "home": {
     "title": "Data Engineer & Fullstack Developer",
@@ -58,13 +66,31 @@
   "timeline": {
     "caption": "Mein Werdegang",
     "title": "Erfahrung & Ausbildung",
-    "description": "Mein beruflicher und akademischer Hintergrund.",
+    "description": "Von der Marine über Krankenhäuser bis zur Leitung der EFREI-Studentenvertretung — jeder Schritt hat meine einzigartige Vision des Data Engineering geprägt.",
     "filters": {
       "all": "Alle",
       "experience": "Erfahrung",
       "education": "Ausbildung",
-      "certification": "Zertifizierungen",
-      "association": "Vereine"
+      "certification": "Zertifikate",
+      "volunteering": "Engagement"
+    },
+    "current": "Aktuell",
+    "expand": "Mehr lesen",
+    "collapse": "Weniger",
+    "startOfJourney": "Beginn der Reise",
+    "years": "Jahre",
+    "stats": {
+      "years": "Jahre",
+      "experiences": "Erfahrungen",
+      "formations": "Ausbildungen",
+      "engagements": "Engagements"
+    },
+    "cta": {
+      "caption": "Was kommt als nächstes?",
+      "title": "Schreiben wir das nächste Kapitel",
+      "description": "Mein Werdegang hat mich gelehrt, mich anzupassen, zu innovieren und zu liefern.",
+      "contact": "Kontaktieren",
+      "projects": "Projekte ansehen"
     }
   },
   "contact": {

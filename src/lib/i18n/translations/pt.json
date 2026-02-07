@@ -11,15 +11,23 @@
     "tagline": "Transformo {data} em decisões e {code} em impacto.",
     "education": "M1 Data Engineering & IA @ EFREI Paris",
     "status": "DISPONÍVEL",
+    "openTo": "Aberto a oportunidades",
+    "role": "Data Engineer & Fullstack Developer",
+    "description": "Transformar fluxos de dados complexos em sistemas inteligentes. Construir pontes entre data science e aplicações prontas para produção.",
     "metrics": {
       "projects": "Projetos GitHub",
       "commits": "Commits",
       "experience": "Anos de experiência",
       "technologies": "Tecnologias"
     },
+    "exploreProjects": "Explorar projetos",
+    "getInTouch": "Contactar",
+    "projects": "Projetos",
+    "yearsXp": "Anos XP",
+    "technologies": "Tecnologias",
+    "scroll": "ROLAR",
     "cta": "Ver projetos",
-    "ctaSecondary": "Contato",
-    "scroll": "ROLAR"
+    "ctaSecondary": "Contato"
   },
   "home": {
     "title": "Data Engineer & Fullstack Developer",
@@ -58,13 +66,31 @@
   "timeline": {
     "caption": "Meu Percurso",
     "title": "Experiência e Formação",
-    "description": "Minha trajetória profissional e acadêmica.",
+    "description": "Da Marinha Nacional aos hospitais, passando pela presidência do BDE EFREI — cada etapa moldou minha visão única de Data Engineering.",
     "filters": {
       "all": "Tudo",
       "experience": "Experiência",
       "education": "Formação",
       "certification": "Certificações",
-      "association": "Associações"
+      "volunteering": "Compromissos"
+    },
+    "current": "Atual",
+    "expand": "Ler mais",
+    "collapse": "Mostrar menos",
+    "startOfJourney": "Início da jornada",
+    "years": "Anos",
+    "stats": {
+      "years": "Anos",
+      "experiences": "Experiências",
+      "formations": "Formações",
+      "engagements": "Compromissos"
+    },
+    "cta": {
+      "caption": "O que vem a seguir?",
+      "title": "Vamos escrever o próximo capítulo",
+      "description": "Meu percurso me ensinou a me adaptar, inovar e entregar. Vamos discutir seus projetos ambiciosos.",
+      "contact": "Contato",
+      "projects": "Ver meus projetos"
     }
   },
   "contact": {

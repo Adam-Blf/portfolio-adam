@@ -5,9 +5,11 @@ import Link from 'next/link'
 import Image from 'next/image'
 import { ArrowRight, Briefcase } from 'lucide-react'
 import GradientBackground from '@/components/backgrounds/GradientBackground'
+import { useI18n } from '@/lib/i18n'
 
 export default function MinimalProHero() {
   const containerRef = useRef<HTMLElement>(null)
+  const { t } = useI18n()
 
   useEffect(() => {
     const container = containerRef.current
@@ -39,7 +41,7 @@ export default function MinimalProHero() {
             <div className="animate-in opacity-0 mb-8">
               <span className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-[--success]/10 border border-[--success]/20 text-[--success] text-sm font-medium">
                 <span className="w-2 h-2 rounded-full bg-[--success] animate-pulse" />
-                Open to opportunities
+                {t('hero.openTo')}
               </span>
             </div>
 
@@ -55,13 +57,12 @@ export default function MinimalProHero() {
 
             {/* Role */}
             <p className="animate-in opacity-0 text-xl md:text-2xl text-[--text-secondary] font-medium mb-6">
-              Data Engineer & Fullstack Developer
+              {t('hero.role')}
             </p>
 
             {/* Description */}
             <p className="animate-in opacity-0 text-[--text-muted] text-base md:text-lg leading-relaxed mb-8 max-w-lg">
-              Transforming complex data flows into intelligent systems.
-              Building bridges between data science and production-ready applications.
+              {t('hero.description')}
             </p>
 
             {/* CTAs */}
@@ -70,7 +71,7 @@ export default function MinimalProHero() {
                 href="/projets"
                 className="group inline-flex items-center gap-2 px-6 py-3 rounded-lg bg-gradient-to-r from-[--accent] to-[--highlight] text-white font-semibold text-sm hover:-translate-y-0.5 transition-all shadow-lg hover:shadow-xl"
               >
-                Explore Projects
+                {t('hero.exploreProjects')}
                 <ArrowRight size={16} className="group-hover:translate-x-1 transition-transform" />
               </Link>
               <Link
@@ -78,16 +79,16 @@ export default function MinimalProHero() {
                 className="inline-flex items-center gap-2 px-6 py-3 rounded-lg border border-[--border] text-[--text-primary] font-semibold text-sm hover:border-[--accent] hover:text-[--accent] transition-all"
               >
                 <Briefcase size={16} />
-                Get in Touch
+                {t('hero.getInTouch')}
               </Link>
             </div>
 
             {/* Stats Row */}
             <div className="animate-in opacity-0 flex gap-8 pt-8 border-t border-[--border]">
               {[
-                { value: '37+', label: 'Projects' },
-                { value: '3+', label: 'Years XP' },
-                { value: '25', label: 'Technologies' },
+                { value: '37+', label: t('hero.projects') },
+                { value: '3+', label: t('hero.yearsXp') },
+                { value: '25', label: t('hero.technologies') },
               ].map((stat) => (
                 <div key={stat.label}>
                   <p className="text-2xl md:text-3xl font-bold gradient-text font-mono">{stat.value}</p>
@@ -129,7 +130,7 @@ export default function MinimalProHero() {
       {/* Scroll indicator */}
       <div className="absolute bottom-8 left-1/2 -translate-x-1/2 z-20">
         <div className="flex flex-col items-center gap-2 animate-in opacity-0">
-          <span className="text-[10px] text-[--text-muted] tracking-widest uppercase">Scroll</span>
+          <span className="text-[10px] text-[--text-muted] tracking-widest uppercase">{t('hero.scroll')}</span>
           <div className="w-px h-8 bg-gradient-to-b from-[--accent] to-transparent" />
         </div>
       </div>

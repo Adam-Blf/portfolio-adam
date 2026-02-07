@@ -11,15 +11,23 @@
     "tagline": "Ik transformeer {data} in beslissingen en {code} in impact.",
     "education": "M1 Data Engineering & AI @ EFREI Parijs",
     "status": "BESCHIKBAAR",
+    "openTo": "Open voor kansen",
+    "role": "Data Engineer & Fullstack Developer",
+    "description": "Complexe datastromen omzetten in intelligente systemen. Bruggen bouwen tussen data science en productieklare applicaties.",
     "metrics": {
       "projects": "GitHub Projecten",
       "commits": "Commits",
       "experience": "Jaren ervaring",
       "technologies": "Technologieën"
     },
+    "exploreProjects": "Projecten verkennen",
+    "getInTouch": "Contact opnemen",
+    "projects": "Projecten",
+    "yearsXp": "Jaren XP",
+    "technologies": "Technologieën",
+    "scroll": "SCROLLEN",
     "cta": "Bekijk projecten",
-    "ctaSecondary": "Contact",
-    "scroll": "SCROLLEN"
+    "ctaSecondary": "Contact"
   },
   "home": {
     "title": "Data Engineer & Fullstack Developer",
@@ -56,15 +64,33 @@
     "featured": "Uitgelicht"
   },
   "timeline": {
-    "caption": "Mijn Loopbaan",
+    "caption": "Mijn Traject",
     "title": "Ervaring & Opleiding",
-    "description": "Mijn professionele en academische achtergrond.",
+    "description": "Van de Marine tot ziekenhuizen, via het voorzitterschap van de BDE EFREI — elke stap heeft mijn unieke visie op Data Engineering gevormd.",
     "filters": {
       "all": "Alles",
       "experience": "Ervaring",
       "education": "Opleiding",
-      "certification": "Certificeringen",
-      "association": "Verenigingen"
+      "certification": "Certificaten",
+      "volunteering": "Vrijwilligerswerk"
+    },
+    "current": "Huidig",
+    "expand": "Lees meer",
+    "collapse": "Toon minder",
+    "startOfJourney": "Begin van de reis",
+    "years": "Jaren",
+    "stats": {
+      "years": "Jaren",
+      "experiences": "Ervaringen",
+      "formations": "Opleidingen",
+      "engagements": "Engagementen"
+    },
+    "cta": {
+      "caption": "Wat nu?",
+      "title": "Laten we het volgende hoofdstuk schrijven",
+      "description": "Mijn traject leerde me me aan te passen, te innoveren en te leveren.",
+      "contact": "Contact",
+      "projects": "Bekijk mijn projecten"
     }
   },
   "contact": {

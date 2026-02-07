@@ -11,15 +11,23 @@
     "tagline": "Trasformo i {data} in decisioni e il {code} in impatto.",
     "education": "M1 Data Engineering & IA @ EFREI Parigi",
     "status": "DISPONIBILE",
+    "openTo": "Aperto a opportunità",
+    "role": "Data Engineer & Fullstack Developer",
+    "description": "Trasformare flussi di dati complessi in sistemi intelligenti. Costruire ponti tra data science e applicazioni pronte per la produzione.",
     "metrics": {
       "projects": "Progetti GitHub",
       "commits": "Commit",
       "experience": "Anni di esperienza",
       "technologies": "Tecnologie"
     },
+    "exploreProjects": "Esplora i progetti",
+    "getInTouch": "Contattami",
+    "projects": "Progetti",
+    "yearsXp": "Anni XP",
+    "technologies": "Tecnologie",
+    "scroll": "SCORRI",
     "cta": "Vedi progetti",
-    "ctaSecondary": "Contattami",
-    "scroll": "SCORRI"
+    "ctaSecondary": "Contattami"
   },
   "home": {
     "title": "Data Engineer & Fullstack Developer",
@@ -58,13 +66,31 @@
   "timeline": {
     "caption": "Il Mio Percorso",
     "title": "Esperienza e Formazione",
-    "description": "Il mio percorso professionale e accademico.",
+    "description": "Dalla Marina Militare agli ospedali, passando per la presidenza del BDE EFREI — ogni tappa ha forgiato la mia visione unica del Data Engineering.",
     "filters": {
       "all": "Tutto",
       "experience": "Esperienza",
       "education": "Formazione",
       "certification": "Certificazioni",
-      "association": "Associazioni"
+      "volunteering": "Impegni"
+    },
+    "current": "In corso",
+    "expand": "Leggi di più",
+    "collapse": "Mostra meno",
+    "startOfJourney": "Inizio del percorso",
+    "years": "Anni",
+    "stats": {
+      "years": "Anni",
+      "experiences": "Esperienze",
+      "formations": "Formazioni",
+      "engagements": "Impegni"
+    },
+    "cta": {
+      "caption": "E dopo?",
+      "title": "Scriviamo il prossimo capitolo",
+      "description": "Il mio percorso mi ha insegnato ad adattarmi, innovare e consegnare. Parliamo dei vostri progetti ambiziosi.",
+      "contact": "Contattami",
+      "projects": "Vedi i miei progetti"
     }
   },
   "contact": {

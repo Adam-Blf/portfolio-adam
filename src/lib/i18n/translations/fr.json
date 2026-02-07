@@ -11,15 +11,23 @@
     "tagline": "Je transforme la {data} en décisions et le {code} en impact.",
     "education": "M1 Data Engineering & IA @ EFREI Paris",
     "status": "DISPONIBLE",
+    "openTo": "Ouvert aux opportunités",
+    "role": "Data Engineer & Fullstack Developer",
+    "description": "Transformer des flux de données complexes en systèmes intelligents. Construire des ponts entre la data science et les applications prêtes pour la production.",
     "metrics": {
       "projects": "Projets GitHub",
       "commits": "Commits",
       "experience": "Ans d'expérience",
       "technologies": "Technologies"
     },
+    "exploreProjects": "Explorer les projets",
+    "getInTouch": "Me contacter",
+    "projects": "Projets",
+    "yearsXp": "Ans XP",
+    "technologies": "Technologies",
+    "scroll": "Défiler",
     "cta": "Voir les projets",
-    "ctaSecondary": "Me contacter",
-    "scroll": "DÉFILER"
+    "ctaSecondary": "Me contacter"
   },
   "home": {
     "title": "Data Engineer & Fullstack Developer",
@@ -58,13 +66,31 @@
   "timeline": {
     "caption": "Mon Parcours",
     "title": "Expériences & Formation",
-    "description": "Mon parcours professionnel et académique.",
+    "description": "De la Marine Nationale aux hôpitaux, en passant par la présidence du BDE EFREI — chaque étape a forgé ma vision unique du Data Engineering.",
     "filters": {
       "all": "Tout",
       "experience": "Expériences",
       "education": "Formation",
       "certification": "Certifications",
-      "association": "Associations"
+      "volunteering": "Engagements"
+    },
+    "current": "En cours",
+    "expand": "Voir plus",
+    "collapse": "Réduire",
+    "startOfJourney": "Début du parcours",
+    "years": "Années",
+    "stats": {
+      "years": "Années",
+      "experiences": "Expériences",
+      "formations": "Formations",
+      "engagements": "Engagements"
+    },
+    "cta": {
+      "caption": "La suite ?",
+      "title": "Construisons le prochain chapitre",
+      "description": "Mon parcours m'a appris à m'adapter, innover et livrer. Discutons de vos projets ambitieux.",
+      "contact": "Me contacter",
+      "projects": "Voir mes projets"
     }
   },
   "contact": {

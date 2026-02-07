@@ -11,15 +11,23 @@
     "tagline": "Transformo los {data} en decisiones y el {code} en impacto.",
     "education": "M1 Data Engineering & IA @ EFREI París",
     "status": "DISPONIBLE",
+    "openTo": "Abierto a oportunidades",
+    "role": "Data Engineer & Fullstack Developer",
+    "description": "Transformar flujos de datos complejos en sistemas inteligentes. Construir puentes entre la ciencia de datos y aplicaciones listas para producción.",
     "metrics": {
       "projects": "Proyectos GitHub",
       "commits": "Commits",
       "experience": "Años de experiencia",
       "technologies": "Tecnologías"
     },
+    "exploreProjects": "Explorar proyectos",
+    "getInTouch": "Contactar",
+    "projects": "Proyectos",
+    "yearsXp": "Años XP",
+    "technologies": "Tecnologías",
+    "scroll": "DESPLAZAR",
     "cta": "Ver proyectos",
-    "ctaSecondary": "Contactar",
-    "scroll": "DESPLAZAR"
+    "ctaSecondary": "Contactar"
   },
   "home": {
     "title": "Data Engineer & Fullstack Developer",
@@ -58,13 +66,31 @@
   "timeline": {
     "caption": "Mi Trayectoria",
     "title": "Experiencia y Formación",
-    "description": "Mi trayectoria profesional y académica.",
+    "description": "De la Marina Nacional a los hospitales, pasando por la presidencia del BDE EFREI — cada etapa ha forjado mi visión única del Data Engineering.",
     "filters": {
       "all": "Todo",
       "experience": "Experiencia",
       "education": "Formación",
       "certification": "Certificaciones",
-      "association": "Asociaciones"
+      "volunteering": "Compromisos"
+    },
+    "current": "Actual",
+    "expand": "Leer más",
+    "collapse": "Mostrar menos",
+    "startOfJourney": "Inicio del recorrido",
+    "years": "Años",
+    "stats": {
+      "years": "Años",
+      "experiences": "Experiencias",
+      "formations": "Formaciones",
+      "engagements": "Compromisos"
+    },
+    "cta": {
+      "caption": "¿Qué sigue?",
+      "title": "Escribamos el próximo capítulo",
+      "description": "Mi trayectoria me enseñó a adaptarme, innovar y entregar. Hablemos de sus proyectos ambiciosos.",
+      "contact": "Contactar",
+      "projects": "Ver mis proyectos"
     }
   },
   "contact": {

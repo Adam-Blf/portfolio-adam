@@ -1,9 +1,9 @@
 'use client'
 
 import { useEffect, useRef, useState, useMemo, useCallback } from 'react'
-import dynamic from 'next/dynamic'
 import { animate, stagger } from 'animejs'
 import Image from 'next/image'
+import Link from 'next/link'
 import {
   experiences,
   education,
@@ -19,24 +19,15 @@ import {
   ChevronDown,
   MapPin,
   Calendar,
-  Sparkles,
   ArrowUp,
   ArrowUpRight,
-  Mail
+  Mail,
+  Filter
 } from 'lucide-react'
-import ErrorBoundary from '@/components/ErrorBoundary'
+import { useI18n } from '@/lib/i18n'
+import GradientBackground from '@/components/backgrounds/GradientBackground'
 
-const SpaceBackground = dynamic(
-  () => import('@/components/three/SpaceBackground').catch(() => {
-    return { default: () => null }
-  }),
-  {
-    ssr: false,
-    loading: () => <div className="fixed inset-0 -z-10 bg-[#050508]" />,
-  }
-)
-
-// Types
+// ─── Types ───────────────────────────────────────────────
 type EventType = 'experience' | 'education' | 'volunteering' | 'certification'
 
 interface TimelineEvent {
@@ -52,28 +43,27 @@ interface TimelineEvent {
   current?: boolean
 }
 
-// Parse date string to comparable format
+// ─── Helpers ─────────────────────────────────────────────
 const parseDate = (dateStr: string): number => {
   if (!dateStr) return 0
   const [year, month = '01'] = dateStr.split('-')
   return parseInt(year) * 100 + parseInt(month)
 }
 
-// Get year from date string
 const getYear = (dateStr: string): string => {
   if (!dateStr) return ''
   return dateStr.split('-')[0]
 }
 
-// Colors and icons for event types
-const eventConfig: Record<EventType, { color: string; icon: typeof Briefcase; label: string; labelFr: string }> = {
-  experience: { color: '#FFB000', icon: Briefcase, label: 'Experience', labelFr: 'Expériences' },
-  education: { color: '#3178C6', icon: GraduationCap, label: 'Formation', labelFr: 'Formations' },
-  volunteering: { color: '#10B981', icon: Heart, label: 'Bénévolat', labelFr: 'Engagements' },
-  certification: { color: '#8B5CF6', icon: Award, label: 'Certification', labelFr: 'Certifications' },
+// ─── Event config ────────────────────────────────────────
+const eventConfig: Record<EventType, { color: string; icon: typeof Briefcase }> = {
+  experience:    { color: '#FFB000', icon: Briefcase },
+  education:     { color: '#3B82F6', icon: GraduationCap },
+  volunteering:  { color: '#10B981', icon: Heart },
+  certification: { color: '#8B5CF6', icon: Award },
 }
 
-// Build unified timeline
+// ─── Build unified timeline ──────────────────────────────
 const buildTimeline = (): TimelineEvent[] => {
   const events: TimelineEvent[] = []
 
@@ -123,7 +113,9 @@ const buildTimeline = (): TimelineEvent[] => {
   const majorCerts = certifications.filter(c =>
     c.issuer === 'Microsoft' ||
     c.issuer === 'Marine Nationale' ||
-    c.name.includes('Pix')
+    c.name.includes('Pix') ||
+    c.name.includes('RNCP') ||
+    c.issuer === 'HubSpot Academy'
   )
   majorCerts.forEach((cert, idx) => {
     events.push({
@@ -140,46 +132,38 @@ const buildTimeline = (): TimelineEvent[] => {
   return events.sort((a, b) => parseDate(b.startDate) - parseDate(a.startDate))
 }
 
-// Timeline Card with WAAPI micro-interactions
+// ─── Timeline Card ───────────────────────────────────────
 function TimelineCard({
   event,
-  isLeft,
   isExpanded,
-  onToggle
+  onToggle,
+  t,
 }: {
   event: TimelineEvent
-  isLeft: boolean
   isExpanded: boolean
   onToggle: () => void
+  t: (key: string) => string
 }) {
   const cardRef = useRef<HTMLDivElement>(null)
   const config = eventConfig[event.type]
   const Icon = config.icon
   const logo = logoMap[event.subtitle] || null
 
-  // WAAPI hover animation
   const handleMouseEnter = useCallback(() => {
-    if (!cardRef.current) return
-    cardRef.current.animate([
-      { transform: 'translateY(0) scale(1)', boxShadow: '0 0 0 rgba(255,176,0,0)' },
-      { transform: 'translateY(-4px) scale(1.01)', boxShadow: '0 20px 40px rgba(255,176,0,0.1)' }
-    ], {
-      duration: 300,
-      easing: 'cubic-bezier(0.34, 1.56, 0.64, 1)',
-      fill: 'forwards'
-    })
-  }, [])
+    cardRef.current?.animate(
+      [
+        { transform: 'translateY(0)', boxShadow: '0 1px 3px rgba(0,0,0,0.08)' },
+        { transform: 'translateY(-3px)', boxShadow: `0 16px 32px ${config.color}12` },
+      ],
+      { duration: 250, easing: 'cubic-bezier(0.34,1.56,0.64,1)', fill: 'forwards' }
+    )
+  }, [config.color])
 
   const handleMouseLeave = useCallback(() => {
-    if (!cardRef.current) return
-    cardRef.current.animate([
-      { transform: 'translateY(-4px) scale(1.01)', boxShadow: '0 20px 40px rgba(255,176,0,0.1)' },
-      { transform: 'translateY(0) scale(1)', boxShadow: '0 0 0 rgba(255,176,0,0)' }
-    ], {
-      duration: 200,
-      easing: 'ease-out',
-      fill: 'forwards'
-    })
+    cardRef.current?.animate(
+      [{ transform: 'translateY(-3px)' }, { transform: 'translateY(0)' }],
+      { duration: 200, easing: 'ease-out', fill: 'forwards' }
+    )
   }, [])
 
   return (
@@ -190,96 +174,68 @@ function TimelineCard({
       aria-expanded={isExpanded}
       onClick={onToggle}
       onKeyDown={(e) => {
-        if (e.key === 'Enter' || e.key === ' ') {
-          e.preventDefault()
-          onToggle()
-        }
+        if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); onToggle() }
       }}
       onMouseEnter={handleMouseEnter}
       onMouseLeave={handleMouseLeave}
-      className="group relative bg-[--bg-surface]/90 backdrop-blur-md border border-[--border]
-                 cursor-pointer transition-colors duration-300 overflow-hidden
-                 focus-visible:outline-2 focus-visible:outline-accent focus-visible:outline-offset-2"
-      style={{
-        clipPath: 'polygon(0 0, calc(100% - 20px) 0, 100% 20px, 100% 100%, 0 100%)',
-        borderColor: `${config.color}30`
-      }}
+      className="group relative bg-[--bg-surface] border border-[--border] rounded-xl
+                 cursor-pointer transition-colors overflow-hidden
+                 focus-visible:outline-2 focus-visible:outline-[--accent] focus-visible:outline-offset-2
+                 hover:border-[--border-accent]"
     >
-      {/* Corner cut decoration */}
+      {/* Accent top line */}
       <div
-        className="absolute top-0 right-0 w-5 h-5"
-        style={{
-          background: `linear-gradient(135deg, transparent 50%, ${config.color}40 50%)`
-        }}
-      />
-
-      {/* Top accent bar with animated glow */}
-      <div
-        className="absolute top-0 left-0 right-5 h-1 opacity-70 group-hover:opacity-100 transition-opacity"
-        style={{ backgroundColor: config.color }}
-      />
-      <div
-        className="absolute top-0 left-0 right-5 h-1 opacity-0 group-hover:opacity-60 blur-sm transition-opacity"
+        className="absolute top-0 left-0 right-0 h-[2px] opacity-50 group-hover:opacity-100 transition-opacity"
         style={{ backgroundColor: config.color }}
       />
 
-      <div className="p-6 md:p-8">
-        {/* Current badge - more geometric */}
+      <div className="p-5 md:p-6">
+        {/* Current badge */}
         {event.current && (
-          <div className="absolute top-4 right-8">
+          <div className="absolute top-3 right-4">
             <span
-              className="px-3 py-1.5 text-[10px] font-mono uppercase tracking-widest text-white"
-              style={{
-                backgroundColor: config.color,
-                clipPath: 'polygon(8px 0, 100% 0, 100% 100%, 0 100%, 0 8px)'
-              }}
+              className="inline-flex items-center gap-1.5 px-2.5 py-1 text-[10px] font-semibold uppercase tracking-wider rounded-full"
+              style={{ backgroundColor: `${config.color}18`, color: config.color }}
             >
-              <span className="relative flex items-center gap-2">
-                <span className="w-1.5 h-1.5 bg-white rounded-full animate-pulse" />
-                En cours
-              </span>
+              <span className="w-1.5 h-1.5 rounded-full animate-pulse" style={{ backgroundColor: config.color }} />
+              {t('timeline.current')}
             </span>
           </div>
         )}
 
         {/* Header */}
-        <div className="flex items-start gap-4 mb-5">
+        <div className="flex items-start gap-3.5 mb-3">
           {logo ? (
-            <div className="relative w-14 h-14 flex-shrink-0 overflow-hidden bg-white border border-[--border] group-hover:scale-105 transition-transform"
-                 style={{ clipPath: 'polygon(0 0, 100% 0, 100% calc(100% - 8px), calc(100% - 8px) 100%, 0 100%)' }}>
-              <Image src={logo} alt={event.subtitle} fill className="object-contain p-2" />
+            <div className="relative w-11 h-11 flex-shrink-0 rounded-lg overflow-hidden bg-white border border-[--border] group-hover:scale-105 transition-transform">
+              <Image src={logo} alt={event.subtitle} fill className="object-contain p-1.5" />
             </div>
           ) : (
             <div
-              className="w-14 h-14 flex-shrink-0 flex items-center justify-center group-hover:scale-105 transition-transform"
-              style={{
-                backgroundColor: `${config.color}15`,
-                clipPath: 'polygon(0 0, 100% 0, 100% calc(100% - 8px), calc(100% - 8px) 100%, 0 100%)'
-              }}
+              className="w-11 h-11 flex-shrink-0 rounded-lg flex items-center justify-center group-hover:scale-105 transition-transform"
+              style={{ backgroundColor: `${config.color}12` }}
             >
-              <Icon size={24} style={{ color: config.color }} />
+              <Icon size={20} style={{ color: config.color }} />
             </div>
           )}
-
-          <div className="flex-1 min-w-0">
-            <h3 className="text-lg font-bold leading-tight group-hover:text-accent transition-colors line-clamp-2">
+          <div className="flex-1 min-w-0 pr-14">
+            <h3 className="text-sm font-bold leading-snug group-hover:text-[--accent] transition-colors line-clamp-2">
               {event.title}
             </h3>
-            <p className="text-sm font-semibold mt-1.5 tracking-wide" style={{ color: config.color }}>
+            <p className="text-xs font-semibold mt-1" style={{ color: config.color }}>
               {event.subtitle}
             </p>
           </div>
         </div>
 
-        {/* Meta - more cyberpunk style */}
-        <div className="flex flex-wrap items-center gap-4 text-xs text-[--text-muted] mb-4 font-mono">
-          <span className="flex items-center gap-1.5 px-2 py-1 bg-[--bg-elevated] border border-[--border]">
-            <Calendar size={10} className="text-accent" />
+        {/* Meta */}
+        <div className="flex flex-wrap items-center gap-2 text-[11px] text-[--text-muted] mb-3">
+          <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-md bg-[--bg-elevated]">
+            <Calendar size={10} className="opacity-60" />
             {event.period}
           </span>
           {event.location && (
-            <span className="flex items-center gap-1.5 px-2 py-1 bg-[--bg-elevated] border border-[--border]">
-              <MapPin size={10} className="text-highlight" />
+            <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-md bg-[--bg-elevated]">
+              <MapPin size={10} className="opacity-60" />
               {event.location}
             </span>
           )}
@@ -287,93 +243,34 @@ function TimelineCard({
 
         {/* Description */}
         {event.description && (
-          <p className={`text-sm text-[--text-secondary] leading-relaxed transition-all duration-300 ${isExpanded ? '' : 'line-clamp-2'}`}>
+          <p className={`text-xs text-[--text-secondary] leading-relaxed transition-all duration-300 ${isExpanded ? '' : 'line-clamp-2'}`}>
             {event.description}
           </p>
         )}
 
-        {/* Expand indicator */}
-        {event.description && event.description.length > 100 && (
-          <div className="mt-4 flex items-center gap-2 text-xs font-mono text-accent/70 group-hover:text-accent transition-colors">
-            <span className="w-4 h-px bg-current" />
+        {/* Expand */}
+        {event.description && event.description.length > 80 && (
+          <button
+            className="mt-2.5 flex items-center gap-1 text-[11px] font-medium text-[--accent] opacity-70 group-hover:opacity-100 transition-opacity"
+            tabIndex={-1}
+          >
             <ChevronDown size={12} className={`transition-transform duration-300 ${isExpanded ? 'rotate-180' : ''}`} />
-            {isExpanded ? 'COLLAPSE' : 'EXPAND'}
-            <span className="flex-1 h-px bg-current opacity-30" />
-          </div>
+            {isExpanded ? t('timeline.collapse') : t('timeline.expand')}
+          </button>
         )}
-
-        {/* Type badge - bottom corner */}
-        <div
-          className="absolute bottom-0 right-0 px-3 py-1.5 text-[10px] font-mono uppercase tracking-widest opacity-50 group-hover:opacity-80 transition-opacity"
-          style={{
-            color: config.color,
-            backgroundColor: `${config.color}15`,
-            clipPath: 'polygon(12px 0, 100% 0, 100% 100%, 0 100%)'
-          }}
-        >
-          {config.label}
-        </div>
       </div>
     </div>
   )
 }
 
-// Counter animation with WAAPI
-function AnimatedCounter({ end, label }: { end: number; label: string }) {
-  const ref = useRef<HTMLDivElement>(null)
-  const valueRef = useRef<HTMLSpanElement>(null)
-  const hasAnimated = useRef(false)
-
-  useEffect(() => {
-    if (!ref.current || !valueRef.current) return
-
-    const observer = new IntersectionObserver(
-      (entries) => {
-        if (entries[0].isIntersecting && !hasAnimated.current) {
-          hasAnimated.current = true
-
-          // WAAPI fade in
-          ref.current?.animate([
-            { opacity: 0, transform: 'translateY(20px)' },
-            { opacity: 1, transform: 'translateY(0)' }
-          ], { duration: 600, easing: 'cubic-bezier(0.16, 1, 0.3, 1)', fill: 'forwards' })
-
-          // Counter with anime.js
-          const counter = { val: 0 }
-          animate(counter, {
-            val: end,
-            duration: 2000,
-            easing: 'outExpo',
-            onUpdate: () => {
-              if (valueRef.current) valueRef.current.textContent = Math.round(counter.val).toString()
-            },
-          })
-        }
-      },
-      { threshold: 0.5 }
-    )
-
-    observer.observe(ref.current)
-    return () => observer.disconnect()
-  }, [end])
-
-  return (
-    <div ref={ref} className="text-center group" style={{ opacity: 0 }}>
-      <div className="font-mono text-4xl md:text-5xl font-bold text-accent mb-2 group-hover:scale-110 transition-transform">
-        <span ref={valueRef}>0</span>
-        <span className="text-accent/50">+</span>
-      </div>
-      <div className="text-sm text-[--text-muted] uppercase tracking-wider">{label}</div>
-    </div>
-  )
-}
-
+// ─── Main Page ───────────────────────────────────────────
 export default function FrisePage() {
   const headerRef = useRef<HTMLDivElement>(null)
   const timelineRef = useRef<HTMLDivElement>(null)
   const [filter, setFilter] = useState<EventType | 'all'>('all')
   const [expandedCard, setExpandedCard] = useState<string | null>(null)
   const [showScrollTop, setShowScrollTop] = useState(false)
+  const { t } = useI18n()
 
   const allEvents = useMemo(() => buildTimeline(), [])
 
@@ -404,193 +301,155 @@ export default function FrisePage() {
     certification: allEvents.filter(e => e.type === 'certification').length,
   }), [allEvents])
 
-  // Scroll to top button visibility
+  // Scroll to top visibility
   useEffect(() => {
     const handleScroll = () => setShowScrollTop(window.scrollY > 500)
     window.addEventListener('scroll', handleScroll, { passive: true })
     return () => window.removeEventListener('scroll', handleScroll)
   }, [])
 
-  // Header animation with anime.js
+  // Header entrance animation
   useEffect(() => {
     const header = headerRef.current
     if (!header) return
-
     const elements = header.querySelectorAll('[data-animate]')
     elements.forEach(el => (el as HTMLElement).style.opacity = '0')
-
     animate(elements, {
-      translateY: [40, 0],
+      translateY: [30, 0],
       opacity: [0, 1],
-      duration: 800,
+      duration: 700,
       easing: 'cubicBezier(0.16, 1, 0.3, 1)',
-      delay: stagger(100),
+      delay: stagger(80),
     })
   }, [])
 
-  // Timeline items scroll animation
+  // Timeline scroll reveal
   useEffect(() => {
     const timeline = timelineRef.current
     if (!timeline) return
-
     const observer = new IntersectionObserver(
       (entries) => {
         entries.forEach((entry) => {
           if (entry.isIntersecting) {
-            const item = entry.target as HTMLElement
-
-            animate(item, {
-              translateY: [50, 0],
+            animate(entry.target as HTMLElement, {
+              translateY: [40, 0],
               opacity: [0, 1],
-              duration: 700,
+              duration: 600,
               easing: 'cubicBezier(0.16, 1, 0.3, 1)',
             })
-
-            observer.unobserve(item)
+            observer.unobserve(entry.target)
           }
         })
       },
-      { threshold: 0.1, rootMargin: '-50px' }
+      { threshold: 0.08, rootMargin: '-40px' }
     )
-
     timeline.querySelectorAll('.timeline-item').forEach((item) => {
       (item as HTMLElement).style.opacity = '0'
       observer.observe(item)
     })
-
     return () => observer.disconnect()
   }, [filteredEvents])
 
-  // Filter change animation
   const handleFilterChange = useCallback((newFilter: EventType | 'all') => {
     setFilter(newFilter)
     setExpandedCard(null)
-
-    // Animate filter pills with WAAPI
-    document.querySelectorAll('.filter-pill').forEach((pill, i) => {
-      pill.animate([
-        { transform: 'scale(0.95)' },
-        { transform: 'scale(1)' }
-      ], { duration: 200, delay: i * 30, easing: 'ease-out' })
-    })
   }, [])
+
+  const filterButtons: { key: EventType | 'all'; labelKey: string; icon?: typeof Briefcase; color?: string }[] = [
+    { key: 'all', labelKey: 'timeline.filters.all' },
+    { key: 'experience', labelKey: 'timeline.filters.experience', icon: Briefcase, color: '#FFB000' },
+    { key: 'education', labelKey: 'timeline.filters.education', icon: GraduationCap, color: '#3B82F6' },
+    { key: 'volunteering', labelKey: 'timeline.filters.volunteering', icon: Heart, color: '#10B981' },
+    { key: 'certification', labelKey: 'timeline.filters.certification', icon: Award, color: '#8B5CF6' },
+  ]
 
   return (
     <>
-      {/* Three.js Space Background */}
-      <ErrorBoundary>
-        <SpaceBackground variant="default" />
-      </ErrorBoundary>
+      <GradientBackground showGrid />
 
-      {/* Scroll to top button */}
+      {/* Scroll to top */}
       <button
         onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
-        className={`fixed bottom-8 right-8 z-50 w-12 h-12 rounded-full bg-accent text-white shadow-lg
-                    flex items-center justify-center transition-all duration-300
-                    hover:scale-110 hover:shadow-xl ${showScrollTop ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10 pointer-events-none'}`}
-        aria-label="Retour en haut"
+        className={`fixed bottom-6 right-6 z-50 w-11 h-11 rounded-full bg-[--accent] text-[--text-inverse]
+                    shadow-lg flex items-center justify-center transition-all duration-300
+                    hover:scale-110 ${showScrollTop ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10 pointer-events-none'}`}
+        aria-label="Scroll to top"
       >
-        <ArrowUp size={20} />
+        <ArrowUp size={18} />
       </button>
 
       <main className="pt-32 pb-24 relative z-10">
         <div className="container-wide">
 
-          {/* Header - Bold Neo-Editorial */}
-          <div ref={headerRef} className="mb-24">
-            <div data-animate className="flex items-center gap-3 mb-6">
-              <span className="text-caption text-accent">// Parcours</span>
-              <span className="w-16 h-px bg-accent" />
-              <Sparkles className="w-4 h-4 text-accent" />
-            </div>
-
-            <h1 data-animate className="text-display mb-8 leading-[0.85]">
-              <span className="block text-[--text-primary] glitch-text" data-text="Mon">Mon</span>
-              <span className="block text-accent neon-glow-subtle relative">
-                Parcours
-                <span className="absolute -right-8 top-0 text-[0.15em] text-highlight font-mono tracking-tight opacity-50 rotate-90">
-                  .journey
-                </span>
-              </span>
-            </h1>
-
-            <p data-animate className="text-body-lg max-w-2xl mb-16 text-[--text-secondary] border-l-2 border-accent/30 pl-6">
-              De la Marine Nationale aux hôpitaux, en passant par la présidence du BDE EFREI —
-              chaque étape a forgé ma vision unique du Data Engineering.
+          {/* ═══ HEADER ═══ */}
+          <div ref={headerRef} className="mb-20">
+            <p data-animate className="text-caption text-[--accent] mb-4">
+              {t('timeline.caption')}
             </p>
 
-            {/* Filters with WAAPI */}
-            <div data-animate className="flex flex-wrap gap-3" role="group" aria-label="Filtrer par catégorie">
-              <button
-                onClick={() => handleFilterChange('all')}
-                className={`filter-pill px-5 py-2.5 text-sm font-medium rounded-full transition-all duration-300 border flex items-center gap-2
-                  ${filter === 'all' ? 'border-accent bg-accent/10 text-accent' : 'border-[--border] text-[--text-secondary] hover:border-accent/50'}`}
-              >
-                Tout
-                <span className="px-1.5 py-0.5 text-xs rounded bg-[--bg-elevated]">{allEvents.length}</span>
-              </button>
+            <h1 data-animate className="text-headline mb-6">
+              <span className="gradient-text">{t('timeline.title')}</span>
+            </h1>
 
-              {(Object.keys(eventConfig) as EventType[]).map((type) => {
-                const config = eventConfig[type]
-                const count = countByType[type]
+            <p data-animate className="text-body-lg max-w-2xl mb-12">
+              {t('timeline.description')}
+            </p>
+
+            {/* Filters */}
+            <div data-animate className="flex flex-wrap gap-2" role="group" aria-label="Filter by category">
+              {filterButtons.map(({ key, labelKey, icon: BtnIcon, color }) => {
+                const count = key === 'all' ? allEvents.length : countByType[key]
+                const isActive = filter === key
                 return (
                   <button
-                    key={type}
-                    onClick={() => handleFilterChange(type)}
-                    className={`filter-pill px-5 py-2.5 text-sm font-medium rounded-full transition-all duration-300 border flex items-center gap-2
-                      ${filter === type ? 'border-accent bg-accent/10 text-accent' : 'border-[--border] text-[--text-secondary] hover:border-accent/50'}`}
+                    key={key}
+                    onClick={() => handleFilterChange(key)}
+                    className={`inline-flex items-center gap-2 px-4 py-2 text-xs font-medium rounded-full border transition-all duration-200
+                      ${isActive
+                        ? 'border-[--accent] bg-[--accent]/10 text-[--accent] shadow-sm'
+                        : 'border-[--border] text-[--text-secondary] hover:border-[--text-muted] hover:text-[--text-primary]'
+                      }`}
                   >
-                    <config.icon size={14} style={{ color: filter === type ? 'currentColor' : config.color }} />
-                    {config.label}
-                    <span className="px-1.5 py-0.5 text-xs rounded bg-[--bg-elevated]">{count}</span>
+                    {BtnIcon ? <BtnIcon size={13} style={{ color: isActive ? 'currentColor' : color }} /> : <Filter size={13} />}
+                    {t(labelKey)}
+                    <span className={`ml-0.5 px-1.5 py-0.5 text-[10px] rounded-full ${isActive ? 'bg-[--accent]/20' : 'bg-[--bg-elevated]'}`}>
+                      {count}
+                    </span>
                   </button>
                 )
               })}
             </div>
           </div>
 
-          {/* Timeline */}
+          {/* ═══ TIMELINE ═══ */}
           <div ref={timelineRef} className="relative">
-            {/* Central line */}
-            <div className="absolute left-1/2 top-0 bottom-0 w-px bg-gradient-to-b from-accent/50 via-[--border] to-transparent hidden md:block" />
+            {/* Central line (mobile: left, desktop: center) */}
+            <div className="absolute left-5 md:left-1/2 md:-translate-x-px top-0 bottom-0 w-px bg-gradient-to-b from-[--accent]/40 via-[--border] to-transparent" />
 
-            {years.map((year, yearIdx) => (
-              <div key={year} className="mb-24 last:mb-0">
-                {/* Year marker - Bold geometric */}
-                <div className="timeline-item relative flex items-center justify-center mb-16">
-                  {/* Horizontal lines */}
-                  <div className="absolute left-0 right-0 h-px bg-gradient-to-r from-transparent via-accent/50 to-transparent" />
-
-                  {/* Year container with geometric styling */}
-                  <div className="relative z-10 px-12 py-6 bg-[--bg-deep] border border-accent/20"
-                       style={{ clipPath: 'polygon(20px 0, 100% 0, 100% calc(100% - 20px), calc(100% - 20px) 100%, 0 100%, 0 20px)' }}>
-                    {/* Corner decorations */}
-                    <div className="absolute top-0 left-0 w-5 h-5 border-l-2 border-t-2 border-accent/40" />
-                    <div className="absolute bottom-0 right-0 w-5 h-5 border-r-2 border-b-2 border-accent/40" />
-
-                    <span className="font-mono text-6xl md:text-8xl font-black text-accent neon-glow-subtle tracking-tighter">
-                      {year}
-                    </span>
-
-                    {/* Small label */}
-                    <span className="absolute -bottom-2 left-1/2 -translate-x-1/2 text-[10px] font-mono text-accent/50 tracking-widest">
-                      // YEAR
-                    </span>
+            {years.map((year) => (
+              <div key={year} className="mb-16 last:mb-0">
+                {/* Year marker */}
+                <div className="timeline-item relative flex items-center mb-10">
+                  <div className="absolute left-0 right-0 h-px bg-[--border] hidden md:block" />
+                  <div className="relative z-10 ml-0 md:mx-auto">
+                    <div className="flex items-center gap-2.5 px-5 py-2 bg-[--bg-deep] border border-[--accent]/25 rounded-full shadow-sm">
+                      <span className="w-2 h-2 rounded-full bg-[--accent]" />
+                      <span className="font-mono text-xl md:text-2xl font-bold text-[--accent] tracking-tight">
+                        {year}
+                      </span>
+                    </div>
                   </div>
                 </div>
 
-                {/* Events for this year */}
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-8">
-                  {eventsByYear[year]?.map((event, eventIdx) => (
-                    <div
-                      key={event.id}
-                      className="timeline-item"
-                    >
+                {/* Events */}
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-5 pl-12 md:pl-0">
+                  {eventsByYear[year]?.map((event) => (
+                    <div key={event.id} className="timeline-item">
                       <TimelineCard
                         event={event}
-                        isLeft={eventIdx % 2 === 0}
                         isExpanded={expandedCard === event.id}
                         onToggle={() => setExpandedCard(expandedCard === event.id ? null : event.id)}
+                        t={t}
                       />
                     </div>
                   ))}
@@ -598,65 +457,53 @@ export default function FrisePage() {
               </div>
             ))}
 
-            {/* Timeline end */}
-            <div className="timeline-item relative flex items-center justify-center pt-12">
-              <div className="absolute left-0 right-0 h-px bg-[--border]" />
-              <div className="relative z-10 px-6 py-3 bg-[--bg-deep] border border-[--border] rounded-full">
-                <span className="font-mono text-sm text-[--text-muted]">Début du parcours</span>
+            {/* End marker */}
+            <div className="timeline-item relative flex items-center justify-center pt-8">
+              <div className="absolute left-0 right-0 h-px bg-[--border] hidden md:block" />
+              <div className="relative z-10 px-5 py-2 bg-[--bg-deep] border border-[--border] rounded-full">
+                <span className="text-xs font-medium text-[--text-muted]">{t('timeline.startOfJourney')}</span>
               </div>
             </div>
           </div>
 
-          {/* Stats footer - Grid style */}
-          <div className="mt-40 relative">
-            {/* Section label */}
-            <div className="absolute -top-8 left-0 flex items-center gap-3">
-              <span className="text-caption text-accent">// STATS</span>
-              <span className="w-20 h-px bg-accent/50" />
-            </div>
-
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-1 bg-[--border]">
-              {[
-                { end: years.length, label: 'Années', color: 'accent' },
-                { end: countByType.experience, label: 'Expériences', color: 'highlight' },
-                { end: countByType.education, label: 'Formations', color: 'tertiary' },
-                { end: countByType.volunteering, label: 'Engagements', color: 'success' },
-              ].map((stat, i) => (
-                <div key={stat.label} className="bg-[--bg-surface] p-8 group relative overflow-hidden">
-                  {/* Hover accent line */}
-                  <div className={`absolute top-0 left-0 right-0 h-1 bg-[--${stat.color}] transform scale-x-0 group-hover:scale-x-100 transition-transform origin-left duration-300`} />
-
-                  <div className="font-mono text-5xl md:text-6xl font-black mb-3" style={{ color: `var(--${stat.color})` }}>
-                    {stat.end}<span className="text-[--text-muted] text-2xl">+</span>
-                  </div>
-                  <div className="text-caption opacity-60 group-hover:opacity-100 transition-opacity">
-                    {stat.label}
-                  </div>
-                </div>
-              ))}
-            </div>
+          {/* ═══ STATS ═══ */}
+          <div className="mt-28 grid grid-cols-2 md:grid-cols-4 gap-4">
+            {[
+              { value: years.length,            label: t('timeline.stats.years'),       color: 'var(--accent)' },
+              { value: countByType.experience,   label: t('timeline.stats.experiences'), color: '#FFB000' },
+              { value: countByType.education,    label: t('timeline.stats.formations'),  color: '#3B82F6' },
+              { value: countByType.volunteering, label: t('timeline.stats.engagements'), color: '#10B981' },
+            ].map((stat) => (
+              <div
+                key={stat.label}
+                className="relative bg-[--bg-surface] border border-[--border] rounded-xl p-6 text-center
+                           group hover:border-[--border-accent] transition-colors overflow-hidden"
+              >
+                <div className="absolute top-0 left-0 right-0 h-0.5 opacity-0 group-hover:opacity-100 transition-opacity" style={{ backgroundColor: stat.color }} />
+                <p className="font-mono text-3xl md:text-4xl font-bold mb-1" style={{ color: stat.color }}>
+                  {stat.value}<span className="text-[--text-muted] text-lg">+</span>
+                </p>
+                <p className="text-xs text-[--text-muted] uppercase tracking-wider">{stat.label}</p>
+              </div>
+            ))}
           </div>
 
-          {/* CTA Section */}
-          <section className="py-20 mt-12 border-t border-[--border]">
-            <div className="max-w-2xl mx-auto text-center">
-              <p className="text-caption mb-4">La suite ?</p>
-              <h2 className="text-headline mb-6">
-                Construisons le prochain <span className="accent-line">chapitre</span>
-              </h2>
-              <p className="text-body-lg text-[--text-secondary] mb-10">
-                Mon parcours m'a appris à m'adapter, innover et livrer. Discutons de vos projets ambitieux.
-              </p>
-              <div className="flex flex-wrap justify-center gap-4">
-                <a href="/contact" className="btn btn-primary group">
-                  <Mail size={16} />
-                  Me contacter
-                  <ArrowUpRight size={16} className="transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
-                </a>
-                <a href="/projets" className="btn btn-outline">
-                  Voir mes projets
-                  <ArrowUpRight size={16} />
-                </a>
+          {/* ═══ CTA ═══ */}
+          <section className="mt-24 py-16 border-t border-[--border]">
+            <div className="max-w-xl mx-auto text-center">
+              <p className="text-caption text-[--accent] mb-3">{t('timeline.cta.caption')}</p>
+              <h2 className="text-title mb-5">{t('timeline.cta.title')}</h2>
+              <p className="text-body mb-8">{t('timeline.cta.description')}</p>
+              <div className="flex flex-wrap justify-center gap-3">
+                <Link href="/contact" className="btn btn-primary group">
+                  <Mail size={15} />
+                  {t('timeline.cta.contact')}
+                  <ArrowUpRight size={14} className="transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
+                </Link>
+                <Link href="/projets" className="btn btn-outline">
+                  {t('timeline.cta.projects')}
+                  <ArrowUpRight size={14} />
+                </Link>
               </div>
             </div>
           </section>

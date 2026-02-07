@@ -11,15 +11,23 @@
     "tagline": "Przekształcam {data} w decyzje i {code} w wpływ.",
     "education": "M1 Data Engineering & AI @ EFREI Paryż",
     "status": "DOSTĘPNY",
+    "openTo": "Otwarty na możliwości",
+    "role": "Data Engineer & Fullstack Developer",
+    "description": "Przekształcanie złożonych przepływów danych w inteligentne systemy. Budowanie mostów między data science a aplikacjami gotowymi do produkcji.",
     "metrics": {
       "projects": "Projekty GitHub",
       "commits": "Commity",
       "experience": "Lat doświadczenia",
       "technologies": "Technologie"
     },
+    "exploreProjects": "Odkryj projekty",
+    "getInTouch": "Kontakt",
+    "projects": "Projekty",
+    "yearsXp": "Lata doświadczenia",
+    "technologies": "Technologie",
+    "scroll": "PRZEWIŃ",
     "cta": "Zobacz projekty",
-    "ctaSecondary": "Kontakt",
-    "scroll": "PRZEWIŃ"
+    "ctaSecondary": "Kontakt"
   },
   "home": {
     "title": "Data Engineer & Fullstack Developer",
@@ -56,15 +64,33 @@
     "featured": "Wyróżnione"
   },
   "timeline": {
-    "caption": "Moja Kariera",
+    "caption": "Moja Droga",
     "title": "Doświadczenie i Edukacja",
-    "description": "Moja ścieżka zawodowa i akademicka.",
+    "description": "Od Marynarki Wojennej przez szpitale po przewodnictwo BDE EFREI — każdy etap ukształtował moją unikalną wizję Data Engineering.",
     "filters": {
       "all": "Wszystko",
       "experience": "Doświadczenie",
       "education": "Edukacja",
       "certification": "Certyfikaty",
-      "association": "Stowarzyszenia"
+      "volunteering": "Zaangażowanie"
+    },
+    "current": "W trakcie",
+    "expand": "Czytaj więcej",
+    "collapse": "Pokaż mniej",
+    "startOfJourney": "Początek podróży",
+    "years": "Lata",
+    "stats": {
+      "years": "Lata",
+      "experiences": "Doświadczenia",
+      "formations": "Wykształcenie",
+      "engagements": "Zaangażowania"
+    },
+    "cta": {
+      "caption": "Co dalej?",
+      "title": "Napiszmy następny rozdział",
+      "description": "Moja droga nauczyła mnie adaptacji, innowacji i dostarczania rezultatów.",
+      "contact": "Kontakt",
+      "projects": "Zobacz moje projekty"
     }
   },
   "contact": {
