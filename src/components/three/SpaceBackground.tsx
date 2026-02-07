@@ -1,8 +1,9 @@
 'use client'
 
 import { useRef, useMemo } from 'react'
-import { Canvas, useFrame } from '@react-three/fiber'
+import { useFrame } from '@react-three/fiber'
 import { Stars, Float } from '@react-three/drei'
+import SafeCanvas from '@/components/three/SafeCanvas'
 import * as THREE from 'three'
 
 // Floating data particles
@@ -141,14 +142,14 @@ interface SpaceBackgroundProps {
 export default function SpaceBackground({ variant = 'default', className = '' }: SpaceBackgroundProps) {
   return (
     <div className={`fixed inset-0 -z-10 ${className}`}>
-      <Canvas
+      <SafeCanvas
         camera={{ position: [0, 0, 8], fov: 60 }}
         gl={{ antialias: true, alpha: true }}
         dpr={[1, 1.5]}
         style={{ background: '#050508' }}
       >
         <Scene variant={variant} />
-      </Canvas>
+      </SafeCanvas>
 
       {/* Gradient overlays */}
       <div className="absolute inset-0 bg-gradient-to-b from-[#050508]/30 via-transparent to-[#050508]" />

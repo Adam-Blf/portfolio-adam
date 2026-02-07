@@ -33,7 +33,7 @@ export default function Error({
     animate(terminal, {
       translateX: [-5, 5, -3, 3, 0],
       duration: 500,
-      easing: 'easeOutElastic(1, .5)',
+      easing: 'outElastic(1, .5)',
     })
 
     // Scale in
@@ -73,7 +73,7 @@ export default function Error({
       animate(terminal, {
         translateX: [0, -2, 2, -1, 1, 0],
         duration: 100,
-        easing: 'easeInOutQuad',
+        easing: 'inOutQuad',
       })
     }
     const glitchInterval = setInterval(glitchEffect, 5000)
@@ -90,7 +90,7 @@ export default function Error({
       animate(btn, {
         rotate: [0, 360],
         duration: 500,
-        easing: 'easeOutExpo',
+        easing: 'outExpo',
       })
     }
 

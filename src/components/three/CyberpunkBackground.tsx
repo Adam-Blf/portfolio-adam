@@ -1,8 +1,9 @@
 'use client'
 
 import { useRef, useMemo, useEffect, useState, memo } from 'react'
-import { Canvas, useFrame, useThree } from '@react-three/fiber'
+import { useFrame, useThree } from '@react-three/fiber'
 import { Points, PointMaterial } from '@react-three/drei'
+import SafeCanvas from '@/components/three/SafeCanvas'
 import type { Points as PointsType } from 'three'
 import * as THREE from 'three'
 
@@ -335,7 +336,7 @@ export default function CyberpunkBackground({ variant = 'hero' }: CyberpunkBackg
 
   return (
     <div className="absolute inset-0">
-      <Canvas
+      <SafeCanvas
         camera={{ position: [0, 0, 6], fov: 65 }}
         dpr={[1, 1.5]}
         gl={{
@@ -349,7 +350,7 @@ export default function CyberpunkBackground({ variant = 'hero' }: CyberpunkBackg
         style={{ background: 'transparent' }}
       >
         <Scene variant={variant} />
-      </Canvas>
+      </SafeCanvas>
     </div>
   )
 }

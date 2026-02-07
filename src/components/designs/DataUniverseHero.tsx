@@ -1,13 +1,14 @@
 'use client'
 
 import { useEffect, useRef, useState, Suspense } from 'react'
-import { Canvas, useFrame, useThree } from '@react-three/fiber'
-import { Float, Text3D, Center, Environment, Stars, Trail } from '@react-three/drei'
+import { useFrame, useThree } from '@react-three/fiber'
+import { Environment, Stars } from '@react-three/drei'
 import { animate, stagger } from 'animejs'
 import Link from 'next/link'
 import Image from 'next/image'
 import * as THREE from 'three'
 import { ArrowRight, Sparkles, Cpu, Database, Code2 } from 'lucide-react'
+import SafeCanvas from '@/components/three/SafeCanvas'
 
 /**
  * DATA UNIVERSE - Immersive 3D Experience
@@ -250,34 +251,42 @@ export default function DataUniverseHero() {
     if (!container) return
 
     // Text animations
-    const titles = container.querySelectorAll('.title-line')
-    animate(titles, {
-      translateY: [60, 0],
-      opacity: [0, 1],
-      duration: 800,
-      delay: stagger(100, { start: 500 }),
-      easing: 'cubicBezier(0.16, 1, 0.3, 1)'
-    })
+    try {
+      const titles = container.querySelectorAll('.title-line')
+      animate(titles, {
+        translateY: [60, 0],
+        opacity: [0, 1],
+        duration: 800,
+        delay: stagger(100, { start: 500 }),
+        easing: 'cubicBezier(0.16, 1, 0.3, 1)'
+      })
 
-    // Content fade in
-    const content = container.querySelectorAll('.content-reveal')
-    animate(content, {
-      translateY: [30, 0],
-      opacity: [0, 1],
-      duration: 600,
-      delay: stagger(80, { start: 1000 }),
-      easing: 'cubicBezier(0.4, 0, 0.2, 1)'
-    })
+      // Content fade in
+      const content = container.querySelectorAll('.content-reveal')
+      animate(content, {
+        translateY: [30, 0],
+        opacity: [0, 1],
+        duration: 600,
+        delay: stagger(80, { start: 1000 }),
+        easing: 'cubicBezier(0.4, 0, 0.2, 1)'
+      })
 
-    // Skill badges
-    const badges = container.querySelectorAll('.skill-badge')
-    animate(badges, {
-      scale: [0.8, 1],
-      opacity: [0, 1],
-      duration: 400,
-      delay: stagger(50, { start: 1400 }),
-      easing: 'cubicBezier(0.4, 0, 0.2, 1)'
-    })
+      // Skill badges
+      const badges = container.querySelectorAll('.skill-badge')
+      animate(badges, {
+        scale: [0.8, 1],
+        opacity: [0, 1],
+        duration: 400,
+        delay: stagger(50, { start: 1400 }),
+        easing: 'cubicBezier(0.4, 0, 0.2, 1)'
+      })
+    } catch (e) {
+      console.warn('Animation error:', e)
+      // Make content visible even if animations fail
+      container.querySelectorAll('.title-line, .content-reveal, .skill-badge').forEach(el => {
+        (el as HTMLElement).style.opacity = '1'
+      })
+    }
   }, [])
 
   return (
@@ -287,15 +296,16 @@ export default function DataUniverseHero() {
     >
       {/* 3D Canvas - Full background */}
       <div className="absolute inset-0">
-        <Canvas
+        <SafeCanvas
           camera={{ position: [0, 0, 5], fov: 60 }}
           gl={{ antialias: true, alpha: true }}
-          dpr={[1, 2]}
+          dpr={[1, 1.5]}
+          fallback={<div className="w-full h-full bg-[#050508]" />}
         >
           <Suspense fallback={null}>
             <Scene />
           </Suspense>
-        </Canvas>
+        </SafeCanvas>
       </div>
 
       {/* Gradient overlays for text readability */}

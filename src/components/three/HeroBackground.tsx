@@ -1,8 +1,9 @@
 'use client'
 
 import { useRef, useMemo, useEffect, useState, useCallback } from 'react'
-import { Canvas, useFrame, useThree } from '@react-three/fiber'
+import { useFrame, useThree } from '@react-three/fiber'
 import { Points, PointMaterial } from '@react-three/drei'
+import SafeCanvas from '@/components/three/SafeCanvas'
 import type { Points as PointsType } from 'three'
 import * as THREE from 'three'
 
@@ -178,7 +179,7 @@ export default function HeroBackground() {
 
   return (
     <div className="absolute inset-0">
-      <Canvas
+      <SafeCanvas
         camera={{ position: [0, 0, 5], fov: 70 }}
         dpr={[1, 1.5]}
         gl={{
@@ -192,7 +193,7 @@ export default function HeroBackground() {
         style={{ background: 'transparent' }}
       >
         <Scene />
-      </Canvas>
+      </SafeCanvas>
     </div>
   )
 }

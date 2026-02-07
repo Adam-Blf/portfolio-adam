@@ -1,8 +1,9 @@
 'use client'
 
 import { useRef, useMemo, useEffect, useState, memo } from 'react'
-import { Canvas, useFrame, useThree } from '@react-three/fiber'
+import { useFrame, useThree } from '@react-three/fiber'
 import { Points, PointMaterial } from '@react-three/drei'
+import SafeCanvas from '@/components/three/SafeCanvas'
 import type { Points as PointsType } from 'three'
 import * as THREE from 'three'
 
@@ -236,7 +237,7 @@ export default function PageBackground({ variant = 'default', accentColor = '#FF
 
   return (
     <div className="fixed inset-0 -z-10">
-      <Canvas
+      <SafeCanvas
         camera={{ position: [0, 0, 5], fov: 55 }}
         dpr={[1, 1.5]}
         gl={{
@@ -250,7 +251,7 @@ export default function PageBackground({ variant = 'default', accentColor = '#FF
         style={{ background: 'transparent' }}
       >
         <Scene variant={variant} color={accentColor} />
-      </Canvas>
+      </SafeCanvas>
     </div>
   )
 }
