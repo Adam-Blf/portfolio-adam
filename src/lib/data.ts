@@ -420,7 +420,7 @@ export const education = [
 
 export const certifications = [
   // 2025 - RNCP & IA
-  { name: "Chef de projets digitaux (RNCP 35541)", issuer: "EFREI", year: "2025", date: "2025-06", level: "Niveau 6", rncp: "RNCP35541" },
+  { name: "Chef de projets digitaux (RNCP 35541)", issuer: "EFREI", year: "2025", date: "2025-07", level: "Niveau 6", rncp: "RNCP35541", url: "https://www.francecompetences.fr/recherche/rncp/35541/" },
   { name: "Career Essentials in Generative AI", issuer: "Microsoft", year: "2025", date: "2025-10" },
   { name: "Les competences humaines a l'ere de l'IA", issuer: "Microsoft", year: "2025", date: "2025-11" },
   { name: "Bases de l'IA generative", issuer: "EFREI", year: "2025", date: "2025-09" },
