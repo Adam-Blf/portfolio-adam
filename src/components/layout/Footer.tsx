@@ -19,9 +19,6 @@ export default function Footer() {
 
   return (
     <footer className="border-t border-[--border] py-16 relative">
-      {/* Decorative gradient line */}
-      <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-[--accent] to-transparent opacity-50" />
-
       <div className="container-wide">
         <div className="grid grid-cols-1 md:grid-cols-3 gap-12 mb-12">
 
@@ -49,7 +46,7 @@ export default function Footer() {
                 <Link
                   key={item.href}
                   href={item.href}
-                  className="block text-sm text-[--text-secondary] hover:text-accent transition-colors hover:translate-x-1 transform"
+                  className="block text-sm text-[--text-secondary] hover:text-[--accent] transition-colors hover:translate-x-1 transform"
                 >
                   {t(`nav.${item.key}`)}
                 </Link>
@@ -62,7 +59,7 @@ export default function Footer() {
             <p className="text-caption mb-4">{t('footer.contact')}</p>
             <a
               href={`mailto:${personalInfo.email}`}
-              className="block text-sm text-[--text-secondary] hover:text-accent transition-colors mb-4"
+              className="block text-sm text-[--text-secondary] hover:text-[--accent] transition-colors mb-4"
             >
               {personalInfo.email}
             </a>
@@ -71,7 +68,7 @@ export default function Footer() {
                 href={personalInfo.github}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="text-sm text-[--text-secondary] hover:text-accent transition-colors"
+                className="text-sm text-[--text-secondary] hover:text-[--accent] transition-colors"
                 aria-label={`GitHub ${t('footer.opensInNewWindow')}`}
               >
                 GitHub
@@ -80,7 +77,7 @@ export default function Footer() {
                 href={personalInfo.linkedin}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="text-sm text-[--text-secondary] hover:text-accent transition-colors"
+                className="text-sm text-[--text-secondary] hover:text-[--accent] transition-colors"
                 aria-label={`LinkedIn ${t('footer.opensInNewWindow')}`}
               >
                 LinkedIn

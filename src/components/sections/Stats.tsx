@@ -71,13 +71,13 @@ function AnimatedCounter({ value, suffix, label, loading }: StatItem) {
 
   return (
     <div ref={containerRef} className="text-center" style={{ opacity: loading ? 1 : 0 }} role="listitem">
-      <p className="counter" aria-label={loading ? `Chargement ${label}` : `${value}${suffix} ${label}`}>
+      <p className="metric-value" aria-label={loading ? `Chargement ${label}` : `${value}${suffix} ${label}`}>
         {loading ? (
           <span className="inline-block w-12 h-10 bg-[--bg-elevated] rounded animate-pulse" aria-hidden="true" />
         ) : (
           <>
             <span ref={valueRef} aria-hidden="true">0</span>
-            <span className="text-[--text-muted]" aria-hidden="true">{suffix}</span>
+            <span aria-hidden="true">{suffix}</span>
           </>
         )}
       </p>

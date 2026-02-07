@@ -4,7 +4,6 @@ import { useState, useEffect, useRef } from 'react'
 import Link from 'next/link'
 import Image from 'next/image'
 import { usePathname } from 'next/navigation'
-import { animate, stagger } from 'animejs'
 import { Menu, X, Sun, Moon, Monitor, Globe } from 'lucide-react'
 import { useTheme } from '@/components/providers/ThemeProvider'
 import { useI18n, Locale } from '@/lib/i18n'
@@ -32,71 +31,6 @@ export default function Header() {
   const { theme, setTheme, toggleTheme, resolvedTheme } = useTheme()
   const { locale, setLocale, t } = useI18n()
 
-  // Check for reduced motion preference
-  const [prefersReducedMotion, setPrefersReducedMotion] = useState(false)
-
-  useEffect(() => {
-    const mediaQuery = window.matchMedia('(prefers-reduced-motion: reduce)')
-    setPrefersReducedMotion(mediaQuery.matches)
-    const handler = (e: MediaQueryListEvent) => setPrefersReducedMotion(e.matches)
-    mediaQuery.addEventListener('change', handler)
-    return () => mediaQuery.removeEventListener('change', handler)
-  }, [])
-
-  // Initial header animation using WAAPI + anime.js
-  useEffect(() => {
-    const header = headerRef.current
-    if (!header) return
-
-    // Helper to show all elements
-    const showAllElements = () => {
-      header.style.opacity = '1'
-      header.style.transform = 'translateY(0)'
-      header.classList.add('is-visible')
-      header.querySelectorAll('.nav-link').forEach((el) => {
-        ;(el as HTMLElement).style.opacity = '1'
-        ;(el as HTMLElement).style.transform = 'translateY(0)'
-        el.classList.add('is-visible')
-      })
-    }
-
-    // Skip animations if user prefers reduced motion
-    if (prefersReducedMotion) {
-      showAllElements()
-      return
-    }
-
-    try {
-      // WAAPI for main header
-      header.animate(
-        [
-          { transform: 'translateY(-20px)', opacity: 0 },
-          { transform: 'translateY(0)', opacity: 1 }
-        ],
-        {
-          duration: 600,
-          easing: 'cubic-bezier(0.16, 1, 0.3, 1)',
-          fill: 'forwards'
-        }
-      )
-
-      // Anime.js for staggered nav links
-      animate(header.querySelectorAll('.nav-link'), {
-        translateY: [-10, 0],
-        opacity: [0, 1],
-        duration: 400,
-        easing: 'cubicBezier(0.16, 1, 0.3, 1)',
-        delay: stagger(50, { start: 200 }),
-      })
-
-      // Fallback: ensure visibility after animations should complete
-      setTimeout(showAllElements, 1500)
-    } catch (e) {
-      console.error('Header animation error:', e)
-      showAllElements()
-    }
-  }, [prefersReducedMotion])
-
   // Scroll detection - hide on scroll down, show on scroll up
   useEffect(() => {
     const handleScroll = () => {
@@ -116,53 +50,6 @@ export default function Header() {
     window.addEventListener('scroll', handleScroll, { passive: true })
     return () => window.removeEventListener('scroll', handleScroll)
   }, [])
-
-  // Mobile menu animation with WAAPI + anime.js
-  useEffect(() => {
-    const mobileMenu = mobileMenuRef.current
-    if (!mobileMenu) return
-
-    if (isMobileMenuOpen) {
-      // Helper to show all mobile elements
-      const showMobileElements = () => {
-        mobileMenu.style.opacity = '1'
-        mobileMenu.querySelectorAll('.mobile-link').forEach((el) => {
-          ;(el as HTMLElement).style.opacity = '1'
-          ;(el as HTMLElement).style.transform = 'translateY(0)'
-          el.classList.add('is-visible')
-        })
-      }
-
-      // Skip animations if user prefers reduced motion
-      if (prefersReducedMotion) {
-        showMobileElements()
-        return
-      }
-
-      try {
-        // WAAPI for smooth fade in
-        mobileMenu.animate(
-          [{ opacity: 0 }, { opacity: 1 }],
-          { duration: 300, fill: 'forwards', easing: 'ease-out' }
-        )
-
-        // Anime.js for staggered menu items
-        animate(mobileMenu.querySelectorAll('.mobile-link'), {
-          translateY: [30, 0],
-          opacity: [0, 1],
-          duration: 500,
-          easing: 'cubicBezier(0.16, 1, 0.3, 1)',
-          delay: stagger(80, { start: 100 }),
-        })
-
-        // Fallback
-        setTimeout(showMobileElements, 1000)
-      } catch (e) {
-        console.error('Mobile menu animation error:', e)
-        showMobileElements()
-      }
-    }
-  }, [isMobileMenuOpen, prefersReducedMotion])
 
   // Close menus on click outside
   useEffect(() => {
@@ -188,7 +75,6 @@ export default function Header() {
         className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
           isScrolled ? 'glass-subtle py-3 md:py-4' : 'py-4 md:py-6'
         } ${isHidden ? '-translate-y-full' : 'translate-y-0'}`}
-        style={{ opacity: 0 }}
       >
         <div className="container-wide">
           <nav className="flex items-center justify-between">
@@ -209,12 +95,11 @@ export default function Header() {
                 <Link
                   key={item.href}
                   href={item.href}
-                  className={`nav-link text-sm font-medium transition-colors relative ${
+                  className={`text-sm font-medium transition-colors relative ${
                     pathname === item.href
-                      ? 'text-accent nav-link-active'
+                      ? 'text-[--accent] nav-link-active'
                       : 'text-[--text-secondary] hover:text-[--text-primary]'
                   }`}
-                  style={{ opacity: 0 }}
                   aria-current={pathname === item.href ? 'page' : undefined}
                 >
                   {t(`nav.${item.key}`)}
@@ -225,9 +110,8 @@ export default function Header() {
               <div className="relative" ref={langMenuRef}>
                 <button
                   onClick={() => setShowLangMenu(!showLangMenu)}
-                  className="nav-link p-2 rounded-lg hover:bg-[--bg-elevated] transition-colors flex items-center gap-1"
+                  className="p-2 rounded-lg hover:bg-[--bg-elevated] transition-colors flex items-center gap-1"
                   aria-label="Change language"
-                  style={{ opacity: 0 }}
                 >
                   <Globe size={16} className="text-[--text-secondary]" />
                   <span className="text-xs font-medium text-[--text-secondary] uppercase">{locale}</span>
@@ -240,12 +124,12 @@ export default function Header() {
                     className="absolute right-0 top-full mt-2 py-2 px-1 bg-[--bg-surface] border border-[--border] rounded-lg shadow-lg min-w-[140px] max-h-[300px] overflow-y-auto"
                   >
                     {[
-                      { value: 'fr', label: 'Français', flag: '🇫🇷' },
+                      { value: 'fr', label: 'Francais', flag: '🇫🇷' },
                       { value: 'en', label: 'English', flag: '🇬🇧' },
                       { value: 'de', label: 'Deutsch', flag: '🇩🇪' },
-                      { value: 'es', label: 'Español', flag: '🇪🇸' },
+                      { value: 'es', label: 'Espanol', flag: '🇪🇸' },
                       { value: 'it', label: 'Italiano', flag: '🇮🇹' },
-                      { value: 'pt', label: 'Português', flag: '🇵🇹' },
+                      { value: 'pt', label: 'Portugues', flag: '🇵🇹' },
                       { value: 'nl', label: 'Nederlands', flag: '🇳🇱' },
                       { value: 'pl', label: 'Polski', flag: '🇵🇱' },
                     ].map((lang) => (
@@ -259,7 +143,7 @@ export default function Header() {
                         aria-checked={locale === lang.value}
                         className={`flex items-center gap-2 w-full px-3 py-2 text-sm rounded-md transition-colors ${
                           locale === lang.value
-                            ? 'bg-accent/10 text-accent'
+                            ? 'bg-[--accent]/10 text-[--accent]'
                             : 'text-[--text-secondary] hover:bg-[--bg-hover]'
                         }`}
                       >
@@ -275,9 +159,8 @@ export default function Header() {
               <div className="relative" ref={themeMenuRef}>
                 <button
                   onClick={() => setShowThemeMenu(!showThemeMenu)}
-                  className="nav-link p-2 rounded-lg hover:bg-[--bg-elevated] transition-colors"
+                  className="p-2 rounded-lg hover:bg-[--bg-elevated] transition-colors"
                   aria-label="Changer le theme"
-                  style={{ opacity: 0 }}
                 >
                   <ThemeIcon size={18} className="text-[--text-secondary]" />
                 </button>
@@ -304,7 +187,7 @@ export default function Header() {
                         aria-checked={theme === option.value}
                         className={`flex items-center gap-2 w-full px-3 py-2 text-sm rounded-md transition-colors ${
                           theme === option.value
-                            ? 'bg-accent/10 text-accent'
+                            ? 'bg-[--accent]/10 text-[--accent]'
                             : 'text-[--text-secondary] hover:bg-[--bg-hover]'
                         }`}
                       >
@@ -355,26 +238,25 @@ export default function Header() {
           role="dialog"
           aria-modal="true"
           aria-label="Menu de navigation"
-          className="fixed inset-0 z-40 bg-[--bg-deep] md:hidden"
-          style={{ opacity: 0 }}
+          className="fixed inset-0 z-40 bg-[--bg-deep] md:hidden animate-fade-in"
         >
           <div className="flex flex-col items-center justify-center h-full gap-6 md:gap-8">
-            {navKeys.map((item) => (
+            {navKeys.map((item, index) => (
               <Link
                 key={item.href}
                 href={item.href}
                 onClick={() => setIsMobileMenuOpen(false)}
-                className={`mobile-link text-2xl md:text-3xl font-bold ${
-                  pathname === item.href ? 'text-accent' : 'text-[--text-primary]'
+                className={`text-2xl md:text-3xl font-bold transition-all ${
+                  pathname === item.href ? 'text-[--accent]' : 'text-[--text-primary]'
                 }`}
-                style={{ opacity: 0 }}
+                style={{ animationDelay: `${index * 50}ms` }}
               >
                 {t(`nav.${item.key}`)}
               </Link>
             ))}
 
             {/* Mobile language switcher */}
-            <div className="flex flex-wrap justify-center gap-2 mt-6 mobile-link max-w-xs" style={{ opacity: 0 }}>
+            <div className="flex flex-wrap justify-center gap-2 mt-6 max-w-xs">
               {[
                 { value: 'fr', flag: '🇫🇷' },
                 { value: 'en', flag: '🇬🇧' },
@@ -390,7 +272,7 @@ export default function Header() {
                   onClick={() => setLocale(lang.value as Locale)}
                   className={`px-3 py-2 rounded-xl border transition-all text-lg ${
                     locale === lang.value
-                      ? 'border-accent bg-accent/10'
+                      ? 'border-[--accent] bg-[--accent]/10'
                       : 'border-[--border]'
                   }`}
                   aria-label={lang.value.toUpperCase()}
@@ -401,7 +283,7 @@ export default function Header() {
             </div>
 
             {/* Mobile theme options */}
-            <div className="flex gap-4 mt-4 mobile-link" style={{ opacity: 0 }}>
+            <div className="flex gap-4 mt-4">
               {[
                 { value: 'light', icon: Sun, label: 'Theme clair' },
                 { value: 'dark', icon: Moon, label: 'Theme sombre' },
@@ -414,7 +296,7 @@ export default function Header() {
                   aria-pressed={theme === option.value}
                   className={`p-3 rounded-xl border transition-all ${
                     theme === option.value
-                      ? 'border-accent bg-accent/10 text-accent'
+                      ? 'border-[--accent] bg-[--accent]/10 text-[--accent]'
                       : 'border-[--border] text-[--text-secondary]'
                   }`}
                 >

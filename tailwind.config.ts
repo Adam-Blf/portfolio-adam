@@ -49,7 +49,8 @@ const config: Config = {
         },
       },
       fontFamily: {
-        sans: ['Outfit', '-apple-system', 'sans-serif'],
+        display: ['Space Grotesk', 'sans-serif'],
+        sans: ['Inter', 'sans-serif'],
         mono: ['Fira Code', 'monospace'],
       },
       boxShadow: {
@@ -57,13 +58,11 @@ const config: Config = {
         md: 'var(--shadow-md)',
         lg: 'var(--shadow-lg)',
         glow: 'var(--shadow-glow)',
-        'glow-lg': 'var(--shadow-glow-lg)',
       },
       animation: {
         'fade-in': 'fadeIn 0.5s ease-out forwards',
         'fade-up': 'fadeUp 0.7s cubic-bezier(0.16, 1, 0.3, 1) forwards',
         'slide-in': 'slideIn 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards',
-        'glow': 'glow 2s ease-in-out infinite',
         'pulse-dot': 'pulse-dot 2s ease-in-out infinite',
       },
       keyframes: {
@@ -78,10 +77,6 @@ const config: Config = {
         slideIn: {
           '0%': { opacity: '0', transform: 'translate3d(-20px, 0, 0)' },
           '100%': { opacity: '1', transform: 'translate3d(0, 0, 0)' },
-        },
-        glow: {
-          '0%, 100%': { boxShadow: '0 0 20px var(--accent-muted)' },
-          '50%': { boxShadow: '0 0 40px var(--accent-glow)' },
         },
         'pulse-dot': {
           '0%, 100%': { opacity: '1', transform: 'scale(1)' },

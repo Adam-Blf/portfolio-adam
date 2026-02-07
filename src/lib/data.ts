@@ -539,15 +539,15 @@ export const projects = {
 
   // Map of repo names to their live demo URLs
   homepages: {
-    "Taskmate": "https://taskmate-mauve.vercel.app",
+    "Taskmate": "https://taskmatev2.vercel.app",
     "Echo": "https://echo-dating.vercel.app",
-    "genius": "https://swipy-app-tawny.vercel.app",
+    "genius": "https://genius-pwa.vercel.app",
     "folder-analyzer-web": "https://adam-blf.github.io/folder-analyzer-web/",
     "Projet-IA-Generative-Doctis-AI-mo": "https://doctis-ai-mo.vercel.app",
-    "black-out": "https://black-out-iota.vercel.app",
+    "black-out": "https://black-out-adam-blfs-projects.vercel.app",
     "Borderland": "https://blackout-tau.vercel.app",
     "ChessAI-SelfLearning-Web": "https://chess-ai-self-learning-web.vercel.app",
-    "pgvplanning": "https://pgvplaning.vercel.app",
+    "pgvplanning": "https://pgv-planning-adam-blfs-projects.vercel.app",
     "Calculator-JS": "https://adam-blf.github.io/Calculator-JS/",
     "Mendelieve.io": "https://adam-blf.github.io/Mendelieve.io/",
     "Snake-Game": "https://adam-blf.github.io/Snake-Game/",

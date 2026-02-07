@@ -4,7 +4,7 @@ import { cn } from '@/lib/utils'
 import Link from 'next/link'
 
 interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
-  variant?: 'primary' | 'secondary' | 'outline' | 'ghost'
+  variant?: 'primary' | 'secondary' | 'outline' | 'ghost' | 'gradient'
   size?: 'sm' | 'md' | 'lg'
   children: React.ReactNode
   href?: string
@@ -19,71 +19,52 @@ export default function Button({
   ...props
 }: ButtonProps) {
   const baseStyles = `
-    relative inline-flex items-center justify-center font-semibold rounded-xl
-    transition-all duration-300 ease-out
-    focus:outline-none focus-visible:ring-2 focus-visible:ring-accent-secondary focus-visible:ring-offset-2 focus-visible:ring-offset-background-primary
+    inline-flex items-center justify-center font-semibold rounded-lg
+    transition-all duration-200 ease-out
+    focus:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 focus-visible:ring-offset-[--bg-deep]
     disabled:opacity-50 disabled:cursor-not-allowed
-    overflow-hidden group
-    hover:scale-[1.02] hover:-translate-y-0.5 active:scale-[0.98]
   `
 
   const variants = {
     primary: `
-      bg-gradient-to-r from-accent-primary via-accent-secondary to-accent-primary
-      bg-[length:200%_100%] bg-left
-      text-white font-semibold
-      hover:bg-right
-      shadow-[0_4px_20px_rgba(0,102,255,0.4)]
-      hover:shadow-[0_6px_30px_rgba(0,212,255,0.5)]
+      bg-[--accent] text-white font-semibold
+      hover:bg-[--accent-dim] hover:-translate-y-0.5
+      shadow-sm hover:shadow-md
     `,
     secondary: `
-      bg-background-card text-text-primary
-      border border-glass-border
-      hover:bg-background-hover hover:border-accent-primary/30
-      shadow-lg shadow-black/20
+      bg-[--bg-elevated] text-[--text-primary]
+      border border-[--border]
+      hover:bg-[--bg-hover] hover:border-[--border-accent]
     `,
     outline: `
-      border-2 border-accent-primary text-accent-primary
-      hover:bg-accent-primary hover:text-white
-      hover:shadow-[0_0_30px_rgba(0,102,255,0.4)]
+      border border-[--border] text-[--text-primary]
+      hover:border-[--accent] hover:text-[--accent]
+      bg-transparent
     `,
     ghost: `
-      text-text-secondary
-      hover:text-accent-secondary hover:bg-background-card/50
+      text-[--text-secondary] bg-transparent
+      hover:text-[--text-primary] hover:bg-[--bg-elevated]
+    `,
+    gradient: `
+      bg-gradient-to-r from-[--accent] to-[--highlight]
+      text-white font-semibold
+      hover:-translate-y-0.5 hover:shadow-lg
+      shadow-md
     `,
   }
 
   const sizes = {
-    sm: 'px-4 py-2 text-sm',
-    md: 'px-6 py-3 text-sm',
-    lg: 'px-8 py-4 text-base',
+    sm: 'px-4 py-2 text-sm gap-1.5',
+    md: 'px-6 py-3 text-sm gap-2',
+    lg: 'px-8 py-4 text-base gap-2',
   }
-
-  const content = (
-    <>
-      {/* Shine effect on hover */}
-      <span className="absolute inset-0 overflow-hidden rounded-xl">
-        <span className="absolute inset-0 -translate-x-full group-hover:translate-x-full transition-transform duration-700 ease-out bg-gradient-to-r from-transparent via-white/10 to-transparent" />
-      </span>
-
-      {/* Glow effect for primary */}
-      {variant === 'primary' && (
-        <span className="absolute inset-0 rounded-xl bg-gradient-to-r from-accent-primary to-accent-secondary opacity-0 group-hover:opacity-20 blur-xl transition-opacity duration-300" />
-      )}
-
-      {/* Button content */}
-      <span className="relative z-10 flex items-center gap-2">
-        {children}
-      </span>
-    </>
-  )
 
   const buttonClasses = cn(baseStyles, variants[variant], sizes[size], className)
 
   if (href) {
     return (
       <Link href={href} className={buttonClasses}>
-        {content}
+        {children}
       </Link>
     )
   }
@@ -93,7 +74,7 @@ export default function Button({
       className={buttonClasses}
       {...props}
     >
-      {content}
+      {children}
     </button>
   )
 }
