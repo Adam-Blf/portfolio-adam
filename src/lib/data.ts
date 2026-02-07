@@ -79,7 +79,6 @@ export const personalInfo = {
   slogan: "From Data to Decisions. From Code to Impact.",
   subtitle: "M1 Data Engineering & IA @ EFREI Paris | Ingenieur Data @ GHT Psy Sud | President BDE EFREI",
   email: "adam.beloucif@efrei.net",
-  phone: "0786466834",
   location: "Paris, France",
   birthday: "20 juin 2004",
   linkedin: "https://www.linkedin.com/in/adambeloucif/",

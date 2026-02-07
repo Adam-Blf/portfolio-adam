@@ -199,16 +199,6 @@ export default function Contact() {
                   </p>
                 </a>
 
-                <a
-                  href={`tel:${personalInfo.phone}`}
-                  className="block group"
-                >
-                  <p className="text-caption mb-1">Téléphone</p>
-                  <p className="text-lg group-hover:text-accent transition-colors">
-                    {personalInfo.phone}
-                  </p>
-                </a>
-
                 <div>
                   <p className="text-caption mb-1">Localisation</p>
                   <p className="text-lg">{personalInfo.location}</p>
