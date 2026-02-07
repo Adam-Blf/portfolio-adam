@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useCallback } from 'react'
 import { animate, stagger, createTimeline } from 'animejs'
+import { useReducedMotion } from './useReducedMotion'
 
 // Hook for scroll-triggered animations
 export function useScrollAnimation<T extends HTMLElement>(
@@ -10,10 +11,17 @@ export function useScrollAnimation<T extends HTMLElement>(
 ) {
   const ref = useRef<T>(null)
   const hasAnimated = useRef(false)
+  const prefersReducedMotion = useReducedMotion()
 
   useEffect(() => {
     const element = ref.current
     if (!element) return
+
+    // Skip animation if user prefers reduced motion
+    if (prefersReducedMotion) {
+      element.style.opacity = '1'
+      return
+    }
 
     const observer = new IntersectionObserver(
       (entries) => {
@@ -37,7 +45,7 @@ export function useScrollAnimation<T extends HTMLElement>(
     observer.observe(element)
 
     return () => observer.disconnect()
-  }, [animationFn, options])
+  }, [animationFn, options, prefersReducedMotion])
 
   return ref
 }
@@ -50,12 +58,22 @@ export function useStaggerAnimation(
 ) {
   const containerRef = useRef<HTMLDivElement>(null)
   const hasAnimated = useRef(false)
+  const prefersReducedMotion = useReducedMotion()
 
   useEffect(() => {
     const container = containerRef.current
     if (!container) return
 
     const children = container.querySelectorAll(selector)
+
+    // Skip animation if user prefers reduced motion
+    if (prefersReducedMotion) {
+      children.forEach((child) => {
+        ;(child as HTMLElement).style.opacity = '1'
+      })
+      return
+    }
+
     children.forEach((child) => {
       ;(child as HTMLElement).style.opacity = '0'
     })
@@ -86,7 +104,7 @@ export function useStaggerAnimation(
     observer.observe(container)
 
     return () => observer.disconnect()
-  }, [selector, staggerDelay, options])
+  }, [selector, staggerDelay, options, prefersReducedMotion])
 
   return containerRef
 }
@@ -95,10 +113,17 @@ export function useStaggerAnimation(
 export function useCounterAnimation(endValue: number, duration = 2000) {
   const ref = useRef<HTMLSpanElement>(null)
   const hasAnimated = useRef(false)
+  const prefersReducedMotion = useReducedMotion()
 
   useEffect(() => {
     const element = ref.current
     if (!element) return
+
+    // Show final value immediately if user prefers reduced motion
+    if (prefersReducedMotion) {
+      element.textContent = endValue.toString()
+      return
+    }
 
     const observer = new IntersectionObserver(
       (entries) => {
@@ -124,7 +149,7 @@ export function useCounterAnimation(endValue: number, duration = 2000) {
     observer.observe(element)
 
     return () => observer.disconnect()
-  }, [endValue, duration])
+  }, [endValue, duration, prefersReducedMotion])
 
   return ref
 }
@@ -133,10 +158,17 @@ export function useCounterAnimation(endValue: number, duration = 2000) {
 export function useProgressBar(percentage: number) {
   const ref = useRef<HTMLDivElement>(null)
   const hasAnimated = useRef(false)
+  const prefersReducedMotion = useReducedMotion()
 
   useEffect(() => {
     const element = ref.current
     if (!element) return
+
+    // Show final state immediately if user prefers reduced motion
+    if (prefersReducedMotion) {
+      element.style.width = `${percentage}%`
+      return
+    }
 
     element.style.width = '0%'
 
@@ -161,7 +193,7 @@ export function useProgressBar(percentage: number) {
     observer.observe(element)
 
     return () => observer.disconnect()
-  }, [percentage])
+  }, [percentage, prefersReducedMotion])
 
   return ref
 }
@@ -169,10 +201,14 @@ export function useProgressBar(percentage: number) {
 // Hook for hover animations using WAAPI
 export function useHoverAnimation(scale = 1.02, lift = -4) {
   const ref = useRef<HTMLElement>(null)
+  const prefersReducedMotion = useReducedMotion()
 
   useEffect(() => {
     const element = ref.current
     if (!element) return
+
+    // Skip hover animations if user prefers reduced motion
+    if (prefersReducedMotion) return
 
     const handleEnter = () => {
       element.animate(
@@ -209,7 +245,7 @@ export function useHoverAnimation(scale = 1.02, lift = -4) {
       element.removeEventListener('mouseenter', handleEnter)
       element.removeEventListener('mouseleave', handleLeave)
     }
-  }, [scale, lift])
+  }, [scale, lift, prefersReducedMotion])
 
   return ref
 }
@@ -217,6 +253,7 @@ export function useHoverAnimation(scale = 1.02, lift = -4) {
 // Hook for page load animation
 export function usePageLoadAnimation() {
   const ref = useRef<HTMLDivElement>(null)
+  const prefersReducedMotion = useReducedMotion()
 
   useEffect(() => {
     const container = ref.current
@@ -224,6 +261,14 @@ export function usePageLoadAnimation() {
 
     // Animate all children with data-animate attribute
     const elements = container.querySelectorAll('[data-animate]')
+
+    // Skip animation if user prefers reduced motion
+    if (prefersReducedMotion) {
+      elements.forEach((el) => {
+        ;(el as HTMLElement).style.opacity = '1'
+      })
+      return
+    }
 
     elements.forEach((el) => {
       ;(el as HTMLElement).style.opacity = '0'
@@ -236,7 +281,7 @@ export function usePageLoadAnimation() {
       easing: 'cubicBezier(0.16, 1, 0.3, 1)',
       delay: stagger(100, { start: 100 }),
     })
-  }, [])
+  }, [prefersReducedMotion])
 
   return ref
 }
