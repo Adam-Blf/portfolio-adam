@@ -3,7 +3,7 @@
 import { useState, useEffect, useRef } from 'react'
 import dynamic from 'next/dynamic'
 import { animate, stagger } from 'animejs'
-import { Github, Code2, Database, Cloud, Brain, Blocks, Server, Palette, GitCommit } from 'lucide-react'
+import { Github, Code2, Database, Cloud, Brain, Blocks, Server, GitCommit } from 'lucide-react'
 import { skills as staticSkills, certifications } from '@/lib/data'
 import ErrorBoundary from '@/components/ErrorBoundary'
 
@@ -22,11 +22,37 @@ interface GitHubRepo {
   archived: boolean
 }
 
-interface SkillCategory {
+interface SkillData {
+  name: string
+  count: number
+}
+
+interface CachedCategory {
   key: string
   title: string
+  skills: SkillData[]
+}
+
+interface SkillCategory extends CachedCategory {
   icon: React.ReactNode
-  skills: { name: string; count: number }[]
+}
+
+// Icon map for categories (must be outside component to avoid recreation)
+const categoryIcons: Record<string, React.ReactNode> = {
+  languages: <Code2 size={18} />,
+  frameworks: <Blocks size={18} />,
+  data: <Database size={18} />,
+  ai: <Brain size={18} />,
+  databases: <Server size={18} />,
+  cloud: <Cloud size={18} />,
+}
+
+// Add icons to cached categories
+const addIconsToCategories = (cached: CachedCategory[]): SkillCategory[] => {
+  return cached.map(cat => ({
+    ...cat,
+    icon: categoryIcons[cat.key] || <Code2 size={18} />,
+  }))
 }
 
 // Extended badge config for shields.io
@@ -324,7 +350,8 @@ export default function Competences() {
         if (cached) {
           const { data, timestamp } = JSON.parse(cached)
           if (Date.now() - timestamp < CACHE_DURATION) {
-            setCategories(data.categories)
+            // Add icons back to cached categories (icons can't be serialized)
+            setCategories(addIconsToCategories(data.categories))
             setTotalRepos(data.totalRepos)
             setTotalCommits(data.totalCommits || 0)
             setLoading(false)
@@ -332,7 +359,8 @@ export default function Competences() {
           }
         }
       } catch (e) {
-        // Cache read failed
+        // Cache read failed, clear corrupted cache
+        localStorage.removeItem(CACHE_KEY)
       }
 
       try {
@@ -420,17 +448,18 @@ export default function Competences() {
           categorized[key].sort((a, b) => b.count - a.count)
         }
 
-        // Build final categories
-        const finalCategories: SkillCategory[] = [
-          { key: 'languages', title: 'Langages', icon: <Code2 size={18} />, skills: categorized.languages },
-          { key: 'frameworks', title: 'Frameworks & Libraries', icon: <Blocks size={18} />, skills: categorized.frameworks },
-          { key: 'data', title: 'Data & Viz', icon: <Database size={18} />, skills: categorized.data },
-          { key: 'ai', title: 'AI / ML / NLP', icon: <Brain size={18} />, skills: categorized.ai },
-          { key: 'databases', title: 'Databases', icon: <Server size={18} />, skills: categorized.databases },
-          { key: 'cloud', title: 'Cloud & DevOps', icon: <Cloud size={18} />, skills: categorized.cloud },
+        // Build final categories (without icons for caching)
+        const cachedCategories: CachedCategory[] = [
+          { key: 'languages', title: 'Langages', skills: categorized.languages },
+          { key: 'frameworks', title: 'Frameworks & Libraries', skills: categorized.frameworks },
+          { key: 'data', title: 'Data & Viz', skills: categorized.data },
+          { key: 'ai', title: 'AI / ML / NLP', skills: categorized.ai },
+          { key: 'databases', title: 'Databases', skills: categorized.databases },
+          { key: 'cloud', title: 'Cloud & DevOps', skills: categorized.cloud },
         ].filter(cat => cat.skills.length > 0)
 
-        setCategories(finalCategories)
+        // Add icons for display
+        setCategories(addIconsToCategories(cachedCategories))
 
         // Estimate commits
         let commits = 0
@@ -455,10 +484,10 @@ export default function Competences() {
         const estimatedCommits = Math.round(avgPerRepo * filteredRepos.length)
         setTotalCommits(estimatedCommits)
 
-        // Cache
+        // Cache (store only serializable data without React elements)
         try {
           localStorage.setItem(CACHE_KEY, JSON.stringify({
-            data: { categories: finalCategories, totalRepos: filteredRepos.length, totalCommits: estimatedCommits },
+            data: { categories: cachedCategories, totalRepos: filteredRepos.length, totalCommits: estimatedCommits },
             timestamp: Date.now()
           }))
         } catch {}
