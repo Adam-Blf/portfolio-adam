@@ -9,12 +9,16 @@ export const logoMap: Record<string, string> = {
   "BNP Paribas": "/logos/bnp_paribas_logo.jpg",
   "Marine Nationale": "/logos/marine_nationale_logo.jpg",
   "DE NOUVEL ARCHITECT POUR COMMUNICATION": "/logos/boneit_logo.jpg",
+  "McDonald's": "/logos/mcdonalds_corporation_logo.jpg",
 
   // Ecoles
   "EFREI Paris": "/logos/efrei_logo.jpg",
   "EFREI Paris x ISIT (Double diplome)": "/logos/efrei_logo.jpg",
   "ISIT Paris": "/logos/isit_paris_logo.jpg",
   "Universidad de Malaga": "/logos/universidad_de_malaga_logo.jpg",
+
+  // Partenaires
+  "Inetum": "/logos/inetum_logo.svg",
 
   // Certifications issuers
   "Microsoft": "/logos/microsoft_logo.jpg",

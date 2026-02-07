@@ -42,13 +42,14 @@ export function I18nProvider({ children }: { children: ReactNode }) {
     setMounted(true)
     // Check localStorage for saved preference
     const saved = localStorage.getItem('locale') as Locale | null
-    if (saved && (saved === 'fr' || saved === 'en')) {
+    const validLocales: Locale[] = ['fr', 'en', 'de', 'es', 'it', 'pt', 'nl', 'pl']
+    if (saved && validLocales.includes(saved)) {
       setLocaleState(saved)
     } else {
       // Detect browser language
-      const browserLang = navigator.language.split('-')[0]
-      if (browserLang === 'en') {
-        setLocaleState('en')
+      const browserLang = navigator.language.split('-')[0] as Locale
+      if (validLocales.includes(browserLang)) {
+        setLocaleState(browserLang)
       }
     }
   }, [])
