@@ -123,7 +123,7 @@ export default function Stats() {
         }
 
         const repos = await response.json()
-        const excludedRepos = ['Adam-Blf', 'portfolio', 'Logo', 'Keep-Alive', 'portfolio-adam']
+        const excludedRepos = ['Adam-Blf', 'portfolio', 'Logo', 'Keep-Alive', 'portfolio-adam', 'LLM-Council', '99']
         const filteredRepos = repos.filter((repo: any) =>
           !excludedRepos.includes(repo.name) &&
           !repo.fork &&

@@ -151,10 +151,14 @@ export default function AboutPreview() {
               ))}
             </div>
 
-            <div className="about-cta mt-8" style={{ opacity: 0 }}>
+            <div className="about-cta mt-8 flex flex-wrap gap-4" style={{ opacity: 0 }}>
               <Link href="/frise" className="btn btn-outline">
                 Voir le parcours complet
                 <ArrowUpRight size={16} />
+              </Link>
+              <Link href="/contact" className="btn btn-primary group">
+                Me contacter
+                <ArrowUpRight size={16} className="transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
               </Link>
             </div>
           </div>

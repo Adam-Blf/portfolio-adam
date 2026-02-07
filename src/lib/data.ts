@@ -535,11 +535,10 @@ export const techBadges = {
 }
 
 export const projects = {
-  featured: ["LLM-Council", "Langue-des-signes", "Taskmate", "AISCA-Cocktails", "Echo", "folder-analyzer-web"],
+  featured: ["Langue-des-signes", "Taskmate", "AISCA-Cocktails", "Echo", "folder-analyzer-web", "genius"],
 
   categories: {
     "AI / ML / NLP": [
-      { name: "LLM-Council", lang: "Python", desc: "Systeme de deliberation LLM 3 etapes avec peer review anonymise", tags: ["Python", "OpenAI", "LLM"] },
       { name: "AISCA-Cocktails", lang: "Python", desc: "App recommandation cocktails avec SBERT semantic search + RAG", tags: ["Python", "SBERT", "RAG", "Streamlit"] },
       { name: "EFREI-NLP-Anime-Recommendation", lang: "Python", desc: "Moteur recommandation NLP (TF-IDF, Cosine Similarity)", tags: ["Python", "NLP", "Scikit-learn"] },
       { name: "Langue-des-signes", lang: "Python", desc: "IA apprentissage langue des signes avec MediaPipe + Deep Learning", tags: ["Python", "MediaPipe", "Computer Vision", "Deep Learning"] },
@@ -569,9 +568,7 @@ export const projects = {
       { name: "ExcelCleaner", lang: "Python", desc: "Utilitaire GUI nettoyage et restructuration fichiers Excel", tags: ["Python", "Pandas", "GUI", "Automation"] },
       { name: "folder-analyzer-web", lang: "JavaScript", desc: "Outil audit fichiers ultra-rapide 100% browser", tags: ["JavaScript", "File System API", "Browser"] },
       { name: "pin-collector", lang: "Python", desc: "Gestion collections avec Streamlit", tags: ["Python", "Streamlit", "Data Viz"] },
-      { name: "Keep-Alive", lang: "JavaScript", desc: "Script utilitaire maintien services actifs", tags: ["JavaScript", "DevOps", "Utility"] },
       { name: "dimmoulinette", lang: "Python", desc: "Outil utilitaire Python", tags: ["Python"] },
-      { name: "Logo", lang: "Python", desc: "Generateur/outil de logos", tags: ["Python", "Graphics"] },
     ],
     "Jeux & Simulations": [
       { name: "Blackjack-Simulator", lang: "Python", desc: "Simulateur blackjack pro avec 5 strategies IA", tags: ["Python", "OOP", "AI", "Simulation"] },
@@ -579,12 +576,10 @@ export const projects = {
       { name: "Pong-Game", lang: "CSS/JS", desc: "Pong classique avec mode solo IA", tags: ["JavaScript", "CSS", "AI"] },
       { name: "PMU-Game", lang: "CSS/JS", desc: "Simulation paris hippiques", tags: ["JavaScript", "CSS", "Simulation"] },
       { name: "Guess-The-Number", lang: "CSS/JS", desc: "Jeu devinette avec indices", tags: ["JavaScript", "CSS"] },
-      { name: "99", lang: "JavaScript", desc: "Jeu de cartes 99", tags: ["JavaScript", "Card Game"] },
     ],
     "Autres": [
       { name: "Calculator-JS", lang: "JavaScript", desc: "Calculatrice scientifique avec historique", tags: ["JavaScript", "Math"] },
       { name: "black-out", lang: "TypeScript", desc: "Projet black-out", tags: ["TypeScript"] },
-      { name: "portfolio", lang: "HTML", desc: "Portfolio personnel (ancienne version)", tags: ["HTML", "CSS"] },
     ],
   },
 }

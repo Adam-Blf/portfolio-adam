@@ -1,7 +1,7 @@
 import { MetadataRoute } from 'next'
 
 export default function sitemap(): MetadataRoute.Sitemap {
-  const baseUrl = 'https://adam-beloucif.dev'
+  const baseUrl = 'https://adam.beloucif.com'
 
   return [
     {
@@ -24,6 +24,12 @@ export default function sitemap(): MetadataRoute.Sitemap {
     },
     {
       url: `${baseUrl}/frise`,
+      lastModified: new Date(),
+      changeFrequency: 'monthly',
+      priority: 0.7,
+    },
+    {
+      url: `${baseUrl}/parcours`,
       lastModified: new Date(),
       changeFrequency: 'monthly',
       priority: 0.7,

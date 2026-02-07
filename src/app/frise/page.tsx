@@ -20,7 +20,9 @@ import {
   MapPin,
   Calendar,
   Sparkles,
-  ArrowUp
+  ArrowUp,
+  ArrowUpRight,
+  Mail
 } from 'lucide-react'
 import ErrorBoundary from '@/components/ErrorBoundary'
 
@@ -634,6 +636,30 @@ export default function FrisePage() {
               ))}
             </div>
           </div>
+
+          {/* CTA Section */}
+          <section className="py-20 mt-12 border-t border-[--border]">
+            <div className="max-w-2xl mx-auto text-center">
+              <p className="text-caption mb-4">La suite ?</p>
+              <h2 className="text-headline mb-6">
+                Construisons le prochain <span className="accent-line">chapitre</span>
+              </h2>
+              <p className="text-body-lg text-[--text-secondary] mb-10">
+                Mon parcours m'a appris à m'adapter, innover et livrer. Discutons de vos projets ambitieux.
+              </p>
+              <div className="flex flex-wrap justify-center gap-4">
+                <a href="/contact" className="btn btn-primary group">
+                  <Mail size={16} />
+                  Me contacter
+                  <ArrowUpRight size={16} className="transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
+                </a>
+                <a href="/projets" className="btn btn-outline">
+                  Voir mes projets
+                  <ArrowUpRight size={16} />
+                </a>
+              </div>
+            </div>
+          </section>
 
         </div>
       </main>

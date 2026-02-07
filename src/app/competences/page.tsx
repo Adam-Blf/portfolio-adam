@@ -3,8 +3,8 @@
 import { useState, useEffect, useRef } from 'react'
 import dynamic from 'next/dynamic'
 import { animate, stagger } from 'animejs'
-import { Github, Code2, Database, Cloud, Brain, Blocks, Server, GitCommit } from 'lucide-react'
-import { skills as staticSkills, certifications } from '@/lib/data'
+import { Github, Code2, Database, Cloud, Brain, Blocks, Server, GitCommit, ArrowUpRight, Mail } from 'lucide-react'
+import { skills as staticSkills, certifications, personalInfo } from '@/lib/data'
 import ErrorBoundary from '@/components/ErrorBoundary'
 
 const SpaceBackground = dynamic(
@@ -798,18 +798,35 @@ export default function Competences() {
             </div>
           </section>
 
-          {/* GitHub link */}
-          <div className="mt-12 text-center">
-            <a
-              href="https://github.com/Adam-Blf"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-flex items-center gap-2 text-[--text-secondary] hover:text-accent transition-colors"
-            >
-              <Github size={18} />
-              <span className="text-sm">Voir tous les projets sur GitHub</span>
-            </a>
-          </div>
+          {/* CTA Section */}
+          <section className="py-20 mt-12 border-t border-[--border]">
+            <div className="max-w-2xl mx-auto text-center">
+              <p className="text-caption mb-4">Intéressé ?</p>
+              <h2 className="text-headline mb-6">
+                Ces compétences au service de <span className="accent-line">votre projet</span>
+              </h2>
+              <p className="text-body-lg text-[--text-secondary] mb-10">
+                Data Engineering, IA, Fullstack — discutons de comment je peux contribuer à vos ambitions.
+              </p>
+              <div className="flex flex-wrap justify-center gap-4">
+                <a href="/contact" className="btn btn-primary group">
+                  <Mail size={16} />
+                  Me contacter
+                  <ArrowUpRight size={16} className="transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
+                </a>
+                <a
+                  href={personalInfo.github}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="btn btn-outline"
+                >
+                  <Github size={16} />
+                  Voir mes projets
+                  <ArrowUpRight size={16} />
+                </a>
+              </div>
+            </div>
+          </section>
         </div>
       </main>
     </>

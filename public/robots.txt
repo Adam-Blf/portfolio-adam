@@ -3,4 +3,4 @@ User-agent: *
 Allow: /
 
 # Sitemap
-Sitemap: https://adam-beloucif.dev/sitemap.xml
+Sitemap: https://adam.beloucif.com/sitemap.xml

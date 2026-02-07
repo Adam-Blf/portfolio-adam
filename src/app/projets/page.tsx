@@ -3,8 +3,9 @@
 import { useState, useEffect, useRef, useMemo } from 'react'
 import dynamic from 'next/dynamic'
 import { animate, stagger } from 'animejs'
-import { ArrowUpRight, Github, Star, GitFork, GitCommit } from 'lucide-react'
+import { ArrowUpRight, Github, Star, GitFork, GitCommit, ExternalLink, Mail } from 'lucide-react'
 import ErrorBoundary from '@/components/ErrorBoundary'
+import { personalInfo } from '@/lib/data'
 
 const SpaceBackground = dynamic(
   () => import('@/components/three/SpaceBackground').catch(() => {
@@ -22,6 +23,7 @@ interface ProcessedProject {
   lang: string
   tags: string[]
   url: string
+  homepage?: string | null
   stars: number
   forks: number
   commits: number
@@ -96,7 +98,7 @@ export default function Projets() {
         }
 
         const repos = await response.json()
-        const excludedRepos = ['Adam-Blf', 'portfolio', 'Logo', 'Keep-Alive', 'portfolio-adam']
+        const excludedRepos = ['Adam-Blf', 'portfolio', 'Logo', 'Keep-Alive', 'portfolio-adam', 'LLM-Council', '99']
 
         const filteredRepos = repos.filter((repo: any) =>
           !excludedRepos.includes(repo.name) &&
@@ -135,6 +137,7 @@ export default function Projets() {
             lang: repo.language || 'Multi',
             tags: tags.length > 0 ? tags : ['Code'],
             url: repo.html_url,
+            homepage: repo.homepage || null,
             stars: repo.stargazers_count,
             forks: repo.forks_count,
             commits: 0, // Not available without API route
@@ -466,12 +469,9 @@ export default function Projets() {
 
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-1 bg-[--border]">
                   {categoryProjects.map((project) => (
-                    <a
+                    <div
                       key={project.name}
-                      href={project.url}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="project-card group bg-[--bg-surface]/95 backdrop-blur-sm p-6 cursor-pointer relative overflow-hidden transition-colors"
+                      className="project-card group bg-[--bg-surface]/95 backdrop-blur-sm p-6 relative overflow-hidden transition-colors"
                       style={{
                         opacity: 0,
                         clipPath: 'polygon(0 0, calc(100% - 16px) 0, 100% 16px, 100% 100%, 0 100%)'
@@ -509,10 +509,6 @@ export default function Projets() {
                               {project.forks}
                             </span>
                           )}
-                          <ArrowUpRight
-                            size={14}
-                            className="text-accent/50 group-hover:text-accent group-hover:translate-x-1 group-hover:-translate-y-1 transition-all"
-                          />
                         </div>
                       </div>
 
@@ -523,8 +519,8 @@ export default function Projets() {
                         {project.desc}
                       </p>
 
-                      <div className="flex flex-wrap gap-2">
-                        {project.tags.slice(0, 3).map((tag, idx) => (
+                      <div className="flex flex-wrap gap-2 mb-4">
+                        {project.tags.slice(0, 3).map((tag) => (
                           <span key={tag} className="text-[10px] font-mono text-[--text-muted] px-1.5 py-0.5 border border-[--border]">
                             {tag}
                           </span>
@@ -533,7 +529,35 @@ export default function Projets() {
                           <span className="text-[10px] font-mono text-accent">+{project.tags.length - 3}</span>
                         )}
                       </div>
-                    </a>
+
+                      {/* Action buttons */}
+                      <div className="flex items-center gap-3 pt-3 border-t border-[--border]">
+                        <a
+                          href={project.url}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="inline-flex items-center gap-1.5 text-xs font-mono text-[--text-secondary] hover:text-accent transition-colors"
+                          aria-label={`Voir le code source de ${project.name} sur GitHub`}
+                        >
+                          <Github size={12} />
+                          <span>Code</span>
+                          <ArrowUpRight size={10} />
+                        </a>
+                        {project.homepage && (
+                          <a
+                            href={project.homepage}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="inline-flex items-center gap-1.5 text-xs font-mono text-accent hover:text-highlight transition-colors"
+                            aria-label={`Voir la démo live de ${project.name}`}
+                          >
+                            <ExternalLink size={12} />
+                            <span>Live Demo</span>
+                            <ArrowUpRight size={10} />
+                          </a>
+                        )}
+                      </div>
+                    </div>
                   ))}
                 </div>
               </section>
@@ -547,6 +571,36 @@ export default function Projets() {
               <p className="text-sm text-[--text-muted]">Essayez un autre terme de recherche</p>
             </div>
           )}
+
+          {/* CTA Section */}
+          <section className="py-20 mt-12 border-t border-[--border]">
+            <div className="max-w-2xl mx-auto text-center">
+              <p className="text-caption mb-4">Collaboration</p>
+              <h2 className="text-headline mb-6">
+                Envie de <span className="accent-line">collaborer</span> ?
+              </h2>
+              <p className="text-body-lg text-[--text-secondary] mb-10">
+                Je suis toujours ouvert aux opportunités — stages, alternances, projets open-source, ou échanges techniques.
+              </p>
+              <div className="flex flex-wrap justify-center gap-4">
+                <a href="/contact" className="btn btn-primary group">
+                  <Mail size={16} />
+                  Me contacter
+                  <ArrowUpRight size={16} className="transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
+                </a>
+                <a
+                  href={personalInfo.github}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="btn btn-outline"
+                >
+                  <Github size={16} />
+                  Profil GitHub
+                  <ArrowUpRight size={16} />
+                </a>
+              </div>
+            </div>
+          </section>
         </div>
       </main>
     </>

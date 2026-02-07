@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 
 const GITHUB_USERNAME = 'Adam-Blf'
-const excludedRepos = ['Adam-Blf', 'portfolio', 'Logo', 'Keep-Alive', 'portfolio-adam']
+const excludedRepos = ['Adam-Blf', 'portfolio', 'Logo', 'Keep-Alive', 'portfolio-adam', 'LLM-Council', '99']
 
 // Rate limiting: track requests per IP
 const rateLimitMap = new Map<string, { count: number; resetTime: number }>()
@@ -36,6 +36,7 @@ interface GitHubRepo {
   name: string
   description: string | null
   html_url: string
+  homepage: string | null
   language: string | null
   stargazers_count: number
   forks_count: number
@@ -51,6 +52,7 @@ interface ProjectWithCommits {
   lang: string
   tags: string[]
   url: string
+  homepage: string | null
   stars: number
   forks: number
   commits: number
@@ -195,6 +197,7 @@ export async function GET(request: NextRequest) {
             lang: repo.language || 'Multi',
             tags: tags.length > 0 ? tags : ['Code'],
             url: repo.html_url,
+            homepage: repo.homepage || null,
             stars: repo.stargazers_count,
             forks: repo.forks_count,
             commits,
