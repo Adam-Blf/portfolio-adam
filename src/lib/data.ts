@@ -537,6 +537,26 @@ export const techBadges = {
 export const projects = {
   featured: ["Langue-des-signes", "Taskmate", "AISCA-Cocktails", "Echo", "folder-analyzer-web", "genius"],
 
+  // Map of repo names to their live demo URLs
+  homepages: {
+    "Taskmate": "https://taskmate-mauve.vercel.app",
+    "Echo": "https://echo-dating.vercel.app",
+    "genius": "https://swipy-app-tawny.vercel.app",
+    "folder-analyzer-web": "https://adam-blf.github.io/folder-analyzer-web/",
+    "Projet-IA-Generative-Doctis-AI-mo": "https://doctis-ai-mo.vercel.app",
+    "black-out": "https://black-out-iota.vercel.app",
+    "Borderland": "https://blackout-tau.vercel.app",
+    "ChessAI-SelfLearning-Web": "https://chess-ai-self-learning-web.vercel.app",
+    "pgvplanning": "https://pgvplaning.vercel.app",
+    "Calculator-JS": "https://adam-blf.github.io/Calculator-JS/",
+    "Mendelieve.io": "https://adam-blf.github.io/Mendelieve.io/",
+    "Snake-Game": "https://adam-blf.github.io/Snake-Game/",
+    "PMU-Game": "https://adam-blf.github.io/PMU-Game/",
+    "Pong-Game": "https://adam-blf.github.io/Pong-Game/",
+    "Guess-The-Number": "https://adam-blf.github.io/Guess-The-Number/",
+    "WalkingAI": "https://adam-blf.github.io/WalkingAI/",
+  } as Record<string, string>,
+
   categories: {
     "AI / ML / NLP": [
       { name: "AISCA-Cocktails", lang: "Python", desc: "App recommandation cocktails avec SBERT semantic search + RAG", tags: ["Python", "SBERT", "RAG", "Streamlit"] },

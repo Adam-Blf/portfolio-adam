@@ -3,7 +3,7 @@
 import { useState, useEffect, useRef, useMemo } from 'react'
 import dynamic from 'next/dynamic'
 import { animate, stagger } from 'animejs'
-import { ArrowUpRight, Github, Star, GitFork, GitCommit, ExternalLink, Mail } from 'lucide-react'
+import { ArrowUpRight, Github, Star, GitFork, GitCommit, ExternalLink, Mail, Download } from 'lucide-react'
 import ErrorBoundary from '@/components/ErrorBoundary'
 import { personalInfo } from '@/lib/data'
 
@@ -552,10 +552,18 @@ export default function Projets() {
                             aria-label={`Voir la démo live de ${project.name}`}
                           >
                             <ExternalLink size={12} />
-                            <span>Live Demo</span>
+                            <span>Demo</span>
                             <ArrowUpRight size={10} />
                           </a>
                         )}
+                        <a
+                          href={`${project.url}/archive/refs/heads/main.zip`}
+                          className="inline-flex items-center gap-1.5 text-xs font-mono text-[--text-secondary] hover:text-accent transition-colors ml-auto"
+                          aria-label={`Télécharger ${project.name}`}
+                        >
+                          <Download size={12} />
+                          <span>ZIP</span>
+                        </a>
                       </div>
                     </div>
                   ))}
