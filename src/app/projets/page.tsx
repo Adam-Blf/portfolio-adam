@@ -6,10 +6,15 @@ import { animate, stagger } from 'animejs'
 import { ArrowUpRight, Github, Star, GitFork, GitCommit } from 'lucide-react'
 import ErrorBoundary from '@/components/ErrorBoundary'
 
-const PageBackground = dynamic(() => import('@/components/three/PageBackground'), {
-  ssr: false,
-  loading: () => null,
-})
+const SpaceBackground = dynamic(
+  () => import('@/components/three/SpaceBackground').catch(() => {
+    return { default: () => null }
+  }),
+  {
+    ssr: false,
+    loading: () => <div className="fixed inset-0 -z-10 bg-[#050508]" />,
+  }
+)
 
 interface ProcessedProject {
   name: string
@@ -279,7 +284,7 @@ export default function Projets() {
   if (loading) {
     return (
       <>
-        <ErrorBoundary><PageBackground variant="grid" /></ErrorBoundary>
+        <ErrorBoundary><SpaceBackground variant="minimal" /></ErrorBoundary>
         <main className="pt-32 pb-24">
           <div className="container-wide">
             {/* Header Skeleton */}
@@ -322,7 +327,7 @@ export default function Projets() {
   if (error) {
     return (
       <>
-        <ErrorBoundary><PageBackground variant="grid" /></ErrorBoundary>
+        <ErrorBoundary><SpaceBackground variant="minimal" /></ErrorBoundary>
         <main className="pt-32 pb-24 min-h-screen flex items-center justify-center">
           <div className="text-center">
             <p className="text-red-500 mb-4">{error}</p>
@@ -343,42 +348,59 @@ export default function Projets() {
 
   return (
     <>
-      <ErrorBoundary><PageBackground variant="grid" /></ErrorBoundary>
-      <main className="pt-32 pb-24">
+      {/* Three.js Space Background */}
+      <ErrorBoundary>
+        <SpaceBackground variant="default" />
+      </ErrorBoundary>
+      <main className="pt-32 pb-24 relative z-10">
         <div className="container-wide">
 
-          {/* Header */}
-          <div ref={headerRef} className="layout-offset mb-16">
-            <p className="page-caption text-caption mb-4" style={{ opacity: 0 }}>Portfolio GitHub</p>
-            <h1 className="page-title text-display mb-6" style={{ opacity: 0 }}>Projets</h1>
-            <p className="page-description text-body max-w-xl mb-8" style={{ opacity: 0 }}>
+          {/* Header - Bold Neo-Editorial */}
+          <div ref={headerRef} className="mb-20">
+            <div className="flex items-center gap-3 mb-6">
+              <span className="page-caption text-caption text-accent" style={{ opacity: 0 }}>// Portfolio GitHub</span>
+              <span className="w-16 h-px bg-accent" />
+            </div>
+
+            <h1 className="page-title text-display mb-8 leading-[0.85]" style={{ opacity: 0 }}>
+              <span className="block text-[--text-primary] glitch-text" data-text="Mes">Mes</span>
+              <span className="block text-accent neon-glow-subtle">Projets</span>
+            </h1>
+
+            <p className="page-description text-body-lg max-w-2xl mb-12 text-[--text-secondary] border-l-2 border-accent/30 pl-6" style={{ opacity: 0 }}>
               {totalProjects} projets publics couvrant l'IA, le Machine Learning,
               le Fullstack, et bien plus. Données en temps réel depuis GitHub.
             </p>
 
-            {/* Stats row */}
-            <div className="stats-row flex flex-wrap items-center gap-6 mb-8" style={{ opacity: 0 }}>
-              <div className="flex items-center gap-2 text-sm text-[--text-secondary]">
-                <Github size={16} className="text-accent" />
-                <span className="font-mono">{totalProjects}</span>
-                <span>repos</span>
+            {/* Stats row - Grid style */}
+            <div className="stats-row grid grid-cols-2 md:grid-cols-4 gap-1 bg-[--border] mb-8" style={{ opacity: 0 }}>
+              <div className="bg-[--bg-surface] p-4 flex items-center gap-3">
+                <Github size={18} className="text-accent" />
+                <div>
+                  <span className="font-mono text-2xl font-bold text-accent">{totalProjects}</span>
+                  <span className="text-xs text-[--text-muted] ml-2">repos</span>
+                </div>
               </div>
               {totalCommits > 0 && (
-                <div className="flex items-center gap-2 text-sm text-[--text-secondary]">
-                  <GitCommit size={16} className="text-accent" />
-                  <span className="font-mono">{totalCommits}</span>
-                  <span>commits</span>
+                <div className="bg-[--bg-surface] p-4 flex items-center gap-3">
+                  <GitCommit size={18} className="text-highlight" />
+                  <div>
+                    <span className="font-mono text-2xl font-bold text-highlight">{totalCommits}</span>
+                    <span className="text-xs text-[--text-muted] ml-2">commits</span>
+                  </div>
                 </div>
               )}
-              <a
-                href="https://github.com/Adam-Blf"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="inline-flex items-center gap-2 text-accent hover:underline text-sm"
-              >
-                <span>Voir sur GitHub</span>
-                <ArrowUpRight size={14} />
-              </a>
+              <div className="bg-[--bg-surface] p-4 col-span-2 md:col-span-1 flex items-center">
+                <a
+                  href="https://github.com/Adam-Blf"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center gap-2 text-accent hover:text-highlight transition-colors text-sm group"
+                >
+                  <span className="font-mono">View on GitHub</span>
+                  <ArrowUpRight size={14} className="group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform" />
+                </a>
+              </div>
             </div>
           </div>
 
@@ -442,59 +464,73 @@ export default function Projets() {
                   </div>
                 </div>
 
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-px bg-[--border]">
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-1 bg-[--border]">
                   {categoryProjects.map((project) => (
                     <a
                       key={project.name}
                       href={project.url}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="project-card group bg-[--bg-surface] p-6 hover:bg-[--bg-elevated] transition-colors cursor-pointer"
-                      style={{ opacity: 0 }}
+                      className="project-card group bg-[--bg-surface]/95 backdrop-blur-sm p-6 cursor-pointer relative overflow-hidden transition-colors"
+                      style={{
+                        opacity: 0,
+                        clipPath: 'polygon(0 0, calc(100% - 16px) 0, 100% 16px, 100% 100%, 0 100%)'
+                      }}
                     >
+                      {/* Corner accent */}
+                      <div className="absolute top-0 right-0 w-4 h-4 bg-gradient-to-br from-accent/30 to-accent/10" />
+
+                      {/* Top accent line on hover */}
+                      <div className="absolute top-0 left-0 right-4 h-0.5 bg-accent transform scale-x-0 group-hover:scale-x-100 transition-transform origin-left duration-300" />
+
                       <div className="flex items-start justify-between mb-4">
-                        <span className="tag font-mono text-xs">{project.lang}</span>
+                        <span
+                          className="font-mono text-[10px] uppercase tracking-wider px-2 py-1 bg-accent/10 text-accent border border-accent/20"
+                          style={{ clipPath: 'polygon(4px 0, 100% 0, 100% 100%, 0 100%, 0 4px)' }}
+                        >
+                          {project.lang}
+                        </span>
                         <div className="flex items-center gap-3 text-[--text-muted]">
                           {project.commits > 0 && (
-                            <span className="flex items-center gap-1 text-xs" title="Commits">
-                              <GitCommit size={12} />
+                            <span className="flex items-center gap-1 text-xs font-mono" title="Commits">
+                              <GitCommit size={10} />
                               {project.commits}
                             </span>
                           )}
                           {project.stars > 0 && (
-                            <span className="flex items-center gap-1 text-xs" title="Stars">
-                              <Star size={12} />
+                            <span className="flex items-center gap-1 text-xs font-mono" title="Stars">
+                              <Star size={10} />
                               {project.stars}
                             </span>
                           )}
                           {project.forks > 0 && (
-                            <span className="flex items-center gap-1 text-xs" title="Forks">
-                              <GitFork size={12} />
+                            <span className="flex items-center gap-1 text-xs font-mono" title="Forks">
+                              <GitFork size={10} />
                               {project.forks}
                             </span>
                           )}
                           <ArrowUpRight
-                            size={16}
-                            className="group-hover:text-accent group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-all"
+                            size={14}
+                            className="text-accent/50 group-hover:text-accent group-hover:translate-x-1 group-hover:-translate-y-1 transition-all"
                           />
                         </div>
                       </div>
 
-                      <h3 className="text-base font-semibold mb-2 group-hover:text-accent transition-colors line-clamp-1">
+                      <h3 className="text-base font-bold mb-2 group-hover:text-accent transition-colors line-clamp-1">
                         {project.name}
                       </h3>
-                      <p className="text-sm text-[--text-secondary] mb-4 line-clamp-2">
+                      <p className="text-sm text-[--text-secondary] mb-4 line-clamp-2 leading-relaxed">
                         {project.desc}
                       </p>
 
-                      <div className="flex flex-wrap gap-1">
+                      <div className="flex flex-wrap gap-2">
                         {project.tags.slice(0, 3).map((tag, idx) => (
-                          <span key={tag} className="text-xs text-[--text-muted]">
-                            {tag}{idx < 2 && project.tags.length > 1 ? ' •' : ''}
+                          <span key={tag} className="text-[10px] font-mono text-[--text-muted] px-1.5 py-0.5 border border-[--border]">
+                            {tag}
                           </span>
                         ))}
                         {project.tags.length > 3 && (
-                          <span className="text-xs text-[--text-muted]">+{project.tags.length - 3}</span>
+                          <span className="text-[10px] font-mono text-accent">+{project.tags.length - 3}</span>
                         )}
                       </div>
                     </a>

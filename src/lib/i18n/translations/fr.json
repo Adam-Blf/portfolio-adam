@@ -7,6 +7,20 @@
     "contact": "Contact",
     "skipToContent": "Aller au contenu principal"
   },
+  "hero": {
+    "tagline": "Je transforme la {data} en décisions et le {code} en impact.",
+    "education": "M1 Data Engineering & IA @ EFREI Paris",
+    "status": "DISPONIBLE",
+    "metrics": {
+      "projects": "Projets GitHub",
+      "commits": "Commits",
+      "experience": "Ans d'expérience",
+      "technologies": "Technologies"
+    },
+    "cta": "Voir les projets",
+    "ctaSecondary": "Me contacter",
+    "scroll": "DÉFILER"
+  },
   "home": {
     "title": "Data Engineer & Fullstack Developer",
     "subtitle": "Building data systems that drive decisions.",

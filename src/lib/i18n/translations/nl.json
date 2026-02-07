@@ -7,6 +7,20 @@
     "contact": "Contact",
     "skipToContent": "Ga naar hoofdinhoud"
   },
+  "hero": {
+    "tagline": "Ik transformeer {data} in beslissingen en {code} in impact.",
+    "education": "M1 Data Engineering & AI @ EFREI Parijs",
+    "status": "BESCHIKBAAR",
+    "metrics": {
+      "projects": "GitHub Projecten",
+      "commits": "Commits",
+      "experience": "Jaren ervaring",
+      "technologies": "Technologieën"
+    },
+    "cta": "Bekijk projecten",
+    "ctaSecondary": "Contact",
+    "scroll": "SCROLLEN"
+  },
   "home": {
     "title": "Data Engineer & Fullstack Developer",
     "subtitle": "Het bouwen van datasystemen die beslissingen aandrijven.",

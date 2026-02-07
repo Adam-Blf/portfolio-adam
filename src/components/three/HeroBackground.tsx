@@ -1,196 +1,198 @@
 'use client'
 
-import { useEffect, useState } from 'react'
+import { useRef, useMemo, useEffect, useState, useCallback } from 'react'
+import { Canvas, useFrame, useThree } from '@react-three/fiber'
+import { Points, PointMaterial } from '@react-three/drei'
+import type { Points as PointsType } from 'three'
+import * as THREE from 'three'
 
-/**
- * CSS-based animated background that replaces Three.js
- * This provides a performant, accessible alternative that works reliably
- * while maintaining the data visualization aesthetic
- */
+// Optimized data stream particles with GPU-friendly updates
+function DataParticles({ count = 1500 }: { count?: number }) {
+  const ref = useRef<PointsType>(null)
+  const { viewport } = useThree()
+
+  const { positions, velocities } = useMemo(() => {
+    const pos = new Float32Array(count * 3)
+    const vel = new Float32Array(count)
+
+    for (let i = 0; i < count; i++) {
+      pos[i * 3] = (Math.random() - 0.5) * viewport.width * 2
+      pos[i * 3 + 1] = (Math.random() - 0.5) * viewport.height * 2
+      pos[i * 3 + 2] = (Math.random() - 0.5) * 8
+      vel[i] = 0.008 + Math.random() * 0.02
+    }
+
+    return { positions: pos, velocities: vel }
+  }, [count, viewport.width, viewport.height])
+
+  useFrame((state, delta) => {
+    if (!ref.current) return
+    const posArray = ref.current.geometry.attributes.position.array as Float32Array
+    const heightLimit = viewport.height * 1.2
+
+    // Batch update for better performance
+    for (let i = 0; i < count; i++) {
+      const idx = i * 3 + 1
+      posArray[idx] += velocities[i] * delta * 60
+
+      if (posArray[idx] > heightLimit) {
+        posArray[idx] = -heightLimit
+        posArray[i * 3] = (Math.random() - 0.5) * viewport.width * 2
+      }
+    }
+
+    ref.current.geometry.attributes.position.needsUpdate = true
+    ref.current.rotation.z = Math.sin(state.clock.elapsedTime * 0.08) * 0.015
+  })
+
+  return (
+    <Points ref={ref} positions={positions} stride={3} frustumCulled>
+      <PointMaterial
+        transparent
+        color="#FFB000"
+        size={0.018}
+        sizeAttenuation
+        depthWrite={false}
+        opacity={0.5}
+        blending={THREE.AdditiveBlending}
+      />
+    </Points>
+  )
+}
+
+// Optimized floating geometric shapes - no hover state (reduces re-renders)
+function FloatingShape({ position, scale, color }: { position: [number, number, number]; scale: number; color: string }) {
+  const meshRef = useRef<THREE.Mesh>(null)
+  const initialY = useRef(position[1])
+
+  useFrame((state, delta) => {
+    if (!meshRef.current) return
+    const t = state.clock.elapsedTime
+    meshRef.current.rotation.x = Math.sin(t * 0.4) * 0.25
+    meshRef.current.rotation.y = Math.cos(t * 0.25) * 0.25
+    meshRef.current.position.y = initialY.current + Math.sin(t * 0.6) * 0.15
+  })
+
+  return (
+    <mesh ref={meshRef} position={position} scale={scale}>
+      <octahedronGeometry args={[1, 0]} />
+      <meshBasicMaterial
+        color={color}
+        wireframe
+        transparent
+        opacity={0.25}
+      />
+    </mesh>
+  )
+}
+
+// Optimized grid floor effect
+function DataGrid() {
+  const gridRef = useRef<THREE.GridHelper>(null)
+
+  useFrame((state, delta) => {
+    if (!gridRef.current) return
+    gridRef.current.position.z = (state.clock.elapsedTime * 0.3) % 1
+  })
+
+  return (
+    <gridHelper
+      ref={gridRef}
+      args={[25, 25, '#FFB000', '#1a1a2e']}
+      position={[0, -3, 0]}
+      rotation={[Math.PI / 2, 0, 0]}
+    />
+  )
+}
+
+// Optimized mouse-following light with lerp
+function MouseLight() {
+  const lightRef = useRef<THREE.PointLight>(null)
+  const { pointer, viewport } = useThree()
+  const targetPos = useRef({ x: 0, y: 0 })
+
+  useFrame((_, delta) => {
+    if (!lightRef.current) return
+    targetPos.current.x = pointer.x * viewport.width * 0.4
+    targetPos.current.y = pointer.y * viewport.height * 0.4
+
+    // Smooth lerp for better feel
+    lightRef.current.position.x += (targetPos.current.x - lightRef.current.position.x) * 0.08
+    lightRef.current.position.y += (targetPos.current.y - lightRef.current.position.y) * 0.08
+  })
+
+  return (
+    <pointLight
+      ref={lightRef}
+      color="#FFB000"
+      intensity={0.4}
+      distance={8}
+      position={[0, 0, 2.5]}
+    />
+  )
+}
+
+// Main scene - memoized for performance
+function Scene() {
+  const { viewport } = useThree()
+
+  return (
+    <>
+      <ambientLight intensity={0.15} />
+      <MouseLight />
+
+      <DataParticles count={1200} />
+      <DataGrid />
+
+      {/* Floating shapes - positioned relative to viewport */}
+      <FloatingShape position={[viewport.width * 0.25, viewport.height * 0.15, -2]} scale={0.4} color="#FFB000" />
+      <FloatingShape position={[-viewport.width * 0.25, -viewport.height * 0.1, -3]} scale={0.25} color="#00E5FF" />
+      <FloatingShape position={[viewport.width * 0.15, -viewport.height * 0.25, -4]} scale={0.35} color="#8B5CF6" />
+    </>
+  )
+}
+
 export default function HeroBackground() {
   const [mounted, setMounted] = useState(false)
+  const [prefersReducedMotion, setPrefersReducedMotion] = useState(false)
 
   useEffect(() => {
     setMounted(true)
+    const mediaQuery = window.matchMedia('(prefers-reduced-motion: reduce)')
+    setPrefersReducedMotion(mediaQuery.matches)
+    const handler = (e: MediaQueryListEvent) => setPrefersReducedMotion(e.matches)
+    mediaQuery.addEventListener('change', handler)
+    return () => mediaQuery.removeEventListener('change', handler)
   }, [])
 
   if (!mounted) return null
 
+  // Fallback for reduced motion
+  if (prefersReducedMotion) {
+    return (
+      <div className="absolute inset-0 bg-gradient-to-br from-[--bg-deep] via-[--bg-surface] to-[--bg-deep]">
+        <div className="absolute inset-0 data-grid opacity-30" />
+      </div>
+    )
+  }
+
   return (
-    <div className="hero-bg-container">
-      {/* Animated grid */}
-      <div className="hero-grid" />
-
-      {/* Floating particles */}
-      <div className="hero-particles">
-        {Array.from({ length: 20 }).map((_, i) => (
-          <div
-            key={i}
-            className="hero-particle"
-            style={{
-              left: `${Math.random() * 100}%`,
-              top: `${Math.random() * 100}%`,
-              animationDelay: `${Math.random() * 5}s`,
-              animationDuration: `${3 + Math.random() * 4}s`,
-            }}
-          />
-        ))}
-      </div>
-
-      {/* Data streams */}
-      <div className="hero-streams">
-        {Array.from({ length: 8 }).map((_, i) => (
-          <div
-            key={i}
-            className="hero-stream"
-            style={{
-              left: `${10 + i * 12}%`,
-              animationDelay: `${i * 0.3}s`,
-            }}
-          />
-        ))}
-      </div>
-
-      {/* Geometric shapes */}
-      <div className="hero-shapes">
-        <div className="hero-shape hero-shape-1" />
-        <div className="hero-shape hero-shape-2" />
-        <div className="hero-shape hero-shape-3" />
-      </div>
-
-      <style jsx>{`
-        .hero-bg-container {
-          position: absolute;
-          inset: 0;
-          overflow: hidden;
-          pointer-events: none;
-        }
-
-        .hero-grid {
-          position: absolute;
-          inset: 0;
-          background-image:
-            linear-gradient(rgba(255, 176, 0, 0.03) 1px, transparent 1px),
-            linear-gradient(90deg, rgba(255, 176, 0, 0.03) 1px, transparent 1px);
-          background-size: 50px 50px;
-          transform: perspective(500px) rotateX(60deg);
-          transform-origin: center top;
-          opacity: 0.5;
-        }
-
-        .hero-particles {
-          position: absolute;
-          inset: 0;
-        }
-
-        .hero-particle {
-          position: absolute;
-          width: 4px;
-          height: 4px;
-          background: var(--accent, #FFB000);
-          border-radius: 50%;
-          opacity: 0;
-          animation: particleFloat 5s ease-in-out infinite;
-        }
-
-        @keyframes particleFloat {
-          0%, 100% {
-            opacity: 0;
-            transform: translateY(0) scale(0.5);
-          }
-          50% {
-            opacity: 0.6;
-            transform: translateY(-30px) scale(1);
-          }
-        }
-
-        .hero-streams {
-          position: absolute;
-          inset: 0;
-        }
-
-        .hero-stream {
-          position: absolute;
-          width: 1px;
-          height: 100%;
-          background: linear-gradient(
-            to bottom,
-            transparent,
-            rgba(255, 176, 0, 0.3),
-            transparent
-          );
-          animation: streamFlow 3s linear infinite;
-        }
-
-        @keyframes streamFlow {
-          0% {
-            transform: translateY(-100%);
-            opacity: 0;
-          }
-          50% {
-            opacity: 1;
-          }
-          100% {
-            transform: translateY(100%);
-            opacity: 0;
-          }
-        }
-
-        .hero-shapes {
-          position: absolute;
-          inset: 0;
-        }
-
-        .hero-shape {
-          position: absolute;
-          border: 1px solid rgba(255, 176, 0, 0.15);
-          animation: shapeRotate 20s linear infinite;
-        }
-
-        .hero-shape-1 {
-          width: 200px;
-          height: 200px;
-          right: 10%;
-          top: 20%;
-          border-radius: 30% 70% 70% 30% / 30% 30% 70% 70%;
-        }
-
-        .hero-shape-2 {
-          width: 150px;
-          height: 150px;
-          left: 5%;
-          bottom: 30%;
-          border-radius: 50%;
-          animation-direction: reverse;
-          animation-duration: 15s;
-        }
-
-        .hero-shape-3 {
-          width: 100px;
-          height: 100px;
-          right: 20%;
-          bottom: 20%;
-          transform: rotate(45deg);
-        }
-
-        @keyframes shapeRotate {
-          from {
-            transform: rotate(0deg);
-          }
-          to {
-            transform: rotate(360deg);
-          }
-        }
-
-        @media (prefers-reduced-motion: reduce) {
-          .hero-particle,
-          .hero-stream,
-          .hero-shape {
-            animation: none;
-            opacity: 0.3;
-          }
-        }
-      `}</style>
+    <div className="absolute inset-0">
+      <Canvas
+        camera={{ position: [0, 0, 5], fov: 70 }}
+        dpr={[1, 1.5]}
+        gl={{
+          antialias: false,
+          alpha: true,
+          powerPreference: 'high-performance',
+          stencil: false,
+          depth: false
+        }}
+        frameloop="always"
+        style={{ background: 'transparent' }}
+      >
+        <Scene />
+      </Canvas>
     </div>
   )
 }

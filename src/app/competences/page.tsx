@@ -7,10 +7,15 @@ import { Github, Code2, Database, Cloud, Brain, Blocks, Server, GitCommit } from
 import { skills as staticSkills, certifications } from '@/lib/data'
 import ErrorBoundary from '@/components/ErrorBoundary'
 
-const PageBackground = dynamic(() => import('@/components/three/PageBackground'), {
-  ssr: false,
-  loading: () => null,
-})
+const SpaceBackground = dynamic(
+  () => import('@/components/three/SpaceBackground').catch(() => {
+    return { default: () => null }
+  }),
+  {
+    ssr: false,
+    loading: () => <div className="fixed inset-0 -z-10 bg-[#050508]" />,
+  }
+)
 
 interface GitHubRepo {
   id: number
@@ -615,7 +620,7 @@ export default function Competences() {
   if (loading) {
     return (
       <>
-        <ErrorBoundary><PageBackground variant="data" /></ErrorBoundary>
+        <ErrorBoundary><SpaceBackground variant="dense" /></ErrorBoundary>
         <main className="pt-32 pb-24">
           <div className="container-wide">
             <div className="layout-offset mb-16">
@@ -648,7 +653,7 @@ export default function Competences() {
   if (error) {
     return (
       <>
-        <ErrorBoundary><PageBackground variant="data" /></ErrorBoundary>
+        <ErrorBoundary><SpaceBackground variant="dense" /></ErrorBoundary>
         <main className="pt-32 pb-24 min-h-screen flex items-center justify-center">
           <div className="text-center">
             <p className="text-red-500 mb-4">{error}</p>
@@ -671,7 +676,7 @@ export default function Competences() {
 
   return (
     <>
-      <ErrorBoundary><PageBackground variant="data" /></ErrorBoundary>
+      <ErrorBoundary><SpaceBackground variant="dense" /></ErrorBoundary>
       <main className="pt-32 pb-24">
         <div className="container-wide">
 

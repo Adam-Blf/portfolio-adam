@@ -19,14 +19,20 @@ import {
   ChevronDown,
   MapPin,
   Calendar,
-  Sparkles
+  Sparkles,
+  ArrowUp
 } from 'lucide-react'
 import ErrorBoundary from '@/components/ErrorBoundary'
 
-const PageBackground = dynamic(() => import('@/components/three/PageBackground'), {
-  ssr: false,
-  loading: () => null,
-})
+const SpaceBackground = dynamic(
+  () => import('@/components/three/SpaceBackground').catch(() => {
+    return { default: () => null }
+  }),
+  {
+    ssr: false,
+    loading: () => <div className="fixed inset-0 -z-10 bg-[#050508]" />,
+  }
+)
 
 // Types
 type EventType = 'experience' | 'education' | 'volunteering' | 'certification'
@@ -59,17 +65,16 @@ const getYear = (dateStr: string): string => {
 
 // Colors and icons for event types
 const eventConfig: Record<EventType, { color: string; icon: typeof Briefcase; label: string; labelFr: string }> = {
-  experience: { color: '#e07a5f', icon: Briefcase, label: 'Experience', labelFr: 'Experiences' },
+  experience: { color: '#FFB000', icon: Briefcase, label: 'Experience', labelFr: 'Expériences' },
   education: { color: '#3178C6', icon: GraduationCap, label: 'Formation', labelFr: 'Formations' },
-  volunteering: { color: '#47A248', icon: Heart, label: 'Benevolat', labelFr: 'Engagements' },
-  certification: { color: '#9333EA', icon: Award, label: 'Certification', labelFr: 'Certifications' },
+  volunteering: { color: '#10B981', icon: Heart, label: 'Bénévolat', labelFr: 'Engagements' },
+  certification: { color: '#8B5CF6', icon: Award, label: 'Certification', labelFr: 'Certifications' },
 }
 
 // Build unified timeline
 const buildTimeline = (): TimelineEvent[] => {
   const events: TimelineEvent[] = []
 
-  // Add experiences
   experiences.forEach((exp) => {
     events.push({
       id: `exp-${exp.id}`,
@@ -85,7 +90,6 @@ const buildTimeline = (): TimelineEvent[] => {
     })
   })
 
-  // Add education
   education.forEach((edu) => {
     events.push({
       id: `edu-${edu.id}`,
@@ -100,7 +104,6 @@ const buildTimeline = (): TimelineEvent[] => {
     })
   })
 
-  // Add volunteering
   volunteering.forEach((vol, idx) => {
     events.push({
       id: `vol-${idx}`,
@@ -115,7 +118,6 @@ const buildTimeline = (): TimelineEvent[] => {
     })
   })
 
-  // Add certifications (major ones only)
   const majorCerts = certifications.filter(c =>
     c.issuer === 'Microsoft' ||
     c.issuer === 'Marine Nationale' ||
@@ -133,33 +135,217 @@ const buildTimeline = (): TimelineEvent[] => {
     })
   })
 
-  // Sort by start date descending
   return events.sort((a, b) => parseDate(b.startDate) - parseDate(a.startDate))
 }
 
-// Counter animation hook
-function useCountUp(end: number, duration: number = 2000, startOnView: boolean = true) {
-  const [count, setCount] = useState(0)
+// Timeline Card with WAAPI micro-interactions
+function TimelineCard({
+  event,
+  isLeft,
+  isExpanded,
+  onToggle
+}: {
+  event: TimelineEvent
+  isLeft: boolean
+  isExpanded: boolean
+  onToggle: () => void
+}) {
+  const cardRef = useRef<HTMLDivElement>(null)
+  const config = eventConfig[event.type]
+  const Icon = config.icon
+  const logo = logoMap[event.subtitle] || null
+
+  // WAAPI hover animation
+  const handleMouseEnter = useCallback(() => {
+    if (!cardRef.current) return
+    cardRef.current.animate([
+      { transform: 'translateY(0) scale(1)', boxShadow: '0 0 0 rgba(255,176,0,0)' },
+      { transform: 'translateY(-4px) scale(1.01)', boxShadow: '0 20px 40px rgba(255,176,0,0.1)' }
+    ], {
+      duration: 300,
+      easing: 'cubic-bezier(0.34, 1.56, 0.64, 1)',
+      fill: 'forwards'
+    })
+  }, [])
+
+  const handleMouseLeave = useCallback(() => {
+    if (!cardRef.current) return
+    cardRef.current.animate([
+      { transform: 'translateY(-4px) scale(1.01)', boxShadow: '0 20px 40px rgba(255,176,0,0.1)' },
+      { transform: 'translateY(0) scale(1)', boxShadow: '0 0 0 rgba(255,176,0,0)' }
+    ], {
+      duration: 200,
+      easing: 'ease-out',
+      fill: 'forwards'
+    })
+  }, [])
+
+  return (
+    <div
+      ref={cardRef}
+      role="button"
+      tabIndex={0}
+      aria-expanded={isExpanded}
+      onClick={onToggle}
+      onKeyDown={(e) => {
+        if (e.key === 'Enter' || e.key === ' ') {
+          e.preventDefault()
+          onToggle()
+        }
+      }}
+      onMouseEnter={handleMouseEnter}
+      onMouseLeave={handleMouseLeave}
+      className="group relative bg-[--bg-surface]/90 backdrop-blur-md border border-[--border]
+                 cursor-pointer transition-colors duration-300 overflow-hidden
+                 focus-visible:outline-2 focus-visible:outline-accent focus-visible:outline-offset-2"
+      style={{
+        clipPath: 'polygon(0 0, calc(100% - 20px) 0, 100% 20px, 100% 100%, 0 100%)',
+        borderColor: `${config.color}30`
+      }}
+    >
+      {/* Corner cut decoration */}
+      <div
+        className="absolute top-0 right-0 w-5 h-5"
+        style={{
+          background: `linear-gradient(135deg, transparent 50%, ${config.color}40 50%)`
+        }}
+      />
+
+      {/* Top accent bar with animated glow */}
+      <div
+        className="absolute top-0 left-0 right-5 h-1 opacity-70 group-hover:opacity-100 transition-opacity"
+        style={{ backgroundColor: config.color }}
+      />
+      <div
+        className="absolute top-0 left-0 right-5 h-1 opacity-0 group-hover:opacity-60 blur-sm transition-opacity"
+        style={{ backgroundColor: config.color }}
+      />
+
+      <div className="p-6 md:p-8">
+        {/* Current badge - more geometric */}
+        {event.current && (
+          <div className="absolute top-4 right-8">
+            <span
+              className="px-3 py-1.5 text-[10px] font-mono uppercase tracking-widest text-white"
+              style={{
+                backgroundColor: config.color,
+                clipPath: 'polygon(8px 0, 100% 0, 100% 100%, 0 100%, 0 8px)'
+              }}
+            >
+              <span className="relative flex items-center gap-2">
+                <span className="w-1.5 h-1.5 bg-white rounded-full animate-pulse" />
+                En cours
+              </span>
+            </span>
+          </div>
+        )}
+
+        {/* Header */}
+        <div className="flex items-start gap-4 mb-5">
+          {logo ? (
+            <div className="relative w-14 h-14 flex-shrink-0 overflow-hidden bg-white border border-[--border] group-hover:scale-105 transition-transform"
+                 style={{ clipPath: 'polygon(0 0, 100% 0, 100% calc(100% - 8px), calc(100% - 8px) 100%, 0 100%)' }}>
+              <Image src={logo} alt={event.subtitle} fill className="object-contain p-2" />
+            </div>
+          ) : (
+            <div
+              className="w-14 h-14 flex-shrink-0 flex items-center justify-center group-hover:scale-105 transition-transform"
+              style={{
+                backgroundColor: `${config.color}15`,
+                clipPath: 'polygon(0 0, 100% 0, 100% calc(100% - 8px), calc(100% - 8px) 100%, 0 100%)'
+              }}
+            >
+              <Icon size={24} style={{ color: config.color }} />
+            </div>
+          )}
+
+          <div className="flex-1 min-w-0">
+            <h3 className="text-lg font-bold leading-tight group-hover:text-accent transition-colors line-clamp-2">
+              {event.title}
+            </h3>
+            <p className="text-sm font-semibold mt-1.5 tracking-wide" style={{ color: config.color }}>
+              {event.subtitle}
+            </p>
+          </div>
+        </div>
+
+        {/* Meta - more cyberpunk style */}
+        <div className="flex flex-wrap items-center gap-4 text-xs text-[--text-muted] mb-4 font-mono">
+          <span className="flex items-center gap-1.5 px-2 py-1 bg-[--bg-elevated] border border-[--border]">
+            <Calendar size={10} className="text-accent" />
+            {event.period}
+          </span>
+          {event.location && (
+            <span className="flex items-center gap-1.5 px-2 py-1 bg-[--bg-elevated] border border-[--border]">
+              <MapPin size={10} className="text-highlight" />
+              {event.location}
+            </span>
+          )}
+        </div>
+
+        {/* Description */}
+        {event.description && (
+          <p className={`text-sm text-[--text-secondary] leading-relaxed transition-all duration-300 ${isExpanded ? '' : 'line-clamp-2'}`}>
+            {event.description}
+          </p>
+        )}
+
+        {/* Expand indicator */}
+        {event.description && event.description.length > 100 && (
+          <div className="mt-4 flex items-center gap-2 text-xs font-mono text-accent/70 group-hover:text-accent transition-colors">
+            <span className="w-4 h-px bg-current" />
+            <ChevronDown size={12} className={`transition-transform duration-300 ${isExpanded ? 'rotate-180' : ''}`} />
+            {isExpanded ? 'COLLAPSE' : 'EXPAND'}
+            <span className="flex-1 h-px bg-current opacity-30" />
+          </div>
+        )}
+
+        {/* Type badge - bottom corner */}
+        <div
+          className="absolute bottom-0 right-0 px-3 py-1.5 text-[10px] font-mono uppercase tracking-widest opacity-50 group-hover:opacity-80 transition-opacity"
+          style={{
+            color: config.color,
+            backgroundColor: `${config.color}15`,
+            clipPath: 'polygon(12px 0, 100% 0, 100% 100%, 0 100%)'
+          }}
+        >
+          {config.label}
+        </div>
+      </div>
+    </div>
+  )
+}
+
+// Counter animation with WAAPI
+function AnimatedCounter({ end, label }: { end: number; label: string }) {
   const ref = useRef<HTMLDivElement>(null)
+  const valueRef = useRef<HTMLSpanElement>(null)
   const hasAnimated = useRef(false)
 
   useEffect(() => {
-    if (!startOnView || !ref.current) return
+    if (!ref.current || !valueRef.current) return
 
     const observer = new IntersectionObserver(
       (entries) => {
         if (entries[0].isIntersecting && !hasAnimated.current) {
           hasAnimated.current = true
-          const startTime = Date.now()
-          const animate = () => {
-            const elapsed = Date.now() - startTime
-            const progress = Math.min(elapsed / duration, 1)
-            // Easing function
-            const eased = 1 - Math.pow(1 - progress, 3)
-            setCount(Math.floor(end * eased))
-            if (progress < 1) requestAnimationFrame(animate)
-          }
-          requestAnimationFrame(animate)
+
+          // WAAPI fade in
+          ref.current?.animate([
+            { opacity: 0, transform: 'translateY(20px)' },
+            { opacity: 1, transform: 'translateY(0)' }
+          ], { duration: 600, easing: 'cubic-bezier(0.16, 1, 0.3, 1)', fill: 'forwards' })
+
+          // Counter with anime.js
+          const counter = { val: 0 }
+          animate(counter, {
+            val: end,
+            duration: 2000,
+            easing: 'outExpo',
+            onUpdate: () => {
+              if (valueRef.current) valueRef.current.textContent = Math.round(counter.val).toString()
+            },
+          })
         }
       },
       { threshold: 0.5 }
@@ -167,18 +353,25 @@ function useCountUp(end: number, duration: number = 2000, startOnView: boolean =
 
     observer.observe(ref.current)
     return () => observer.disconnect()
-  }, [end, duration, startOnView])
+  }, [end])
 
-  return { count, ref }
+  return (
+    <div ref={ref} className="text-center group" style={{ opacity: 0 }}>
+      <div className="font-mono text-4xl md:text-5xl font-bold text-accent mb-2 group-hover:scale-110 transition-transform">
+        <span ref={valueRef}>0</span>
+        <span className="text-accent/50">+</span>
+      </div>
+      <div className="text-sm text-[--text-muted] uppercase tracking-wider">{label}</div>
+    </div>
+  )
 }
 
 export default function FrisePage() {
   const headerRef = useRef<HTMLDivElement>(null)
   const timelineRef = useRef<HTMLDivElement>(null)
-  const yearIndicatorRef = useRef<HTMLDivElement>(null)
   const [filter, setFilter] = useState<EventType | 'all'>('all')
-  const [isScrolling, setIsScrolling] = useState(false)
   const [expandedCard, setExpandedCard] = useState<string | null>(null)
+  const [showScrollTop, setShowScrollTop] = useState(false)
 
   const allEvents = useMemo(() => buildTimeline(), [])
 
@@ -187,7 +380,6 @@ export default function FrisePage() {
     return allEvents.filter(e => e.type === filter)
   }, [allEvents, filter])
 
-  // Group events by year
   const eventsByYear = useMemo(() => {
     const grouped: Record<string, TimelineEvent[]> = {}
     filteredEvents.forEach(event => {
@@ -203,67 +395,38 @@ export default function FrisePage() {
     [eventsByYear]
   )
 
-  // Active year - dynamically set to most recent
-  const [activeYear, setActiveYear] = useState<string>(() => years[0] || '2025')
+  const countByType = useMemo(() => ({
+    experience: allEvents.filter(e => e.type === 'experience').length,
+    education: allEvents.filter(e => e.type === 'education').length,
+    volunteering: allEvents.filter(e => e.type === 'volunteering').length,
+    certification: allEvents.filter(e => e.type === 'certification').length,
+  }), [allEvents])
 
-  // Update active year when years change
+  // Scroll to top button visibility
   useEffect(() => {
-    if (years.length > 0 && !years.includes(activeYear)) {
-      setActiveYear(years[0])
-    }
-  }, [years, activeYear])
+    const handleScroll = () => setShowScrollTop(window.scrollY > 500)
+    window.addEventListener('scroll', handleScroll, { passive: true })
+    return () => window.removeEventListener('scroll', handleScroll)
+  }, [])
 
-  // Header animation
+  // Header animation with anime.js
   useEffect(() => {
     const header = headerRef.current
     if (!header) return
 
-    const caption = header.querySelector('.frise-caption')
-    const title = header.querySelector('.frise-title')
-    const subtitle = header.querySelector('.frise-subtitle')
-    const filterPills = header.querySelectorAll('.filter-pill')
+    const elements = header.querySelectorAll('[data-animate]')
+    elements.forEach(el => (el as HTMLElement).style.opacity = '0')
 
-    if (caption) {
-      animate(caption, {
-        translateY: [30, 0],
-        opacity: [0, 1],
-        duration: 700,
-        easing: 'cubicBezier(0.16, 1, 0.3, 1)',
-      })
-    }
-
-    if (title) {
-      animate(title, {
-        translateY: [50, 0],
-        opacity: [0, 1],
-        duration: 900,
-        easing: 'cubicBezier(0.16, 1, 0.3, 1)',
-        delay: 100,
-      })
-    }
-
-    if (subtitle) {
-      animate(subtitle, {
-        translateY: [30, 0],
-        opacity: [0, 1],
-        duration: 700,
-        easing: 'cubicBezier(0.16, 1, 0.3, 1)',
-        delay: 200,
-      })
-    }
-
-    if (filterPills.length > 0) {
-      animate(filterPills, {
-        scale: [0.8, 1],
-        opacity: [0, 1],
-        duration: 500,
-        easing: 'cubicBezier(0.16, 1, 0.3, 1)',
-        delay: stagger(50, { start: 400 }),
-      })
-    }
+    animate(elements, {
+      translateY: [40, 0],
+      opacity: [0, 1],
+      duration: 800,
+      easing: 'cubicBezier(0.16, 1, 0.3, 1)',
+      delay: stagger(100),
+    })
   }, [])
 
-  // Scroll-triggered animations for timeline items
+  // Timeline items scroll animation
   useEffect(() => {
     const timeline = timelineRef.current
     if (!timeline) return
@@ -273,12 +436,11 @@ export default function FrisePage() {
         entries.forEach((entry) => {
           if (entry.isIntersecting) {
             const item = entry.target as HTMLElement
-            const direction = item.dataset.direction === 'left' ? -1 : 1
 
             animate(item, {
-              translateX: [50 * direction, 0],
+              translateY: [50, 0],
               opacity: [0, 1],
-              duration: 800,
+              duration: 700,
               easing: 'cubicBezier(0.16, 1, 0.3, 1)',
             })
 
@@ -286,179 +448,99 @@ export default function FrisePage() {
           }
         })
       },
-      { threshold: 0.15, rootMargin: '-80px' }
+      { threshold: 0.1, rootMargin: '-50px' }
     )
 
     timeline.querySelectorAll('.timeline-item').forEach((item) => {
+      (item as HTMLElement).style.opacity = '0'
       observer.observe(item)
     })
 
     return () => observer.disconnect()
   }, [filteredEvents])
 
-  // Update active year on scroll
-  useEffect(() => {
-    const handleScroll = () => {
-      if (isScrolling) return
+  // Filter change animation
+  const handleFilterChange = useCallback((newFilter: EventType | 'all') => {
+    setFilter(newFilter)
+    setExpandedCard(null)
 
-      const yearSections = document.querySelectorAll('[data-year]')
-      let currentYear = activeYear
-
-      yearSections.forEach((section) => {
-        const rect = section.getBoundingClientRect()
-        if (rect.top <= 200 && rect.bottom > 0) {
-          currentYear = section.getAttribute('data-year') || activeYear
-        }
-      })
-
-      if (currentYear !== activeYear) {
-        setActiveYear(currentYear)
-      }
-    }
-
-    window.addEventListener('scroll', handleScroll, { passive: true })
-    return () => window.removeEventListener('scroll', handleScroll)
-  }, [activeYear, isScrolling])
-
-  // Scroll to year
-  const scrollToYear = useCallback((year: string) => {
-    setIsScrolling(true)
-    const section = document.querySelector(`[data-year="${year}"]`)
-    if (section) {
-      const offset = 120
-      const top = section.getBoundingClientRect().top + window.scrollY - offset
-      window.scrollTo({ top, behavior: 'smooth' })
-      setActiveYear(year)
-    }
-    setTimeout(() => setIsScrolling(false), 1000)
+    // Animate filter pills with WAAPI
+    document.querySelectorAll('.filter-pill').forEach((pill, i) => {
+      pill.animate([
+        { transform: 'scale(0.95)' },
+        { transform: 'scale(1)' }
+      ], { duration: 200, delay: i * 30, easing: 'ease-out' })
+    })
   }, [])
-
-  const getEventLogo = (event: TimelineEvent): string | null => {
-    return logoMap[event.subtitle] || null
-  }
-
-  // Stats counters
-  const yearsCounter = useCountUp(years.length, 1500)
-  const expCounter = useCountUp(experiences.length, 1500)
-  const eduCounter = useCountUp(education.length, 1500)
-  const volCounter = useCountUp(volunteering.length, 1500)
-
-  // Count by type for filter badges
-  const countByType = useMemo(() => ({
-    experience: allEvents.filter(e => e.type === 'experience').length,
-    education: allEvents.filter(e => e.type === 'education').length,
-    volunteering: allEvents.filter(e => e.type === 'volunteering').length,
-    certification: allEvents.filter(e => e.type === 'certification').length,
-  }), [allEvents])
 
   return (
     <>
+      {/* Three.js Space Background */}
       <ErrorBoundary>
-        <PageBackground variant="grid" />
+        <SpaceBackground variant="default" />
       </ErrorBoundary>
 
-      {/* Fixed Year Navigator */}
-      <nav
-        ref={yearIndicatorRef}
-        aria-label="Navigation par annee"
-        className="fixed left-8 top-1/2 -translate-y-1/2 z-40 hidden lg:flex flex-col items-center gap-1"
+      {/* Scroll to top button */}
+      <button
+        onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
+        className={`fixed bottom-8 right-8 z-50 w-12 h-12 rounded-full bg-accent text-white shadow-lg
+                    flex items-center justify-center transition-all duration-300
+                    hover:scale-110 hover:shadow-xl ${showScrollTop ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10 pointer-events-none'}`}
+        aria-label="Retour en haut"
       >
-        <div className="text-caption text-[--text-muted] mb-4 -rotate-90 origin-center whitespace-nowrap" aria-hidden="true">
-          Navigation
-        </div>
-        {years.map((year) => (
-          <button
-            key={year}
-            onClick={() => scrollToYear(year)}
-            aria-label={`Aller a l'annee ${year}`}
-            aria-current={activeYear === year ? 'true' : undefined}
-            className={`
-              relative w-10 h-10 flex items-center justify-center
-              font-mono text-xs transition-all duration-300
-              ${activeYear === year
-                ? 'text-accent scale-110'
-                : 'text-[--text-muted] hover:text-[--text-secondary]'}
-            `}
-          >
-            {activeYear === year && (
-              <span className="absolute inset-0 rounded-full border border-accent opacity-30 animate-ping" aria-hidden="true" />
-            )}
-            <span className="relative z-10" aria-hidden="true">{year.slice(2)}</span>
-            {activeYear === year && (
-              <span className="absolute inset-2 rounded-full bg-accent/10" aria-hidden="true" />
-            )}
-          </button>
-        ))}
-        <ChevronDown className="mt-4 text-[--text-muted] animate-bounce" size={16} aria-hidden="true" />
-      </nav>
+        <ArrowUp size={20} />
+      </button>
 
-      <main className="pt-32 pb-24">
+      <main className="pt-32 pb-24 relative z-10">
         <div className="container-wide">
 
-          {/* Header */}
-          <div ref={headerRef} className="mb-20">
-            <div className="flex items-center gap-3 mb-4">
-              <span className="frise-caption text-caption" style={{ opacity: 0 }}>
-                Parcours
-              </span>
-              <span className="w-12 h-px bg-accent/50" aria-hidden="true" />
-              <Sparkles className="w-4 h-4 text-accent animate-pulse" aria-hidden="true" />
+          {/* Header - Bold Neo-Editorial */}
+          <div ref={headerRef} className="mb-24">
+            <div data-animate className="flex items-center gap-3 mb-6">
+              <span className="text-caption text-accent">// Parcours</span>
+              <span className="w-16 h-px bg-accent" />
+              <Sparkles className="w-4 h-4 text-accent" />
             </div>
 
-            <h1 className="frise-title text-display mb-6" style={{ opacity: 0 }}>
-              Mon<br />
-              <span className="text-accent">Parcours</span>
+            <h1 data-animate className="text-display mb-8 leading-[0.85]">
+              <span className="block text-[--text-primary] glitch-text" data-text="Mon">Mon</span>
+              <span className="block text-accent neon-glow-subtle relative">
+                Parcours
+                <span className="absolute -right-8 top-0 text-[0.15em] text-highlight font-mono tracking-tight opacity-50 rotate-90">
+                  .journey
+                </span>
+              </span>
             </h1>
 
-            <p className="frise-subtitle text-body-lg max-w-2xl mb-12" style={{ opacity: 0 }}>
-              De la Marine Nationale aux hopitaux, en passant par la presidence du BDE EFREI (6500+ etudiants) - chaque etape a forge ma vision unique du Data Engineering.
+            <p data-animate className="text-body-lg max-w-2xl mb-16 text-[--text-secondary] border-l-2 border-accent/30 pl-6">
+              De la Marine Nationale aux hôpitaux, en passant par la présidence du BDE EFREI —
+              chaque étape a forgé ma vision unique du Data Engineering.
             </p>
 
-            {/* Filters */}
-            <div className="flex flex-wrap gap-3" role="group" aria-label="Filtrer par categorie">
+            {/* Filters with WAAPI */}
+            <div data-animate className="flex flex-wrap gap-3" role="group" aria-label="Filtrer par catégorie">
               <button
-                onClick={() => setFilter('all')}
-                aria-pressed={filter === 'all'}
-                className={`
-                  filter-pill px-5 py-2.5 text-sm font-medium rounded-full
-                  transition-all duration-300 border flex items-center gap-2
-                  ${filter === 'all'
-                    ? 'border-accent bg-accent/10 text-accent'
-                    : 'border-[--border] text-[--text-secondary] hover:border-[--text-muted]'}
-                `}
-                style={{ opacity: 0 }}
+                onClick={() => handleFilterChange('all')}
+                className={`filter-pill px-5 py-2.5 text-sm font-medium rounded-full transition-all duration-300 border flex items-center gap-2
+                  ${filter === 'all' ? 'border-accent bg-accent/10 text-accent' : 'border-[--border] text-[--text-secondary] hover:border-accent/50'}`}
               >
                 Tout
-                <span className="px-1.5 py-0.5 text-xs rounded bg-[--bg-elevated]" aria-hidden="true">
-                  {allEvents.length}
-                </span>
-                <span className="sr-only">({allEvents.length} elements)</span>
+                <span className="px-1.5 py-0.5 text-xs rounded bg-[--bg-elevated]">{allEvents.length}</span>
               </button>
 
               {(Object.keys(eventConfig) as EventType[]).map((type) => {
                 const config = eventConfig[type]
                 const count = countByType[type]
-
                 return (
                   <button
                     key={type}
-                    onClick={() => setFilter(type)}
-                    aria-pressed={filter === type}
-                    className={`
-                      filter-pill px-5 py-2.5 text-sm font-medium rounded-full
-                      transition-all duration-300 border flex items-center gap-2
-                      ${filter === type
-                        ? 'border-accent bg-accent/10 text-accent'
-                        : 'border-[--border] text-[--text-secondary] hover:border-[--text-muted]'}
-                    `}
-                    style={{ opacity: 0 }}
+                    onClick={() => handleFilterChange(type)}
+                    className={`filter-pill px-5 py-2.5 text-sm font-medium rounded-full transition-all duration-300 border flex items-center gap-2
+                      ${filter === type ? 'border-accent bg-accent/10 text-accent' : 'border-[--border] text-[--text-secondary] hover:border-accent/50'}`}
                   >
-                    <config.icon size={14} style={{ color: filter === type ? 'currentColor' : config.color }} aria-hidden="true" />
+                    <config.icon size={14} style={{ color: filter === type ? 'currentColor' : config.color }} />
                     {config.label}
-                    <span className="px-1.5 py-0.5 text-xs rounded bg-[--bg-elevated]" aria-hidden="true">
-                      {count}
-                    </span>
-                    <span className="sr-only">({count} elements)</span>
+                    <span className="px-1.5 py-0.5 text-xs rounded bg-[--bg-elevated]">{count}</span>
                   </button>
                 )
               })}
@@ -468,228 +550,88 @@ export default function FrisePage() {
           {/* Timeline */}
           <div ref={timelineRef} className="relative">
             {/* Central line */}
-            <div className="absolute left-1/2 top-0 bottom-0 w-px bg-gradient-to-b from-transparent via-[--border] to-transparent hidden md:block" />
+            <div className="absolute left-1/2 top-0 bottom-0 w-px bg-gradient-to-b from-accent/50 via-[--border] to-transparent hidden md:block" />
 
-            {years.map((year) => (
-              <div key={year} data-year={year} className="mb-24 last:mb-0">
-                {/* Year marker */}
-                <div className="relative flex items-center justify-center mb-16">
-                  <div className="absolute left-0 right-0 h-px bg-[--border]" />
-                  <div className="relative z-10 px-8 py-4 bg-[--bg-deep]">
-                    <span className="font-mono text-6xl md:text-8xl font-black text-transparent bg-clip-text bg-gradient-to-br from-accent via-accent/60 to-accent/20">
+            {years.map((year, yearIdx) => (
+              <div key={year} className="mb-24 last:mb-0">
+                {/* Year marker - Bold geometric */}
+                <div className="timeline-item relative flex items-center justify-center mb-16">
+                  {/* Horizontal lines */}
+                  <div className="absolute left-0 right-0 h-px bg-gradient-to-r from-transparent via-accent/50 to-transparent" />
+
+                  {/* Year container with geometric styling */}
+                  <div className="relative z-10 px-12 py-6 bg-[--bg-deep] border border-accent/20"
+                       style={{ clipPath: 'polygon(20px 0, 100% 0, 100% calc(100% - 20px), calc(100% - 20px) 100%, 0 100%, 0 20px)' }}>
+                    {/* Corner decorations */}
+                    <div className="absolute top-0 left-0 w-5 h-5 border-l-2 border-t-2 border-accent/40" />
+                    <div className="absolute bottom-0 right-0 w-5 h-5 border-r-2 border-b-2 border-accent/40" />
+
+                    <span className="font-mono text-6xl md:text-8xl font-black text-accent neon-glow-subtle tracking-tighter">
                       {year}
+                    </span>
+
+                    {/* Small label */}
+                    <span className="absolute -bottom-2 left-1/2 -translate-x-1/2 text-[10px] font-mono text-accent/50 tracking-widest">
+                      // YEAR
                     </span>
                   </div>
                 </div>
 
                 {/* Events for this year */}
-                <div className="space-y-8 md:space-y-0">
-                  {eventsByYear[year]?.map((event, eventIdx) => {
-                    const config = eventConfig[event.type]
-                    const Icon = config.icon
-                    const isLeft = eventIdx % 2 === 0
-                    const logo = getEventLogo(event)
-                    const isExpanded = expandedCard === event.id
-
-                    return (
-                      <div
-                        key={event.id}
-                        data-direction={isLeft ? 'left' : 'right'}
-                        className={`
-                          timeline-item relative
-                          md:w-[calc(50%-2rem)]
-                          ${isLeft ? 'md:mr-auto md:pr-8' : 'md:ml-auto md:pl-8'}
-                          mb-8 md:mb-16
-                        `}
-                        style={{ opacity: 0 }}
-                      >
-                        {/* Connector dot */}
-                        <div
-                          className={`
-                            hidden md:block absolute top-8
-                            ${isLeft ? '-right-6' : '-left-6'}
-                          `}
-                        >
-                          <div
-                            className="w-4 h-4 rounded-full border-4 border-[--bg-deep] transition-transform duration-300 hover:scale-125"
-                            style={{ backgroundColor: config.color }}
-                          />
-                        </div>
-
-                        {/* Connector line */}
-                        <div
-                          className={`
-                            hidden md:block absolute top-10 w-8 h-px
-                            ${isLeft ? '-right-8' : '-left-8'}
-                          `}
-                          style={{ backgroundColor: config.color, opacity: 0.3 }}
-                        />
-
-                        {/* Card */}
-                        <div
-                          role="button"
-                          tabIndex={0}
-                          aria-expanded={isExpanded}
-                          onClick={() => setExpandedCard(isExpanded ? null : event.id)}
-                          onKeyDown={(e) => {
-                            if (e.key === 'Enter' || e.key === ' ') {
-                              e.preventDefault()
-                              setExpandedCard(isExpanded ? null : event.id)
-                            }
-                          }}
-                          className="group relative bg-[--bg-surface] border border-[--border] p-6 md:p-8
-                                     hover:border-opacity-50 transition-all duration-500 cursor-pointer
-                                     hover:shadow-lg hover:shadow-accent/5 focus-visible:outline-2 focus-visible:outline-accent focus-visible:outline-offset-2"
-                          style={{
-                            borderColor: `${config.color}20`,
-                            '--hover-color': config.color
-                          } as React.CSSProperties}
-                        >
-                          {/* Accent line */}
-                          <div
-                            className="absolute top-0 left-0 right-0 h-1 opacity-60 group-hover:opacity-100 transition-opacity"
-                            style={{ backgroundColor: config.color }}
-                          />
-
-                          {/* Current badge - top right */}
-                          {event.current && (
-                            <div className="absolute -top-3 right-4">
-                              <span
-                                className="px-3 py-1 text-xs font-bold rounded-full animate-pulse"
-                                style={{
-                                  backgroundColor: config.color,
-                                  color: 'white'
-                                }}
-                              >
-                                En cours
-                              </span>
-                            </div>
-                          )}
-
-                          {/* Header */}
-                          <div className="flex items-start gap-4 mb-4">
-                            {/* Logo or Icon */}
-                            {logo ? (
-                              <div className="relative w-14 h-14 flex-shrink-0 rounded-xl overflow-hidden bg-white border border-[--border] group-hover:scale-105 transition-transform">
-                                <Image
-                                  src={logo}
-                                  alt={event.subtitle}
-                                  fill
-                                  className="object-contain p-1.5"
-                                />
-                              </div>
-                            ) : (
-                              <div
-                                className="w-14 h-14 flex-shrink-0 rounded-xl flex items-center justify-center group-hover:scale-105 transition-transform"
-                                style={{ backgroundColor: `${config.color}15` }}
-                              >
-                                <Icon size={24} style={{ color: config.color }} />
-                              </div>
-                            )}
-
-                            <div className="flex-1 min-w-0">
-                              <h3 className="text-lg font-semibold leading-tight group-hover:text-accent transition-colors line-clamp-2">
-                                {event.title}
-                              </h3>
-                              <p className="text-sm font-medium mt-1" style={{ color: config.color }}>
-                                {event.subtitle}
-                              </p>
-                            </div>
-                          </div>
-
-                          {/* Meta */}
-                          <div className="flex flex-wrap items-center gap-4 text-sm text-[--text-muted] mb-3">
-                            <span className="flex items-center gap-1.5 font-mono">
-                              <Calendar size={12} aria-hidden="true" />
-                              <span className="sr-only">Periode: </span>{event.period}
-                            </span>
-                            {event.location && (
-                              <span className="flex items-center gap-1">
-                                <MapPin size={12} aria-hidden="true" />
-                                <span className="sr-only">Lieu: </span>{event.location}
-                              </span>
-                            )}
-                          </div>
-
-                          {/* Description */}
-                          {event.description && (
-                            <p className={`text-sm text-[--text-secondary] leading-relaxed transition-all duration-300 ${isExpanded ? '' : 'line-clamp-2'}`}>
-                              {event.description}
-                            </p>
-                          )}
-
-                          {/* Expand indicator */}
-                          {event.description && event.description.length > 100 && (
-                            <div className="mt-2 text-xs text-accent/60 group-hover:text-accent transition-colors">
-                              {isExpanded ? 'Cliquer pour reduire' : 'Cliquer pour voir plus'}
-                            </div>
-                          )}
-
-                          {/* Type badge */}
-                          <div
-                            className={`
-                              absolute bottom-4 right-4
-                              px-2 py-1 text-xs font-mono uppercase tracking-wider
-                              opacity-40 group-hover:opacity-70 transition-opacity
-                            `}
-                            style={{ color: config.color }}
-                          >
-                            {config.label}
-                          </div>
-                        </div>
-                      </div>
-                    )
-                  })}
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-8">
+                  {eventsByYear[year]?.map((event, eventIdx) => (
+                    <div
+                      key={event.id}
+                      className="timeline-item"
+                    >
+                      <TimelineCard
+                        event={event}
+                        isLeft={eventIdx % 2 === 0}
+                        isExpanded={expandedCard === event.id}
+                        onToggle={() => setExpandedCard(expandedCard === event.id ? null : event.id)}
+                      />
+                    </div>
+                  ))}
                 </div>
               </div>
             ))}
 
             {/* Timeline end */}
-            <div className="relative flex items-center justify-center pt-12">
+            <div className="timeline-item relative flex items-center justify-center pt-12">
               <div className="absolute left-0 right-0 h-px bg-[--border]" />
               <div className="relative z-10 px-6 py-3 bg-[--bg-deep] border border-[--border] rounded-full">
-                <span className="font-mono text-sm text-[--text-muted]">
-                  Debut du parcours
-                </span>
+                <span className="font-mono text-sm text-[--text-muted]">Début du parcours</span>
               </div>
             </div>
           </div>
 
-          {/* Stats footer */}
-          <div className="mt-32 pt-16 border-t border-[--border]">
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
-              <div ref={yearsCounter.ref} className="text-center group">
-                <div className="font-mono text-4xl md:text-5xl font-bold text-accent mb-2 group-hover:scale-110 transition-transform">
-                  {yearsCounter.count}<span className="text-accent/50">+</span>
+          {/* Stats footer - Grid style */}
+          <div className="mt-40 relative">
+            {/* Section label */}
+            <div className="absolute -top-8 left-0 flex items-center gap-3">
+              <span className="text-caption text-accent">// STATS</span>
+              <span className="w-20 h-px bg-accent/50" />
+            </div>
+
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-1 bg-[--border]">
+              {[
+                { end: years.length, label: 'Années', color: 'accent' },
+                { end: countByType.experience, label: 'Expériences', color: 'highlight' },
+                { end: countByType.education, label: 'Formations', color: 'tertiary' },
+                { end: countByType.volunteering, label: 'Engagements', color: 'success' },
+              ].map((stat, i) => (
+                <div key={stat.label} className="bg-[--bg-surface] p-8 group relative overflow-hidden">
+                  {/* Hover accent line */}
+                  <div className={`absolute top-0 left-0 right-0 h-1 bg-[--${stat.color}] transform scale-x-0 group-hover:scale-x-100 transition-transform origin-left duration-300`} />
+
+                  <div className="font-mono text-5xl md:text-6xl font-black mb-3" style={{ color: `var(--${stat.color})` }}>
+                    {stat.end}<span className="text-[--text-muted] text-2xl">+</span>
+                  </div>
+                  <div className="text-caption opacity-60 group-hover:opacity-100 transition-opacity">
+                    {stat.label}
+                  </div>
                 </div>
-                <div className="text-sm text-[--text-muted] uppercase tracking-wider">
-                  Annees
-                </div>
-              </div>
-              <div ref={expCounter.ref} className="text-center group">
-                <div className="font-mono text-4xl md:text-5xl font-bold text-accent mb-2 group-hover:scale-110 transition-transform">
-                  {expCounter.count}
-                </div>
-                <div className="text-sm text-[--text-muted] uppercase tracking-wider">
-                  {eventConfig.experience.labelFr}
-                </div>
-              </div>
-              <div ref={eduCounter.ref} className="text-center group">
-                <div className="font-mono text-4xl md:text-5xl font-bold text-accent mb-2 group-hover:scale-110 transition-transform">
-                  {eduCounter.count}
-                </div>
-                <div className="text-sm text-[--text-muted] uppercase tracking-wider">
-                  {eventConfig.education.labelFr}
-                </div>
-              </div>
-              <div ref={volCounter.ref} className="text-center group">
-                <div className="font-mono text-4xl md:text-5xl font-bold text-accent mb-2 group-hover:scale-110 transition-transform">
-                  {volCounter.count}
-                </div>
-                <div className="text-sm text-[--text-muted] uppercase tracking-wider">
-                  {eventConfig.volunteering.labelFr}
-                </div>
-              </div>
+              ))}
             </div>
           </div>
 

@@ -209,12 +209,13 @@ export default function Header() {
                 <Link
                   key={item.href}
                   href={item.href}
-                  className={`nav-link text-sm font-medium transition-colors ${
+                  className={`nav-link text-sm font-medium transition-colors relative ${
                     pathname === item.href
-                      ? 'text-accent'
+                      ? 'text-accent nav-link-active'
                       : 'text-[--text-secondary] hover:text-[--text-primary]'
                   }`}
                   style={{ opacity: 0 }}
+                  aria-current={pathname === item.href ? 'page' : undefined}
                 >
                   {t(`nav.${item.key}`)}
                 </Link>

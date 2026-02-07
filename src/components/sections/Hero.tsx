@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, useRef, useState, useCallback } from 'react'
+import { useEffect, useRef, useState, useCallback, Suspense } from 'react'
 import dynamic from 'next/dynamic'
 import { animate, stagger } from 'animejs'
 import Link from 'next/link'
@@ -8,6 +8,7 @@ import Image from 'next/image'
 import { ArrowDown, ArrowUpRight, Github, Linkedin, Mail, Terminal, MapPin, Building2 } from 'lucide-react'
 import { personalInfo } from '@/lib/data'
 import ErrorBoundary from '@/components/ErrorBoundary'
+import { useI18n } from '@/lib/i18n'
 
 interface GitHubStats {
   projectCount: number
@@ -16,10 +17,18 @@ interface GitHubStats {
   totalStars: number
 }
 
-const HeroBackground = dynamic(() => import('@/components/three/HeroBackground'), {
-  ssr: false,
-  loading: () => null,
-})
+const CyberpunkBackground = dynamic(
+  () => import('@/components/three/CyberpunkBackground').catch(() => {
+    // Return a fallback component if import fails
+    return { default: () => null }
+  }),
+  {
+    ssr: false,
+    loading: () => (
+      <div className="absolute inset-0 bg-gradient-to-br from-[--bg-deep] via-[--bg-surface] to-[--bg-deep]" />
+    ),
+  }
+)
 
 // Typing effect component
 function TypeWriter({ text, delay = 0, speed = 40 }: { text: string; delay?: number; speed?: number }) {
@@ -95,6 +104,7 @@ export default function Hero() {
     totalStars: 0
   })
   const [isLoading, setIsLoading] = useState(true)
+  const { t } = useI18n()
 
   // Fetch GitHub stats with caching
   useEffect(() => {
@@ -369,13 +379,20 @@ export default function Hero() {
         }}
       >
         <ErrorBoundary>
-          <HeroBackground />
+          <CyberpunkBackground variant="hero" />
         </ErrorBoundary>
       </div>
 
-      {/* Gradient overlays */}
-      <div className="absolute inset-0 bg-gradient-to-b from-[--bg-deep]/30 via-transparent to-[--bg-deep] z-[1]" />
-      <div className="absolute inset-0 bg-gradient-to-r from-[--bg-deep]/60 via-transparent to-transparent z-[1]" />
+      {/* Gradient overlays - more dramatic */}
+      <div className="absolute inset-0 bg-gradient-to-b from-[--bg-deep]/50 via-transparent to-[--bg-deep] z-[1]" />
+      <div className="absolute inset-0 bg-gradient-to-r from-[--bg-deep]/70 via-transparent to-transparent z-[1]" />
+
+      {/* Scanline effect overlay */}
+      <div className="absolute inset-0 z-[2] pointer-events-none opacity-30">
+        <div className="w-full h-full" style={{
+          background: 'repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(255,176,0,0.03) 2px, rgba(255,176,0,0.03) 4px)'
+        }} />
+      </div>
 
       {/* Terminal header bar */}
       <header className="terminal-header relative z-10 pt-28 pb-6" style={{ opacity: 0 }}>
@@ -387,9 +404,9 @@ export default function Hero() {
                 <TypeWriter text="~/adam-beloucif/portfolio" delay={800} speed={30} />
               </span>
             </div>
-            <div className="status-online" aria-label="Disponible pour des opportunites">
+            <div className="status-online" aria-label={t('hero.status')}>
               <span className="status-dot" aria-hidden="true" />
-              <span className="font-mono text-xs">AVAILABLE</span>
+              <span className="font-mono text-xs">{t('hero.status')}</span>
             </div>
           </div>
         </div>
@@ -402,48 +419,61 @@ export default function Hero() {
 
             {/* Left - Name & Title */}
             <div className="lg:col-span-7 space-y-8">
-              {/* Name */}
-              <h1 className="text-display leading-[0.85]">
+              {/* Name - Bold Syne typography */}
+              <h1 className="text-display leading-[0.8]">
                 <span className="block overflow-hidden">
                   {'Adam'.split('').map((char, i) => (
                     <span
                       key={i}
-                      className="name-char inline-block"
+                      className="name-char inline-block glitch-text"
+                      data-text={char}
                       style={{ opacity: 0 }}
                     >
                       {char}
                     </span>
                   ))}
                 </span>
-                <span className="block overflow-hidden text-accent">
+                <span className="block overflow-hidden relative">
                   {'Beloucif'.split('').map((char, i) => (
                     <span
                       key={i}
-                      className="name-char inline-block"
+                      className="name-char inline-block text-accent neon-glow-subtle"
                       style={{ opacity: 0 }}
                     >
                       {char}
                     </span>
                   ))}
+                  {/* Accent decoration */}
+                  <span className="absolute -right-4 top-0 text-[0.3em] text-highlight font-mono tracking-tight opacity-60">
+                    .dev
+                  </span>
                 </span>
               </h1>
 
-              {/* Role */}
-              <div className="hero-role flex items-center gap-4" style={{ opacity: 0 }}>
-                <div className="divider-accent" aria-hidden="true" />
-                <p className="text-title text-[--text-secondary]">
-                  Data Engineer
-                  <span className="text-[--text-muted]"> & </span>
-                  <span className="text-highlight">Fullstack Dev</span>
-                </p>
+              {/* Role - with corner brackets */}
+              <div className="hero-role" style={{ opacity: 0 }}>
+                <div className="corner-brackets inline-block">
+                  <p className="text-title font-light tracking-tight">
+                    <span className="text-[--text-primary]">Data Engineer</span>
+                    <span className="text-accent mx-3">//</span>
+                    <span className="text-highlight">Fullstack Dev</span>
+                  </p>
+                </div>
               </div>
 
               {/* Info */}
               <div className="hero-info max-w-lg space-y-6" style={{ opacity: 0 }}>
                 <p className="text-body-lg">
-                  Je transforme la <span className="text-accent font-medium">data</span> en décisions
-                  et le <span className="text-highlight font-medium">code</span> en impact.
-                  M1 Data Engineering & IA @ EFREI Paris.
+                  {(() => {
+                    const tagline = t('hero.tagline')
+                    const parts = tagline.split(/\{(data|code)\}/g)
+                    return parts.map((part, i) => {
+                      if (part === 'data') return <span key={i} className="text-accent font-medium">data</span>
+                      if (part === 'code') return <span key={i} className="text-highlight font-medium">code</span>
+                      return <span key={i}>{part}</span>
+                    })
+                  })()}
+                  {' '}{t('hero.education')}
                 </p>
 
                 <div className="flex items-center gap-4 text-sm text-[--text-muted] font-mono">
@@ -459,34 +489,51 @@ export default function Hero() {
                 </div>
               </div>
 
-              {/* CTAs */}
+              {/* CTAs - Bold styling */}
               <div className="flex flex-col sm:flex-row gap-4">
-                <MagneticElement as={Link} href="/projets" className="hero-cta btn btn-primary group">
-                  <span>Voir les projets</span>
-                  <ArrowUpRight size={16} className="transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
+                <MagneticElement
+                  as={Link}
+                  href="/projets"
+                  className="hero-cta btn btn-primary group relative overflow-hidden"
+                  style={{ opacity: 0 }}
+                >
+                  <span className="relative z-10 flex items-center gap-2">
+                    <span className="font-semibold">{t('hero.cta')}</span>
+                    <ArrowUpRight size={16} className="transition-transform group-hover:translate-x-1 group-hover:-translate-y-1" />
+                  </span>
+                  <div className="absolute inset-0 bg-gradient-to-r from-accent via-highlight to-accent bg-[length:200%_100%] opacity-0 group-hover:opacity-100 transition-opacity" />
                 </MagneticElement>
 
-                <MagneticElement as={Link} href="/contact" className="hero-cta btn btn-outline">
-                  <span>Me contacter</span>
+                <MagneticElement
+                  as={Link}
+                  href="/contact"
+                  className="hero-cta btn btn-outline group"
+                  style={{ opacity: 0 }}
+                >
+                  <span className="accent-underline">{t('hero.ctaSecondary')}</span>
                 </MagneticElement>
               </div>
             </div>
 
-            {/* Right - Photo */}
+            {/* Right - Photo with geometric frame */}
             <div className="lg:col-span-5 flex justify-center lg:justify-end">
               <div
-                className="hero-photo relative"
+                className="hero-photo relative perspective-card"
                 style={{
                   opacity: 0,
                   transform: `translate(${mousePos.x * 10}px, ${mousePos.y * 10}px)`,
                   transition: 'transform 0.3s ease-out',
                 }}
               >
-                {/* Glow effect */}
-                <div className="absolute inset-0 rounded-full bg-accent/20 blur-3xl scale-110" />
+                {/* Glow effect - more intense */}
+                <div className="absolute inset-0 bg-accent/30 blur-[80px] scale-125" />
 
-                {/* Photo container */}
-                <div className="relative w-56 h-56 md:w-72 md:h-72 rounded-full overflow-hidden border-2 border-[--border-accent] shadow-lg">
+                {/* Geometric frame decoration */}
+                <div className="absolute -inset-8 border border-accent/30 rotate-6" style={{ clipPath: 'polygon(10% 0%, 100% 0%, 100% 90%, 90% 100%, 0% 100%, 0% 10%)' }} />
+                <div className="absolute -inset-6 border border-highlight/20 -rotate-3" style={{ clipPath: 'polygon(5% 0%, 100% 0%, 100% 95%, 95% 100%, 0% 100%, 0% 5%)' }} />
+
+                {/* Photo container - hexagonal clip */}
+                <div className="perspective-card-inner relative w-60 h-60 md:w-80 md:h-80 overflow-hidden shadow-2xl" style={{ clipPath: 'polygon(25% 0%, 75% 0%, 100% 25%, 100% 75%, 75% 100%, 25% 100%, 0% 75%, 0% 25%)' }}>
                   <Image
                     src="/images/adam-photo.jpg"
                     alt="Adam Beloucif"
@@ -494,38 +541,54 @@ export default function Hero() {
                     className="object-cover"
                     priority
                   />
+                  {/* Gradient overlay */}
+                  <div className="absolute inset-0 bg-gradient-to-tr from-accent/20 via-transparent to-highlight/10" />
                 </div>
 
-                {/* Decorative ring */}
-                <div className="absolute inset-0 rounded-full border border-[--accent] opacity-20 scale-125 animate-pulse" />
+                {/* Corner accents */}
+                <div className="absolute top-0 left-0 w-8 h-8 border-l-2 border-t-2 border-accent" />
+                <div className="absolute bottom-0 right-0 w-8 h-8 border-r-2 border-b-2 border-accent" />
+
+                {/* Status indicator */}
+                <div className="absolute -bottom-4 left-1/2 -translate-x-1/2 px-4 py-2 bg-[--bg-card] backdrop-blur-lg border border-[--border] rounded-full flex items-center gap-2">
+                  <span className="status-dot" />
+                  <span className="font-mono text-xs text-[--text-secondary]">Available</span>
+                </div>
               </div>
             </div>
           </div>
 
-          {/* Metrics row */}
+          {/* Metrics row - Bold Neo-Editorial style */}
           <div
-            className="grid grid-cols-2 md:grid-cols-4 gap-6 mt-16 pt-8 border-t border-[--border]"
+            className="grid grid-cols-2 md:grid-cols-4 gap-1 mt-16 bg-[--border]"
             aria-live="polite"
             aria-busy={isLoading}
           >
             {[
-              { value: String(githubStats.projectCount), label: 'Projets GitHub', suffix: '+', loading: isLoading },
-              { value: String(githubStats.totalCommits), label: 'Commits', suffix: '+', loading: isLoading },
-              { value: '3', label: 'Ans d\'experience', suffix: '+', loading: false },
-              { value: String(githubStats.languageCount), label: 'Technologies', suffix: '', loading: isLoading },
-            ].map((metric) => (
-              <div key={metric.label} className="hero-metric metric" style={{ opacity: 0 }}>
-                <p className="metric-value" aria-label={`${metric.value}${metric.suffix} ${metric.label}`}>
+              { value: String(githubStats.projectCount), label: t('hero.metrics.projects'), suffix: '+', loading: isLoading, color: 'accent' },
+              { value: String(githubStats.totalCommits), label: t('hero.metrics.commits'), suffix: '+', loading: isLoading, color: 'highlight' },
+              { value: '3', label: t('hero.metrics.experience'), suffix: '+', loading: false, color: 'tertiary' },
+              { value: String(githubStats.languageCount), label: t('hero.metrics.technologies'), suffix: '', loading: isLoading, color: 'success' },
+            ].map((metric, idx) => (
+              <div
+                key={metric.label}
+                className="hero-metric bg-[--bg-surface] p-6 relative group cursor-default"
+                style={{ opacity: 0 }}
+              >
+                {/* Hover line accent */}
+                <div className={`absolute top-0 left-0 right-0 h-1 bg-[--${metric.color}] transform scale-x-0 group-hover:scale-x-100 transition-transform origin-left duration-300`} />
+
+                <p className="font-mono text-4xl md:text-5xl font-bold tracking-tight" aria-label={`${metric.value}${metric.suffix} ${metric.label}`}>
                   {metric.loading ? (
-                    <span className="inline-block w-8 h-8 bg-[--bg-elevated] rounded animate-pulse" aria-hidden="true" />
+                    <span className="inline-block w-12 h-10 bg-[--bg-elevated] rounded skeleton" aria-hidden="true" />
                   ) : (
                     <>
-                      <span aria-hidden="true">{metric.value}</span>
-                      <span className="text-[--text-muted] text-lg" aria-hidden="true">{metric.suffix}</span>
+                      <span className={`text-[--${metric.color}]`} aria-hidden="true">{metric.value}</span>
+                      <span className="text-[--text-muted] text-xl" aria-hidden="true">{metric.suffix}</span>
                     </>
                   )}
                 </p>
-                <p className="metric-label">{metric.label}</p>
+                <p className="text-caption mt-2 opacity-60 group-hover:opacity-100 transition-opacity">{metric.label}</p>
               </div>
             ))}
           </div>
@@ -561,11 +624,11 @@ export default function Hero() {
             <button
               ref={scrollRef}
               type="button"
-              aria-label="Défiler vers le bas"
+              aria-label={t('hero.scroll')}
               className="flex items-center gap-3 text-[--text-muted] cursor-pointer hover:text-accent transition-colors"
               onClick={() => window.scrollTo({ top: window.innerHeight, behavior: 'smooth' })}
             >
-              <span className="font-mono text-xs tracking-wider hidden md:inline">SCROLL</span>
+              <span className="font-mono text-xs tracking-wider hidden md:inline">{t('hero.scroll')}</span>
               <ArrowDown size={16} />
             </button>
           </div>

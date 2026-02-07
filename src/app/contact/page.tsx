@@ -6,11 +6,17 @@ import { animate } from 'animejs'
 import { ArrowUpRight } from 'lucide-react'
 import { personalInfo } from '@/lib/data'
 import ErrorBoundary from '@/components/ErrorBoundary'
+import { useI18n } from '@/lib/i18n'
 
-const PageBackground = dynamic(() => import('@/components/three/PageBackground'), {
-  ssr: false,
-  loading: () => null,
-})
+const SpaceBackground = dynamic(
+  () => import('@/components/three/SpaceBackground').catch(() => {
+    return { default: () => null }
+  }),
+  {
+    ssr: false,
+    loading: () => <div className="fixed inset-0 -z-10 bg-[#050508]" />,
+  }
+)
 
 export default function Contact() {
   const [formState, setFormState] = useState({
@@ -23,6 +29,7 @@ export default function Contact() {
   const [errors, setErrors] = useState<Record<string, string>>({})
   const headerRef = useRef<HTMLDivElement>(null)
   const contentRef = useRef<HTMLDivElement>(null)
+  const { t } = useI18n()
 
   // Input sanitization - strip HTML tags and limit length
   function sanitize(input: string, maxLength: number = 500): string {
@@ -166,20 +173,19 @@ export default function Contact() {
 
   return (
     <>
-      <ErrorBoundary><PageBackground variant="minimal" /></ErrorBoundary>
+      <ErrorBoundary><SpaceBackground variant="minimal" /></ErrorBoundary>
       <main className="pt-32 pb-24">
         <div className="container-wide">
           <div className="max-w-4xl mx-auto">
 
             {/* Header */}
             <div ref={headerRef} className="mb-16">
-            <p className="page-caption text-caption mb-4" style={{ opacity: 0 }}>Contact</p>
+            <p className="page-caption text-caption mb-4" style={{ opacity: 0 }}>{t('contact.caption')}</p>
             <h1 className="page-title text-display mb-6" style={{ opacity: 0 }}>
-              Travaillons<br />ensemble
+              {t('contact.title')}
             </h1>
             <p className="page-description text-body max-w-xl" style={{ opacity: 0 }}>
-              Intéressé par une collaboration ou une opportunité ?
-              N'hésitez pas à me contacter.
+              {t('contact.description')}
             </p>
           </div>
 
@@ -187,34 +193,34 @@ export default function Contact() {
 
             {/* Contact Info */}
             <div className="contact-info" style={{ opacity: 0 }}>
-              <h2 className="sr-only">Informations de contact</h2>
+              <h2 className="sr-only">{t('contact.info')}</h2>
               <div className="space-y-8 mb-12">
                 <a
                   href={`mailto:${personalInfo.email}`}
                   className="block group"
                 >
-                  <p className="text-caption mb-1">Email</p>
+                  <p className="text-caption mb-1">{t('contact.email')}</p>
                   <p className="text-lg group-hover:text-accent transition-colors">
                     {personalInfo.email}
                   </p>
                 </a>
 
                 <div>
-                  <p className="text-caption mb-1">Localisation</p>
+                  <p className="text-caption mb-1">{t('contact.location')}</p>
                   <p className="text-lg">{personalInfo.location}</p>
                 </div>
               </div>
 
               {/* Social Links */}
               <div>
-                <p className="text-caption mb-4">Reseaux</p>
+                <p className="text-caption mb-4">{t('contact.social')}</p>
                 <div className="flex gap-6">
                   <a
                     href={personalInfo.linkedin}
                     target="_blank"
                     rel="noopener noreferrer"
                     className="flex items-center gap-2 text-[--text-secondary] hover:text-accent transition-colors"
-                    aria-label="Profil LinkedIn (nouvelle fenetre)"
+                    aria-label={`LinkedIn ${t('footer.opensInNewWindow')}`}
                   >
                     <span>LinkedIn</span>
                     <ArrowUpRight size={14} aria-hidden="true" />
@@ -224,7 +230,7 @@ export default function Contact() {
                     target="_blank"
                     rel="noopener noreferrer"
                     className="flex items-center gap-2 text-[--text-secondary] hover:text-accent transition-colors"
-                    aria-label="Profil GitHub (nouvelle fenetre)"
+                    aria-label={`GitHub ${t('footer.opensInNewWindow')}`}
                   >
                     <span>GitHub</span>
                     <ArrowUpRight size={14} aria-hidden="true" />
@@ -235,26 +241,30 @@ export default function Contact() {
 
             {/* Contact Form */}
             <div className="contact-form" style={{ opacity: 0 }} aria-live="polite">
-              <h2 className="sr-only">Formulaire de contact</h2>
+              <h2 className="sr-only">{t('contact.form.title')}</h2>
               {isSubmitted ? (
-                <div className="border border-[--border] p-8 text-center" role="status" aria-live="assertive">
-                  <p className="text-title mb-2">Message pret a envoyer</p>
+                <div className="border border-[--border] p-8 text-center rounded-lg bg-[--bg-card]" role="status" aria-live="assertive">
+                  <div className="w-16 h-16 mx-auto mb-4 rounded-full bg-[--success]/10 flex items-center justify-center">
+                    <svg className="w-8 h-8 text-[--success]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                    </svg>
+                  </div>
+                  <p className="text-title mb-2">{t('contact.form.success')}</p>
                   <p className="text-[--text-secondary] mb-6">
-                    Votre client email va s'ouvrir pour finaliser l'envoi.
+                    {t('contact.form.sending')}
                   </p>
                   <button
                     onClick={() => setIsSubmitted(false)}
-                    className="text-accent hover:underline"
+                    className="text-accent hover:underline cursor-pointer"
                   >
-                    Envoyer un autre message
+                    {t('contact.form.send')}
                   </button>
                 </div>
               ) : (
                 <form onSubmit={handleSubmit} className="space-y-6" noValidate>
                   <div>
                     <label htmlFor="name" className="block text-caption mb-2">
-                      Nom complet <span className="text-accent" aria-hidden="true">*</span>
-                      <span className="sr-only">(requis)</span>
+                      {t('contact.form.name')} <span className="text-accent" aria-hidden="true">*</span>
                     </label>
                     <input
                       type="text"
@@ -268,16 +278,14 @@ export default function Contact() {
                       maxLength={100}
                       value={formState.name}
                       onChange={handleChange}
-                      className={`w-full px-4 py-3 bg-transparent border ${errors.name ? 'border-red-500' : 'border-[--border]'} text-[--text-primary] placeholder:text-[--text-muted] focus:outline-none focus:border-accent transition-colors rounded-sm`}
-                      placeholder="Votre nom"
+                      className={`w-full px-4 py-3 bg-[--bg-elevated] border ${errors.name ? 'border-red-500' : 'border-[--border]'} text-[--text-primary] placeholder:text-[--text-muted] focus:outline-none focus:border-accent transition-colors rounded-lg`}
                     />
                     {errors.name && <p id="name-error" className="text-red-500 text-sm mt-1" role="alert">{errors.name}</p>}
                   </div>
 
                   <div>
                     <label htmlFor="email" className="block text-caption mb-2">
-                      Email <span className="text-accent" aria-hidden="true">*</span>
-                      <span className="sr-only">(requis)</span>
+                      {t('contact.form.email')} <span className="text-accent" aria-hidden="true">*</span>
                     </label>
                     <input
                       type="email"
@@ -291,16 +299,14 @@ export default function Contact() {
                       maxLength={254}
                       value={formState.email}
                       onChange={handleChange}
-                      className={`w-full px-4 py-3 bg-transparent border ${errors.email ? 'border-red-500' : 'border-[--border]'} text-[--text-primary] placeholder:text-[--text-muted] focus:outline-none focus:border-accent transition-colors rounded-sm`}
-                      placeholder="votre@email.com"
+                      className={`w-full px-4 py-3 bg-[--bg-elevated] border ${errors.email ? 'border-red-500' : 'border-[--border]'} text-[--text-primary] placeholder:text-[--text-muted] focus:outline-none focus:border-accent transition-colors rounded-lg`}
                     />
                     {errors.email && <p id="email-error" className="text-red-500 text-sm mt-1" role="alert">{errors.email}</p>}
                   </div>
 
                   <div>
                     <label htmlFor="subject" className="block text-caption mb-2">
-                      Sujet <span className="text-accent" aria-hidden="true">*</span>
-                      <span className="sr-only">(requis)</span>
+                      Subject <span className="text-accent" aria-hidden="true">*</span>
                     </label>
                     <input
                       type="text"
@@ -313,16 +319,14 @@ export default function Contact() {
                       maxLength={200}
                       value={formState.subject}
                       onChange={handleChange}
-                      className={`w-full px-4 py-3 bg-transparent border ${errors.subject ? 'border-red-500' : 'border-[--border]'} text-[--text-primary] placeholder:text-[--text-muted] focus:outline-none focus:border-accent transition-colors rounded-sm`}
-                      placeholder="Objet de votre message"
+                      className={`w-full px-4 py-3 bg-[--bg-elevated] border ${errors.subject ? 'border-red-500' : 'border-[--border]'} text-[--text-primary] placeholder:text-[--text-muted] focus:outline-none focus:border-accent transition-colors rounded-lg`}
                     />
                     {errors.subject && <p id="subject-error" className="text-red-500 text-sm mt-1" role="alert">{errors.subject}</p>}
                   </div>
 
                   <div>
                     <label htmlFor="message" className="block text-caption mb-2">
-                      Message <span className="text-accent" aria-hidden="true">*</span>
-                      <span className="sr-only">(requis)</span>
+                      {t('contact.form.message')} <span className="text-accent" aria-hidden="true">*</span>
                     </label>
                     <textarea
                       id="message"
@@ -335,18 +339,17 @@ export default function Contact() {
                       maxLength={5000}
                       value={formState.message}
                       onChange={handleChange}
-                      className={`w-full px-4 py-3 bg-transparent border ${errors.message ? 'border-red-500' : 'border-[--border]'} text-[--text-primary] placeholder:text-[--text-muted] focus:outline-none focus:border-accent transition-colors resize-none rounded-sm`}
-                      placeholder="Votre message..."
+                      className={`w-full px-4 py-3 bg-[--bg-elevated] border ${errors.message ? 'border-red-500' : 'border-[--border]'} text-[--text-primary] placeholder:text-[--text-muted] focus:outline-none focus:border-accent transition-colors resize-none rounded-lg`}
                     />
                     {errors.message && <p id="message-error" className="text-red-500 text-sm mt-1" role="alert">{errors.message}</p>}
                   </div>
 
                   <button
                     type="submit"
-                    className="btn btn-primary w-full justify-center"
+                    className="btn btn-primary w-full justify-center group"
                   >
-                    Envoyer le message
-                    <ArrowUpRight size={16} />
+                    {t('contact.form.send')}
+                    <ArrowUpRight size={16} className="transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
                   </button>
                 </form>
               )}
