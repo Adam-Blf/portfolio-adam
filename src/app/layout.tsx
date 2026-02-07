@@ -3,6 +3,7 @@ import './globals.css'
 import Header from '@/components/layout/Header'
 import Footer from '@/components/layout/Footer'
 import { ThemeProvider } from '@/components/providers/ThemeProvider'
+import { I18nProvider } from '@/lib/i18n'
 
 export const metadata: Metadata = {
   title: {
@@ -97,13 +98,15 @@ export default function RootLayout({
       </head>
       <body className="noise" suppressHydrationWarning>
         <ThemeProvider defaultTheme="system">
-          {/* Skip link for accessibility */}
-          <a href="#main-content" className="skip-link">
-            Aller au contenu principal
-          </a>
-          <Header />
-          <main id="main-content" tabIndex={-1}>{children}</main>
-          <Footer />
+          <I18nProvider>
+            {/* Skip link for accessibility */}
+            <a href="#main-content" className="skip-link">
+              Aller au contenu principal
+            </a>
+            <Header />
+            <main id="main-content" tabIndex={-1}>{children}</main>
+            <Footer />
+          </I18nProvider>
         </ThemeProvider>
       </body>
     </html>

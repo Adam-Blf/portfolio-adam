@@ -5,15 +5,16 @@ import Link from 'next/link'
 import Image from 'next/image'
 import { usePathname } from 'next/navigation'
 import { animate, stagger } from 'animejs'
-import { Menu, X, Sun, Moon, Monitor } from 'lucide-react'
+import { Menu, X, Sun, Moon, Monitor, Globe } from 'lucide-react'
 import { useTheme } from '@/components/providers/ThemeProvider'
+import { useI18n, Locale } from '@/lib/i18n'
 
-const navItems = [
-  { href: '/', label: 'Accueil' },
-  { href: '/frise', label: 'Parcours' },
-  { href: '/projets', label: 'Projets' },
-  { href: '/competences', label: 'Competences' },
-  { href: '/contact', label: 'Contact' },
+const navKeys = [
+  { href: '/', key: 'home' },
+  { href: '/frise', key: 'timeline' },
+  { href: '/projets', key: 'projects' },
+  { href: '/competences', key: 'skills' },
+  { href: '/contact', key: 'contact' },
 ]
 
 export default function Header() {
@@ -21,12 +22,15 @@ export default function Header() {
   const [isHidden, setIsHidden] = useState(false)
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
   const [showThemeMenu, setShowThemeMenu] = useState(false)
+  const [showLangMenu, setShowLangMenu] = useState(false)
   const pathname = usePathname()
   const headerRef = useRef<HTMLElement>(null)
   const mobileMenuRef = useRef<HTMLDivElement>(null)
   const themeMenuRef = useRef<HTMLDivElement>(null)
+  const langMenuRef = useRef<HTMLDivElement>(null)
   const lastScrollY = useRef(0)
   const { theme, setTheme, toggleTheme, resolvedTheme } = useTheme()
+  const { locale, setLocale, t } = useI18n()
 
   // Check for reduced motion preference
   const [prefersReducedMotion, setPrefersReducedMotion] = useState(false)
@@ -160,11 +164,14 @@ export default function Header() {
     }
   }, [isMobileMenuOpen, prefersReducedMotion])
 
-  // Close theme menu on click outside
+  // Close menus on click outside
   useEffect(() => {
     const handleClickOutside = (e: MouseEvent) => {
       if (themeMenuRef.current && !themeMenuRef.current.contains(e.target as Node)) {
         setShowThemeMenu(false)
+      }
+      if (langMenuRef.current && !langMenuRef.current.contains(e.target as Node)) {
+        setShowLangMenu(false)
       }
     }
     document.addEventListener('mousedown', handleClickOutside)
@@ -198,7 +205,7 @@ export default function Header() {
 
             {/* Desktop Nav */}
             <div className="hidden md:flex items-center gap-6 lg:gap-8">
-              {navItems.map((item) => (
+              {navKeys.map((item) => (
                 <Link
                   key={item.href}
                   href={item.href}
@@ -209,9 +216,59 @@ export default function Header() {
                   }`}
                   style={{ opacity: 0 }}
                 >
-                  {item.label}
+                  {t(`nav.${item.key}`)}
                 </Link>
               ))}
+
+              {/* Language Switcher */}
+              <div className="relative" ref={langMenuRef}>
+                <button
+                  onClick={() => setShowLangMenu(!showLangMenu)}
+                  className="nav-link p-2 rounded-lg hover:bg-[--bg-elevated] transition-colors flex items-center gap-1"
+                  aria-label="Change language"
+                  style={{ opacity: 0 }}
+                >
+                  <Globe size={16} className="text-[--text-secondary]" />
+                  <span className="text-xs font-medium text-[--text-secondary] uppercase">{locale}</span>
+                </button>
+
+                {showLangMenu && (
+                  <div
+                    role="menu"
+                    aria-label="Language selection"
+                    className="absolute right-0 top-full mt-2 py-2 px-1 bg-[--bg-surface] border border-[--border] rounded-lg shadow-lg min-w-[140px] max-h-[300px] overflow-y-auto"
+                  >
+                    {[
+                      { value: 'fr', label: 'Français', flag: '🇫🇷' },
+                      { value: 'en', label: 'English', flag: '🇬🇧' },
+                      { value: 'de', label: 'Deutsch', flag: '🇩🇪' },
+                      { value: 'es', label: 'Español', flag: '🇪🇸' },
+                      { value: 'it', label: 'Italiano', flag: '🇮🇹' },
+                      { value: 'pt', label: 'Português', flag: '🇵🇹' },
+                      { value: 'nl', label: 'Nederlands', flag: '🇳🇱' },
+                      { value: 'pl', label: 'Polski', flag: '🇵🇱' },
+                    ].map((lang) => (
+                      <button
+                        key={lang.value}
+                        onClick={() => {
+                          setLocale(lang.value as Locale)
+                          setShowLangMenu(false)
+                        }}
+                        role="menuitemradio"
+                        aria-checked={locale === lang.value}
+                        className={`flex items-center gap-2 w-full px-3 py-2 text-sm rounded-md transition-colors ${
+                          locale === lang.value
+                            ? 'bg-accent/10 text-accent'
+                            : 'text-[--text-secondary] hover:bg-[--bg-hover]'
+                        }`}
+                      >
+                        <span>{lang.flag}</span>
+                        {lang.label}
+                      </button>
+                    ))}
+                  </div>
+                )}
+              </div>
 
               {/* Theme Toggle */}
               <div className="relative" ref={themeMenuRef}>
@@ -301,7 +358,7 @@ export default function Header() {
           style={{ opacity: 0 }}
         >
           <div className="flex flex-col items-center justify-center h-full gap-6 md:gap-8">
-            {navItems.map((item) => (
+            {navKeys.map((item) => (
               <Link
                 key={item.href}
                 href={item.href}
@@ -311,12 +368,39 @@ export default function Header() {
                 }`}
                 style={{ opacity: 0 }}
               >
-                {item.label}
+                {t(`nav.${item.key}`)}
               </Link>
             ))}
 
+            {/* Mobile language switcher */}
+            <div className="flex flex-wrap justify-center gap-2 mt-6 mobile-link max-w-xs" style={{ opacity: 0 }}>
+              {[
+                { value: 'fr', flag: '🇫🇷' },
+                { value: 'en', flag: '🇬🇧' },
+                { value: 'de', flag: '🇩🇪' },
+                { value: 'es', flag: '🇪🇸' },
+                { value: 'it', flag: '🇮🇹' },
+                { value: 'pt', flag: '🇵🇹' },
+                { value: 'nl', flag: '🇳🇱' },
+                { value: 'pl', flag: '🇵🇱' },
+              ].map((lang) => (
+                <button
+                  key={lang.value}
+                  onClick={() => setLocale(lang.value as Locale)}
+                  className={`px-3 py-2 rounded-xl border transition-all text-lg ${
+                    locale === lang.value
+                      ? 'border-accent bg-accent/10'
+                      : 'border-[--border]'
+                  }`}
+                  aria-label={lang.value.toUpperCase()}
+                >
+                  {lang.flag}
+                </button>
+              ))}
+            </div>
+
             {/* Mobile theme options */}
-            <div className="flex gap-4 mt-8 mobile-link" style={{ opacity: 0 }}>
+            <div className="flex gap-4 mt-4 mobile-link" style={{ opacity: 0 }}>
               {[
                 { value: 'light', icon: Sun, label: 'Theme clair' },
                 { value: 'dark', icon: Moon, label: 'Theme sombre' },

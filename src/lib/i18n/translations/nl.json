@@ -1,0 +1,94 @@
+{
+  "nav": {
+    "home": "Home",
+    "timeline": "Loopbaan",
+    "projects": "Projecten",
+    "skills": "Vaardigheden",
+    "contact": "Contact",
+    "skipToContent": "Ga naar hoofdinhoud"
+  },
+  "home": {
+    "title": "Data Engineer & Fullstack Developer",
+    "subtitle": "Het bouwen van datasystemen die beslissingen aandrijven.",
+    "cta": "Bekijk mijn projecten",
+    "ctaSecondary": "Neem contact op"
+  },
+  "skills": {
+    "caption": "Tech Stack",
+    "title": "Vaardigheden",
+    "description": "{count}+ technologieën beheerst in {repos}+ GitHub-projecten. Realtime data uit mijn repositories.",
+    "projects": "projecten",
+    "commits": "commits",
+    "technologies": "technologieën",
+    "categories": {
+      "languages": "Talen",
+      "frameworks": "Frameworks & Libraries",
+      "data": "Data & Visualisatie",
+      "ai": "AI / ML / NLP",
+      "databases": "Databases",
+      "cloud": "Cloud & DevOps"
+    },
+    "certifications": "Certificeringen",
+    "viewOnGitHub": "Bekijk alle projecten op GitHub",
+    "projectCount": "{count} project",
+    "projectCountPlural": "{count} projecten"
+  },
+  "projects": {
+    "caption": "Portfolio",
+    "title": "Projecten",
+    "description": "Een selectie van mijn belangrijkste projecten.",
+    "viewProject": "Bekijk project",
+    "viewCode": "Bekijk code",
+    "featured": "Uitgelicht"
+  },
+  "timeline": {
+    "caption": "Mijn Loopbaan",
+    "title": "Ervaring & Opleiding",
+    "description": "Mijn professionele en academische achtergrond.",
+    "filters": {
+      "all": "Alles",
+      "experience": "Ervaring",
+      "education": "Opleiding",
+      "certification": "Certificeringen",
+      "association": "Verenigingen"
+    }
+  },
+  "contact": {
+    "caption": "Contact",
+    "title": "Laten we samenwerken",
+    "description": "Geïnteresseerd in samenwerking of een kans? Neem gerust contact op.",
+    "info": "Contactgegevens",
+    "email": "Email",
+    "location": "Locatie",
+    "social": "Sociaal",
+    "form": {
+      "title": "Contactformulier",
+      "name": "Naam",
+      "email": "Email",
+      "message": "Bericht",
+      "send": "Verzenden",
+      "sending": "Verzenden...",
+      "success": "Bericht succesvol verzonden!",
+      "error": "Fout bij verzenden. Probeer het opnieuw."
+    }
+  },
+  "footer": {
+    "tagline": "Data Engineer & Fullstack Developer. Het bouwen van datasystemen die beslissingen aandrijven.",
+    "navigation": "Navigatie",
+    "contact": "Contact",
+    "copyright": "© {year} Adam Beloucif",
+    "opensInNewWindow": "(opent in nieuw venster)"
+  },
+  "error": {
+    "title": "Er is een fout opgetreden",
+    "description": "Er ging iets mis. Probeer het opnieuw of ga terug naar home.",
+    "retry": "Opnieuw proberen",
+    "backHome": "Terug naar home",
+    "showDetails": "Details tonen"
+  },
+  "notFound": {
+    "title": "Pagina niet gevonden",
+    "description": "De pagina die je zoekt bestaat niet of is verplaatst.",
+    "backHome": "Terug naar home"
+  }
+}

@@ -1,0 +1,94 @@
+{
+  "nav": {
+    "home": "Strona główna",
+    "timeline": "Kariera",
+    "projects": "Projekty",
+    "skills": "Umiejętności",
+    "contact": "Kontakt",
+    "skipToContent": "Przejdź do głównej treści"
+  },
+  "home": {
+    "title": "Data Engineer & Fullstack Developer",
+    "subtitle": "Buduję systemy danych, które napędzają decyzje.",
+    "cta": "Zobacz moje projekty",
+    "ctaSecondary": "Skontaktuj się"
+  },
+  "skills": {
+    "caption": "Stack Technologiczny",
+    "title": "Umiejętności",
+    "description": "{count}+ technologii opanowanych w {repos}+ projektach GitHub. Dane w czasie rzeczywistym z moich repozytoriów.",
+    "projects": "projektów",
+    "commits": "commitów",
+    "technologies": "technologii",
+    "categories": {
+      "languages": "Języki",
+      "frameworks": "Frameworki i Biblioteki",
+      "data": "Dane i Wizualizacja",
+      "ai": "AI / ML / NLP",
+      "databases": "Bazy danych",
+      "cloud": "Cloud i DevOps"
+    },
+    "certifications": "Certyfikaty",
+    "viewOnGitHub": "Zobacz wszystkie projekty na GitHub",
+    "projectCount": "{count} projekt",
+    "projectCountPlural": "{count} projektów"
+  },
+  "projects": {
+    "caption": "Portfolio",
+    "title": "Projekty",
+    "description": "Wybór moich najważniejszych projektów.",
+    "viewProject": "Zobacz projekt",
+    "viewCode": "Zobacz kod",
+    "featured": "Wyróżnione"
+  },
+  "timeline": {
+    "caption": "Moja Kariera",
+    "title": "Doświadczenie i Edukacja",
+    "description": "Moja ścieżka zawodowa i akademicka.",
+    "filters": {
+      "all": "Wszystko",
+      "experience": "Doświadczenie",
+      "education": "Edukacja",
+      "certification": "Certyfikaty",
+      "association": "Stowarzyszenia"
+    }
+  },
+  "contact": {
+    "caption": "Kontakt",
+    "title": "Pracujmy razem",
+    "description": "Zainteresowany współpracą lub możliwością? Skontaktuj się ze mną.",
+    "info": "Dane kontaktowe",
+    "email": "Email",
+    "location": "Lokalizacja",
+    "social": "Social media",
+    "form": {
+      "title": "Formularz kontaktowy",
+      "name": "Imię",
+      "email": "Email",
+      "message": "Wiadomość",
+      "send": "Wyślij",
+      "sending": "Wysyłanie...",
+      "success": "Wiadomość wysłana pomyślnie!",
+      "error": "Błąd wysyłania. Spróbuj ponownie."
+    }
+  },
+  "footer": {
+    "tagline": "Data Engineer & Fullstack Developer. Buduję systemy danych, które napędzają decyzje.",
+    "navigation": "Nawigacja",
+    "contact": "Kontakt",
+    "copyright": "© {year} Adam Beloucif",
+    "opensInNewWindow": "(otwiera w nowym oknie)"
+  },
+  "error": {
+    "title": "Wystąpił błąd",
+    "description": "Coś poszło nie tak. Spróbuj ponownie lub wróć do strony głównej.",
+    "retry": "Spróbuj ponownie",
+    "backHome": "Wróć do strony głównej",
+    "showDetails": "Pokaż szczegóły"
+  },
+  "notFound": {
+    "title": "Strona nie znaleziona",
+    "description": "Strona, której szukasz, nie istnieje lub została przeniesiona.",
+    "backHome": "Wróć do strony głównej"
+  }
+}

@@ -1,0 +1,94 @@
+{
+  "nav": {
+    "home": "Startseite",
+    "timeline": "Werdegang",
+    "projects": "Projekte",
+    "skills": "Fähigkeiten",
+    "contact": "Kontakt",
+    "skipToContent": "Zum Hauptinhalt springen"
+  },
+  "home": {
+    "title": "Data Engineer & Fullstack Developer",
+    "subtitle": "Aufbau von Datensystemen, die Entscheidungen vorantreiben.",
+    "cta": "Meine Projekte ansehen",
+    "ctaSecondary": "Kontaktieren Sie mich"
+  },
+  "skills": {
+    "caption": "Tech-Stack",
+    "title": "Fähigkeiten",
+    "description": "{count}+ Technologien in {repos}+ GitHub-Projekten gemeistert. Echtzeitdaten aus meinen Repositories.",
+    "projects": "Projekte",
+    "commits": "Commits",
+    "technologies": "Technologien",
+    "categories": {
+      "languages": "Sprachen",
+      "frameworks": "Frameworks & Bibliotheken",
+      "data": "Daten & Visualisierung",
+      "ai": "KI / ML / NLP",
+      "databases": "Datenbanken",
+      "cloud": "Cloud & DevOps"
+    },
+    "certifications": "Zertifizierungen",
+    "viewOnGitHub": "Alle Projekte auf GitHub ansehen",
+    "projectCount": "{count} Projekt",
+    "projectCountPlural": "{count} Projekte"
+  },
+  "projects": {
+    "caption": "Portfolio",
+    "title": "Projekte",
+    "description": "Eine Auswahl meiner bedeutendsten Projekte.",
+    "viewProject": "Projekt ansehen",
+    "viewCode": "Code ansehen",
+    "featured": "Empfohlen"
+  },
+  "timeline": {
+    "caption": "Mein Werdegang",
+    "title": "Erfahrung & Ausbildung",
+    "description": "Mein beruflicher und akademischer Hintergrund.",
+    "filters": {
+      "all": "Alle",
+      "experience": "Erfahrung",
+      "education": "Ausbildung",
+      "certification": "Zertifizierungen",
+      "association": "Vereine"
+    }
+  },
+  "contact": {
+    "caption": "Kontakt",
+    "title": "Zusammenarbeiten",
+    "description": "Interesse an einer Zusammenarbeit? Kontaktieren Sie mich gerne.",
+    "info": "Kontaktinformationen",
+    "email": "E-Mail",
+    "location": "Standort",
+    "social": "Soziale Netzwerke",
+    "form": {
+      "title": "Kontaktformular",
+      "name": "Name",
+      "email": "E-Mail",
+      "message": "Nachricht",
+      "send": "Senden",
+      "sending": "Wird gesendet...",
+      "success": "Nachricht erfolgreich gesendet!",
+      "error": "Fehler beim Senden. Bitte versuchen Sie es erneut."
+    }
+  },
+  "footer": {
+    "tagline": "Data Engineer & Fullstack Developer. Aufbau von Datensystemen, die Entscheidungen vorantreiben.",
+    "navigation": "Navigation",
+    "contact": "Kontakt",
+    "copyright": "© {year} Adam Beloucif",
+    "opensInNewWindow": "(öffnet in neuem Fenster)"
+  },
+  "error": {
+    "title": "Ein Fehler ist aufgetreten",
+    "description": "Etwas ist schief gelaufen. Bitte versuchen Sie es erneut oder kehren Sie zur Startseite zurück.",
+    "retry": "Erneut versuchen",
+    "backHome": "Zur Startseite",
+    "showDetails": "Details anzeigen"
+  },
+  "notFound": {
+    "title": "Seite nicht gefunden",
+    "description": "Die gesuchte Seite existiert nicht oder wurde verschoben.",
+    "backHome": "Zur Startseite"
+  }
+}

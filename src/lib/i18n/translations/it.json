@@ -1,0 +1,94 @@
+{
+  "nav": {
+    "home": "Home",
+    "timeline": "Percorso",
+    "projects": "Progetti",
+    "skills": "Competenze",
+    "contact": "Contatto",
+    "skipToContent": "Vai al contenuto principale"
+  },
+  "home": {
+    "title": "Data Engineer & Fullstack Developer",
+    "subtitle": "Costruisco sistemi di dati che guidano le decisioni.",
+    "cta": "Vedi i miei progetti",
+    "ctaSecondary": "Contattami"
+  },
+  "skills": {
+    "caption": "Stack Tecnico",
+    "title": "Competenze",
+    "description": "{count}+ tecnologie padroneggiate in {repos}+ progetti GitHub. Dati in tempo reale dai miei repository.",
+    "projects": "progetti",
+    "commits": "commit",
+    "technologies": "tecnologie",
+    "categories": {
+      "languages": "Linguaggi",
+      "frameworks": "Framework e Librerie",
+      "data": "Dati e Visualizzazione",
+      "ai": "IA / ML / NLP",
+      "databases": "Database",
+      "cloud": "Cloud e DevOps"
+    },
+    "certifications": "Certificazioni",
+    "viewOnGitHub": "Vedi tutti i progetti su GitHub",
+    "projectCount": "{count} progetto",
+    "projectCountPlural": "{count} progetti"
+  },
+  "projects": {
+    "caption": "Portfolio",
+    "title": "Progetti",
+    "description": "Una selezione dei miei progetti più significativi.",
+    "viewProject": "Vedi progetto",
+    "viewCode": "Vedi codice",
+    "featured": "In evidenza"
+  },
+  "timeline": {
+    "caption": "Il Mio Percorso",
+    "title": "Esperienza e Formazione",
+    "description": "Il mio percorso professionale e accademico.",
+    "filters": {
+      "all": "Tutto",
+      "experience": "Esperienza",
+      "education": "Formazione",
+      "certification": "Certificazioni",
+      "association": "Associazioni"
+    }
+  },
+  "contact": {
+    "caption": "Contatto",
+    "title": "Lavoriamo insieme",
+    "description": "Interessato a una collaborazione o opportunità? Non esitare a contattarmi.",
+    "info": "Informazioni di contatto",
+    "email": "Email",
+    "location": "Posizione",
+    "social": "Social",
+    "form": {
+      "title": "Modulo di contatto",
+      "name": "Nome",
+      "email": "Email",
+      "message": "Messaggio",
+      "send": "Invia",
+      "sending": "Invio in corso...",
+      "success": "Messaggio inviato con successo!",
+      "error": "Errore nell'invio. Riprova."
+    }
+  },
+  "footer": {
+    "tagline": "Data Engineer & Fullstack Developer. Costruisco sistemi di dati che guidano le decisioni.",
+    "navigation": "Navigazione",
+    "contact": "Contatto",
+    "copyright": "© {year} Adam Beloucif",
+    "opensInNewWindow": "(apre in nuova finestra)"
+  },
+  "error": {
+    "title": "Si è verificato un errore",
+    "description": "Qualcosa è andato storto. Riprova o torna alla home.",
+    "retry": "Riprova",
+    "backHome": "Torna alla home",
+    "showDetails": "Mostra dettagli"
+  },
+  "notFound": {
+    "title": "Pagina non trovata",
+    "description": "La pagina che cerchi non esiste o è stata spostata.",
+    "backHome": "Torna alla home"
+  }
+}
