@@ -1,403 +1,281 @@
-// @ts-nocheck
 'use client'
 
-import { useRef, useMemo, Suspense, useEffect, useState } from 'react'
-import { Canvas, useFrame, useThree } from '@react-three/fiber'
-import { Float, MeshDistortMaterial } from '@react-three/drei'
-import * as THREE from 'three'
+import { useEffect, useState } from 'react'
 
 interface PageBackgroundProps {
   variant?: 'default' | 'minimal' | 'data' | 'grid' | 'hero'
   accentColor?: string
 }
 
-// Hook to detect theme
-function useResolvedTheme() {
-  const [isDark, setIsDark] = useState(true)
+/**
+ * CSS-based animated background that replaces Three.js
+ * Supports multiple variants for different page contexts
+ */
+export default function PageBackground({ variant = 'default', accentColor = '#FFB000' }: PageBackgroundProps) {
+  const [mounted, setMounted] = useState(false)
+  const [prefersReducedMotion, setPrefersReducedMotion] = useState(false)
 
   useEffect(() => {
-    const checkTheme = () => {
-      setIsDark(document.documentElement.classList.contains('dark'))
-    }
+    setMounted(true)
+    const mediaQuery = window.matchMedia('(prefers-reduced-motion: reduce)')
+    setPrefersReducedMotion(mediaQuery.matches)
 
-    checkTheme()
-
-    const observer = new MutationObserver(checkTheme)
-    observer.observe(document.documentElement, {
-      attributes: true,
-      attributeFilter: ['class']
-    })
-
-    return () => observer.disconnect()
+    const handler = (e: MediaQueryListEvent) => setPrefersReducedMotion(e.matches)
+    mediaQuery.addEventListener('change', handler)
+    return () => mediaQuery.removeEventListener('change', handler)
   }, [])
 
-  return isDark
-}
-
-// Floating data nodes - for data-related pages
-function DataNodes({ color, isDark }: { color: string; isDark: boolean }) {
-  const groupRef = useRef<THREE.Group>(null)
-  const mouseRef = useRef({ x: 0, y: 0 })
-  const { viewport } = useThree()
-
-  const nodes = useMemo(() => {
-    return Array.from({ length: 25 }, (_, i) => ({
-      position: [
-        (Math.random() - 0.5) * 18,
-        (Math.random() - 0.5) * 12,
-        (Math.random() - 0.5) * 10 - 3,
-      ] as [number, number, number],
-      scale: 0.03 + Math.random() * 0.06,
-      speed: 0.2 + Math.random() * 0.4,
-      pulseOffset: Math.random() * Math.PI * 2,
-    }))
-  }, [])
-
-  // Connection lines between nearby nodes
-  const connections = useMemo(() => {
-    const lines: { start: [number, number, number]; end: [number, number, number] }[] = []
-    for (let i = 0; i < nodes.length; i++) {
-      for (let j = i + 1; j < nodes.length; j++) {
-        const dist = Math.sqrt(
-          Math.pow(nodes[i].position[0] - nodes[j].position[0], 2) +
-          Math.pow(nodes[i].position[1] - nodes[j].position[1], 2) +
-          Math.pow(nodes[i].position[2] - nodes[j].position[2], 2)
-        )
-        if (dist < 5) {
-          lines.push({ start: nodes[i].position, end: nodes[j].position })
-        }
-      }
-    }
-    return lines
-  }, [nodes])
-
-  useFrame(({ mouse, clock }) => {
-    mouseRef.current.x = (mouse.x * viewport.width) / 2
-    mouseRef.current.y = (mouse.y * viewport.height) / 2
-
-    if (groupRef.current) {
-      groupRef.current.rotation.x = THREE.MathUtils.lerp(
-        groupRef.current.rotation.x,
-        mouseRef.current.y * 0.02,
-        0.03
-      )
-      groupRef.current.rotation.y = THREE.MathUtils.lerp(
-        groupRef.current.rotation.y,
-        mouseRef.current.x * 0.02 + clock.getElapsedTime() * 0.02,
-        0.03
-      )
-    }
-  })
-
-  const opacity = isDark ? 0.6 : 0.4
+  if (!mounted) return null
 
   return (
-    <group ref={groupRef}>
-      {/* Nodes */}
-      {nodes.map((node, i) => (
-        <Float key={i} speed={node.speed} rotationIntensity={0.2} floatIntensity={0.3}>
-          <mesh position={node.position}>
-            <sphereGeometry args={[node.scale, 12, 12]} />
-            <meshBasicMaterial color={color} transparent opacity={opacity} />
-          </mesh>
-          {/* Glow around nodes */}
-          <mesh position={node.position}>
-            <sphereGeometry args={[node.scale * 2, 8, 8]} />
-            <meshBasicMaterial color={color} transparent opacity={opacity * 0.2} />
-          </mesh>
-        </Float>
-      ))}
+    <div className="page-bg-container" style={{ '--accent': accentColor } as React.CSSProperties}>
+      {/* Base grid - visible on all variants except minimal */}
+      {variant !== 'minimal' && <div className="page-grid" />}
 
-      {/* Connection lines */}
-      {connections.map((conn, i) => (
-        <line key={`line-${i}`}>
-          <bufferGeometry>
-            <bufferAttribute
-              attach="attributes-position"
-              count={2}
-              array={new Float32Array([...conn.start, ...conn.end])}
-              itemSize={3}
-            />
-          </bufferGeometry>
-          <lineBasicMaterial color={color} transparent opacity={isDark ? 0.15 : 0.1} />
-        </line>
-      ))}
-    </group>
-  )
-}
-
-// Minimal floating particles
-function MinimalParticles({ color, isDark }: { color: string; isDark: boolean }) {
-  const particlesRef = useRef<THREE.Points>(null)
-  const count = 300
-
-  const positions = useMemo(() => {
-    const pos = new Float32Array(count * 3)
-    for (let i = 0; i < count; i++) {
-      pos[i * 3] = (Math.random() - 0.5) * 35
-      pos[i * 3 + 1] = (Math.random() - 0.5) * 25
-      pos[i * 3 + 2] = (Math.random() - 0.5) * 15 - 5
-    }
-    return pos
-  }, [])
-
-  useFrame(({ clock }) => {
-    if (particlesRef.current) {
-      particlesRef.current.rotation.y = clock.getElapsedTime() * 0.015
-      particlesRef.current.rotation.x = Math.sin(clock.getElapsedTime() * 0.08) * 0.05
-    }
-  })
-
-  return (
-    <points ref={particlesRef}>
-      <bufferGeometry>
-        <bufferAttribute
-          attach="attributes-position"
-          count={count}
-          array={positions}
-          itemSize={3}
-        />
-      </bufferGeometry>
-      <pointsMaterial
-        size={0.035}
-        color={color}
-        transparent
-        opacity={isDark ? 0.5 : 0.35}
-        sizeAttenuation
-      />
-    </points>
-  )
-}
-
-// Animated grid for tech pages
-function TechGrid({ color, isDark }: { color: string; isDark: boolean }) {
-  const gridRef = useRef<THREE.Group>(null)
-  const timeRef = useRef(0)
-
-  useFrame(({ clock }) => {
-    timeRef.current = clock.getElapsedTime()
-    if (gridRef.current) {
-      gridRef.current.rotation.x = -Math.PI / 4
-      gridRef.current.position.z = -10
-      gridRef.current.position.y = -4
-    }
-  })
-
-  const gridLines = useMemo(() => {
-    const lines: [number, number, number][][] = []
-    const size = 30
-    const divisions = 30
-
-    for (let i = -size / 2; i <= size / 2; i += size / divisions) {
-      lines.push([[-size / 2, 0, i], [size / 2, 0, i]])
-      lines.push([[i, 0, -size / 2], [i, 0, size / 2]])
-    }
-    return lines
-  }, [])
-
-  return (
-    <group ref={gridRef}>
-      {gridLines.map((line, i) => (
-        <line key={i}>
-          <bufferGeometry>
-            <bufferAttribute
-              attach="attributes-position"
-              count={2}
-              array={new Float32Array(line.flat())}
-              itemSize={3}
-            />
-          </bufferGeometry>
-          <lineBasicMaterial color={color} transparent opacity={isDark ? 0.08 : 0.05} />
-        </line>
-      ))}
-    </group>
-  )
-}
-
-// Floating geometric shapes
-function FloatingGeometry({ color, isDark }: { color: string; isDark: boolean }) {
-  const groupRef = useRef<THREE.Group>(null)
-  const mouseRef = useRef({ x: 0, y: 0 })
-  const { viewport } = useThree()
-
-  const shapes = useMemo(() => {
-    return Array.from({ length: 10 }, (_, i) => ({
-      type: ['icosahedron', 'octahedron', 'tetrahedron', 'dodecahedron'][i % 4] as string,
-      position: [
-        (Math.random() - 0.5) * 14,
-        (Math.random() - 0.5) * 10,
-        (Math.random() - 0.5) * 8 - 4,
-      ] as [number, number, number],
-      rotation: Math.random() * Math.PI * 2,
-      speed: 0.15 + Math.random() * 0.25,
-      scale: 0.3 + Math.random() * 0.6,
-      distort: Math.random() * 0.3,
-    }))
-  }, [])
-
-  useFrame(({ mouse }) => {
-    mouseRef.current.x = (mouse.x * viewport.width) / 2
-    mouseRef.current.y = (mouse.y * viewport.height) / 2
-
-    if (groupRef.current) {
-      groupRef.current.rotation.x = THREE.MathUtils.lerp(
-        groupRef.current.rotation.x,
-        mouseRef.current.y * 0.03,
-        0.04
-      )
-      groupRef.current.rotation.y = THREE.MathUtils.lerp(
-        groupRef.current.rotation.y,
-        mouseRef.current.x * 0.03,
-        0.04
-      )
-    }
-  })
-
-  const opacity = isDark ? 0.25 : 0.15
-
-  return (
-    <group ref={groupRef}>
-      {shapes.map((shape, i) => (
-        <Float key={i} speed={shape.speed} rotationIntensity={0.4} floatIntensity={0.4}>
-          <mesh position={shape.position} scale={shape.scale} rotation={[shape.rotation, shape.rotation, 0]}>
-            {shape.type === 'icosahedron' && <icosahedronGeometry args={[0.5, 0]} />}
-            {shape.type === 'octahedron' && <octahedronGeometry args={[0.4, 0]} />}
-            {shape.type === 'tetrahedron' && <tetrahedronGeometry args={[0.35, 0]} />}
-            {shape.type === 'dodecahedron' && <dodecahedronGeometry args={[0.35, 0]} />}
-            <meshStandardMaterial color={color} wireframe transparent opacity={opacity} />
-          </mesh>
-        </Float>
-      ))}
-    </group>
-  )
-}
-
-// Hero background with distorted sphere
-function HeroScene({ color, isDark }: { color: string; isDark: boolean }) {
-  const sphereRef = useRef<THREE.Mesh>(null)
-  const mouseRef = useRef({ x: 0, y: 0 })
-  const { viewport } = useThree()
-
-  useFrame(({ mouse, clock }) => {
-    mouseRef.current.x = mouse.x
-    mouseRef.current.y = mouse.y
-
-    if (sphereRef.current) {
-      sphereRef.current.rotation.x = clock.getElapsedTime() * 0.1
-      sphereRef.current.rotation.y = clock.getElapsedTime() * 0.15
-      sphereRef.current.position.x = THREE.MathUtils.lerp(
-        sphereRef.current.position.x,
-        mouseRef.current.x * 0.5,
-        0.05
-      )
-      sphereRef.current.position.y = THREE.MathUtils.lerp(
-        sphereRef.current.position.y,
-        mouseRef.current.y * 0.3,
-        0.05
-      )
-    }
-  })
-
-  return (
-    <>
-      {/* Main distorted sphere */}
-      <Float speed={0.5} rotationIntensity={0.2} floatIntensity={0.3}>
-        <mesh ref={sphereRef} position={[3, 0, -3]} scale={2}>
-          <icosahedronGeometry args={[1, 4]} />
-          <MeshDistortMaterial
-            color={color}
-            wireframe
-            transparent
-            opacity={isDark ? 0.35 : 0.2}
-            distort={0.3}
-            speed={2}
+      {/* Floating particles - all variants */}
+      <div className="page-particles">
+        {Array.from({ length: variant === 'minimal' ? 10 : 15 }).map((_, i) => (
+          <div
+            key={i}
+            className="page-particle"
+            style={{
+              left: `${Math.random() * 100}%`,
+              top: `${Math.random() * 100}%`,
+              animationDelay: `${Math.random() * 5}s`,
+              animationDuration: `${4 + Math.random() * 4}s`,
+            }}
           />
-        </mesh>
-      </Float>
+        ))}
+      </div>
 
-      {/* Accent ring */}
-      <Float speed={0.3} rotationIntensity={0.1}>
-        <mesh position={[-4, 1, -5]} rotation={[Math.PI / 3, 0, 0]}>
-          <torusGeometry args={[1.5, 0.03, 16, 64]} />
-          <meshBasicMaterial color={color} transparent opacity={isDark ? 0.4 : 0.25} />
-        </mesh>
-      </Float>
-
-      {/* Secondary ring */}
-      <Float speed={0.4} rotationIntensity={0.15}>
-        <mesh position={[4, -2, -6]} rotation={[-Math.PI / 4, Math.PI / 6, 0]}>
-          <torusGeometry args={[2, 0.02, 16, 64]} />
-          <meshBasicMaterial color={color} transparent opacity={isDark ? 0.25 : 0.15} />
-        </mesh>
-      </Float>
-
-      <MinimalParticles color={color} isDark={isDark} />
-    </>
-  )
-}
-
-function Scene({ variant, accentColor, isDark }: { variant: string; accentColor: string; isDark: boolean }) {
-  return (
-    <>
-      <ambientLight intensity={isDark ? 0.3 : 0.5} />
-      <pointLight position={[10, 10, 10]} intensity={isDark ? 0.3 : 0.4} />
-
-      {variant === 'default' && (
-        <>
-          <FloatingGeometry color={accentColor} isDark={isDark} />
-          <MinimalParticles color={accentColor} isDark={isDark} />
-        </>
-      )}
-
-      {variant === 'minimal' && <MinimalParticles color={accentColor} isDark={isDark} />}
-
+      {/* Data nodes - for data variant */}
       {variant === 'data' && (
-        <>
-          <DataNodes color={accentColor} isDark={isDark} />
-          <TechGrid color={accentColor} isDark={isDark} />
-        </>
+        <div className="page-data-nodes">
+          {Array.from({ length: 8 }).map((_, i) => (
+            <div
+              key={i}
+              className="page-data-node"
+              style={{
+                left: `${15 + (i % 4) * 20}%`,
+                top: `${20 + Math.floor(i / 4) * 40}%`,
+                animationDelay: `${i * 0.2}s`,
+              }}
+            />
+          ))}
+          {/* Connection lines */}
+          <svg className="page-connections" viewBox="0 0 100 100" preserveAspectRatio="none">
+            <line x1="15" y1="20" x2="35" y2="20" />
+            <line x1="35" y1="20" x2="55" y2="20" />
+            <line x1="55" y1="20" x2="75" y2="20" />
+            <line x1="15" y1="60" x2="35" y2="60" />
+            <line x1="35" y1="60" x2="55" y2="60" />
+            <line x1="55" y1="60" x2="75" y2="60" />
+            <line x1="15" y1="20" x2="15" y2="60" />
+            <line x1="35" y1="20" x2="35" y2="60" />
+            <line x1="55" y1="20" x2="55" y2="60" />
+            <line x1="75" y1="20" x2="75" y2="60" />
+          </svg>
+        </div>
       )}
 
+      {/* Geometric shapes - for default and hero variants */}
+      {(variant === 'default' || variant === 'hero') && (
+        <div className="page-shapes">
+          <div className="page-shape page-shape-1" />
+          <div className="page-shape page-shape-2" />
+          <div className="page-shape page-shape-3" />
+        </div>
+      )}
+
+      {/* Grid lines - for grid variant */}
       {variant === 'grid' && (
-        <>
-          <TechGrid color={accentColor} isDark={isDark} />
-          <MinimalParticles color={accentColor} isDark={isDark} />
-        </>
+        <div className="page-tech-grid">
+          {Array.from({ length: 10 }).map((_, i) => (
+            <div key={`h-${i}`} className="page-grid-line-h" style={{ top: `${i * 10}%` }} />
+          ))}
+          {Array.from({ length: 10 }).map((_, i) => (
+            <div key={`v-${i}`} className="page-grid-line-v" style={{ left: `${i * 10}%` }} />
+          ))}
+        </div>
       )}
 
-      {variant === 'hero' && <HeroScene color={accentColor} isDark={isDark} />}
-    </>
-  )
-}
+      <style jsx>{`
+        .page-bg-container {
+          position: fixed;
+          inset: 0;
+          overflow: hidden;
+          pointer-events: none;
+          z-index: -10;
+        }
 
-export default function PageBackground({ variant = 'default', accentColor = '#e07a5f' }: PageBackgroundProps) {
-  const isDark = useResolvedTheme()
-  const [hasWebGL, setHasWebGL] = useState(true)
+        .page-grid {
+          position: absolute;
+          inset: 0;
+          background-image:
+            linear-gradient(var(--accent, #FFB000) 1px, transparent 1px),
+            linear-gradient(90deg, var(--accent, #FFB000) 1px, transparent 1px);
+          background-size: 80px 80px;
+          opacity: 0.03;
+        }
 
-  useEffect(() => {
-    try {
-      const canvas = document.createElement('canvas')
-      const gl = canvas.getContext('webgl2') || canvas.getContext('webgl')
-      if (!gl) setHasWebGL(false)
-    } catch {
-      setHasWebGL(false)
-    }
-  }, [])
+        .page-particles {
+          position: absolute;
+          inset: 0;
+        }
 
-  if (!hasWebGL) return null
+        .page-particle {
+          position: absolute;
+          width: 3px;
+          height: 3px;
+          background: var(--accent, #FFB000);
+          border-radius: 50%;
+          opacity: 0;
+          animation: particleDrift 6s ease-in-out infinite;
+        }
 
-  return (
-    <div className="fixed inset-0 -z-10 pointer-events-none transition-opacity duration-500">
-      <Canvas
-        camera={{ position: [0, 0, 6], fov: 50 }}
-        dpr={[1, 1.5]}
-        gl={{ antialias: true, alpha: true, failIfMajorPerformanceCaveat: true }}
-        style={{ opacity: isDark ? 1 : 0.7 }}
-      >
-        <Suspense fallback={null}>
-          <Scene variant={variant} accentColor={accentColor} isDark={isDark} />
-        </Suspense>
-      </Canvas>
+        @keyframes particleDrift {
+          0%, 100% {
+            opacity: 0;
+            transform: translateY(0) scale(0.5);
+          }
+          50% {
+            opacity: 0.4;
+            transform: translateY(-20px) scale(1);
+          }
+        }
+
+        .page-data-nodes {
+          position: absolute;
+          inset: 0;
+        }
+
+        .page-data-node {
+          position: absolute;
+          width: 8px;
+          height: 8px;
+          background: var(--accent, #FFB000);
+          border-radius: 50%;
+          opacity: 0.5;
+          animation: nodePulse 2s ease-in-out infinite;
+          box-shadow: 0 0 10px var(--accent, #FFB000);
+        }
+
+        @keyframes nodePulse {
+          0%, 100% {
+            transform: scale(1);
+            opacity: 0.4;
+          }
+          50% {
+            transform: scale(1.3);
+            opacity: 0.7;
+          }
+        }
+
+        .page-connections {
+          position: absolute;
+          inset: 0;
+          width: 100%;
+          height: 100%;
+        }
+
+        .page-connections line {
+          stroke: var(--accent, #FFB000);
+          stroke-width: 0.1;
+          opacity: 0.15;
+        }
+
+        .page-shapes {
+          position: absolute;
+          inset: 0;
+        }
+
+        .page-shape {
+          position: absolute;
+          border: 1px solid var(--accent, #FFB000);
+          opacity: 0.1;
+          animation: shapeFloat 20s linear infinite;
+        }
+
+        .page-shape-1 {
+          width: 150px;
+          height: 150px;
+          right: 15%;
+          top: 25%;
+          border-radius: 30% 70% 70% 30% / 30% 30% 70% 70%;
+        }
+
+        .page-shape-2 {
+          width: 100px;
+          height: 100px;
+          left: 10%;
+          bottom: 35%;
+          border-radius: 50%;
+          animation-direction: reverse;
+          animation-duration: 15s;
+        }
+
+        .page-shape-3 {
+          width: 80px;
+          height: 80px;
+          right: 25%;
+          bottom: 25%;
+          transform: rotate(45deg);
+        }
+
+        @keyframes shapeFloat {
+          from {
+            transform: rotate(0deg);
+          }
+          to {
+            transform: rotate(360deg);
+          }
+        }
+
+        .page-tech-grid {
+          position: absolute;
+          inset: 0;
+        }
+
+        .page-grid-line-h,
+        .page-grid-line-v {
+          position: absolute;
+          background: var(--accent, #FFB000);
+          opacity: 0.05;
+        }
+
+        .page-grid-line-h {
+          left: 0;
+          right: 0;
+          height: 1px;
+        }
+
+        .page-grid-line-v {
+          top: 0;
+          bottom: 0;
+          width: 1px;
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+          .page-particle,
+          .page-data-node,
+          .page-shape {
+            animation: none;
+            opacity: 0.2;
+          }
+        }
+
+        :global(.dark) .page-grid {
+          opacity: 0.04;
+        }
+
+        :global(.dark) .page-particle {
+          opacity: 0.5;
+        }
+
+        :global(.dark) .page-shape {
+          opacity: 0.15;
+        }
+      `}</style>
     </div>
   )
 }

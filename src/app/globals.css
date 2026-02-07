@@ -968,3 +968,45 @@ select:focus-visible {
   background: linear-gradient(180deg, transparent, var(--accent), transparent);
   animation: dataFlow 4s linear infinite;
 }
+
+/* ========================================
+   Animation Fallback - ensures visibility
+   ======================================== */
+
+/* Fallback: ensure elements with inline opacity:0 become visible after JS loads */
+@keyframes ensureVisible {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+/* Apply fallback animation with delay to allow JS animations to run first */
+.nav-link,
+.name-char,
+.hero-role,
+.hero-photo,
+.hero-info,
+.hero-cta,
+.hero-metric,
+.hero-footer,
+.terminal-header,
+.mobile-link,
+header[style*="opacity: 0"] {
+  animation: ensureVisible 0.5s ease-out forwards;
+  animation-delay: 2s;
+}
+
+/* Immediate visibility for elements when JS animations complete */
+.nav-link.is-visible,
+.name-char.is-visible,
+.hero-role.is-visible,
+.hero-photo.is-visible,
+.hero-info.is-visible,
+.hero-cta.is-visible,
+.hero-metric.is-visible,
+.hero-footer.is-visible,
+.terminal-header.is-visible,
+.mobile-link.is-visible,
+header.is-visible {
+  animation: none !important;
+  opacity: 1 !important;
+}

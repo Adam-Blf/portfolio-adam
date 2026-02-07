@@ -205,119 +205,144 @@ export default function Hero() {
     return () => window.removeEventListener('mousemove', handleMouse)
   }, [])
 
+  // Check for reduced motion preference
+  const [prefersReducedMotion, setPrefersReducedMotion] = useState(false)
+
+  useEffect(() => {
+    const mediaQuery = window.matchMedia('(prefers-reduced-motion: reduce)')
+    setPrefersReducedMotion(mediaQuery.matches)
+    const handler = (e: MediaQueryListEvent) => setPrefersReducedMotion(e.matches)
+    mediaQuery.addEventListener('change', handler)
+    return () => mediaQuery.removeEventListener('change', handler)
+  }, [])
+
   // Entry animations
   useEffect(() => {
     const container = containerRef.current
     if (!container) return
 
+    // Helper to show all hidden elements (fallback)
+    const showAllElements = () => {
+      container.querySelectorAll('.terminal-header, .name-char, .hero-role, .hero-photo, .hero-info, .hero-cta, .hero-metric, .hero-footer').forEach((el) => {
+        ;(el as HTMLElement).style.opacity = '1'
+        ;(el as HTMLElement).style.transform = 'none'
+      })
+    }
+
+    // If reduced motion is preferred, show everything immediately
+    if (prefersReducedMotion) {
+      showAllElements()
+      return
+    }
+
     try {
-    const easing = 'cubicBezier(0.22, 1, 0.36, 1)'
+      const easing = 'cubicBezier(0.22, 1, 0.36, 1)'
 
-    // Terminal header
-    const terminalHeader = container.querySelector('.terminal-header')
-    if (terminalHeader) {
-      animate(terminalHeader, {
-        translateY: [-30, 0],
-        opacity: [0, 1],
-        duration: 600,
-        easing,
-      })
-    }
+      // Terminal header
+      const terminalHeader = container.querySelector('.terminal-header')
+      if (terminalHeader) {
+        animate(terminalHeader, {
+          translateY: [-30, 0],
+          opacity: [0, 1],
+          duration: 600,
+          easing,
+        })
+      }
 
-    // Name letters stagger
-    const nameChars = container.querySelectorAll('.name-char')
-    if (nameChars.length > 0) {
-      animate(nameChars, {
-        translateY: [80, 0],
-        rotateX: [45, 0],
-        opacity: [0, 1],
-        duration: 700,
-        easing,
-        delay: stagger(40, { start: 300 }),
-      })
-    }
+      // Name letters stagger
+      const nameChars = container.querySelectorAll('.name-char')
+      if (nameChars.length > 0) {
+        animate(nameChars, {
+          translateY: [80, 0],
+          rotateX: [45, 0],
+          opacity: [0, 1],
+          duration: 700,
+          easing,
+          delay: stagger(40, { start: 300 }),
+        })
+      }
 
-    // Role line
-    const heroRole = container.querySelector('.hero-role')
-    if (heroRole) {
-      animate(heroRole, {
-        translateX: [-40, 0],
-        opacity: [0, 1],
-        duration: 600,
-        easing,
-        delay: 500,
-      })
-    }
+      // Role line
+      const heroRole = container.querySelector('.hero-role')
+      if (heroRole) {
+        animate(heroRole, {
+          translateX: [-40, 0],
+          opacity: [0, 1],
+          duration: 600,
+          easing,
+          delay: 500,
+        })
+      }
 
-    // Photo
-    const heroPhoto = container.querySelector('.hero-photo')
-    if (heroPhoto) {
-      animate(heroPhoto, {
-        scale: [0.8, 1],
-        opacity: [0, 1],
-        duration: 700,
-        easing,
-        delay: 400,
-      })
-    }
+      // Photo
+      const heroPhoto = container.querySelector('.hero-photo')
+      if (heroPhoto) {
+        animate(heroPhoto, {
+          scale: [0.8, 1],
+          opacity: [0, 1],
+          duration: 700,
+          easing,
+          delay: 400,
+        })
+      }
 
-    // Info section
-    const heroInfo = container.querySelector('.hero-info')
-    if (heroInfo) {
-      animate(heroInfo, {
-        translateY: [30, 0],
-        opacity: [0, 1],
-        duration: 600,
-        easing,
-        delay: 600,
-      })
-    }
+      // Info section
+      const heroInfo = container.querySelector('.hero-info')
+      if (heroInfo) {
+        animate(heroInfo, {
+          translateY: [30, 0],
+          opacity: [0, 1],
+          duration: 600,
+          easing,
+          delay: 600,
+        })
+      }
 
-    // CTAs
-    const heroCtas = container.querySelectorAll('.hero-cta')
-    if (heroCtas.length > 0) {
-      animate(heroCtas, {
-        translateY: [20, 0],
-        opacity: [0, 1],
-        duration: 500,
-        easing,
-        delay: stagger(100, { start: 800 }),
-      })
-    }
+      // CTAs
+      const heroCtas = container.querySelectorAll('.hero-cta')
+      if (heroCtas.length > 0) {
+        animate(heroCtas, {
+          translateY: [20, 0],
+          opacity: [0, 1],
+          duration: 500,
+          easing,
+          delay: stagger(100, { start: 800 }),
+        })
+      }
 
-    // Metrics
-    const heroMetrics = container.querySelectorAll('.hero-metric')
-    if (heroMetrics.length > 0) {
-      animate(heroMetrics, {
-        translateY: [30, 0],
-        opacity: [0, 1],
-        duration: 500,
-        easing,
-        delay: stagger(80, { start: 1000 }),
-      })
-    }
+      // Metrics
+      const heroMetrics = container.querySelectorAll('.hero-metric')
+      if (heroMetrics.length > 0) {
+        animate(heroMetrics, {
+          translateY: [30, 0],
+          opacity: [0, 1],
+          duration: 500,
+          easing,
+          delay: stagger(80, { start: 1000 }),
+        })
+      }
 
-    // Footer
-    const heroFooter = container.querySelector('.hero-footer')
-    if (heroFooter) {
-      animate(heroFooter, {
-        opacity: [0, 1],
-        duration: 500,
-        easing,
-        delay: 1200,
-      })
-    }
+      // Footer
+      const heroFooter = container.querySelector('.hero-footer')
+      if (heroFooter) {
+        animate(heroFooter, {
+          opacity: [0, 1],
+          duration: 500,
+          easing,
+          delay: 1200,
+        })
+      }
+
+      // Fallback: ensure all elements are visible after animation duration
+      setTimeout(showAllElements, 2000)
 
     } catch (e) {
       console.error('Animation error:', e)
-      // Show content even if animations fail
-      container.querySelectorAll('[style*="opacity: 0"]').forEach((el) => {
-        ;(el as HTMLElement).style.opacity = '1'
-      })
+      showAllElements()
     }
 
     // Scroll indicator WAAPI
-    if (scrollRef.current) {
+    if (scrollRef.current && !prefersReducedMotion) {
       scrollRef.current.animate([
         { transform: 'translateY(0)', opacity: 1 },
         { transform: 'translateY(10px)', opacity: 0.4 },
@@ -328,7 +353,7 @@ export default function Hero() {
         easing: 'ease-in-out',
       })
     }
-  }, [])
+  }, [prefersReducedMotion])
 
   return (
     <section

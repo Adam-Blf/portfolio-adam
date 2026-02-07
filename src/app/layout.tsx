@@ -95,7 +95,7 @@ export default function RootLayout({
           }}
         />
       </head>
-      <body className="noise">
+      <body className="noise" suppressHydrationWarning>
         <ThemeProvider defaultTheme="system">
           {/* Skip link for accessibility */}
           <a href="#main-content" className="skip-link">

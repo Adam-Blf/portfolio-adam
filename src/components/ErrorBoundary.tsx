@@ -17,16 +17,20 @@ export default class ErrorBoundary extends Component<Props, State> {
     this.state = { hasError: false }
   }
 
-  static getDerivedStateFromError(): State {
+  static getDerivedStateFromError(error: Error): State {
+    console.error('ErrorBoundary getDerivedStateFromError:', error.message)
     return { hasError: true }
   }
 
   componentDidCatch(error: Error, errorInfo: React.ErrorInfo) {
-    console.error('ErrorBoundary caught:', error, errorInfo)
+    console.error('ErrorBoundary caught error:', error.message)
+    console.error('Error stack:', error.stack)
+    console.error('Component stack:', errorInfo.componentStack)
   }
 
   render() {
     if (this.state.hasError) {
+      console.log('ErrorBoundary: Rendering fallback due to error')
       return this.props.fallback || null
     }
     return this.props.children

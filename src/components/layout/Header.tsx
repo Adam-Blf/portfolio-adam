@@ -28,33 +28,70 @@ export default function Header() {
   const lastScrollY = useRef(0)
   const { theme, setTheme, toggleTheme, resolvedTheme } = useTheme()
 
+  // Check for reduced motion preference
+  const [prefersReducedMotion, setPrefersReducedMotion] = useState(false)
+
+  useEffect(() => {
+    const mediaQuery = window.matchMedia('(prefers-reduced-motion: reduce)')
+    setPrefersReducedMotion(mediaQuery.matches)
+    const handler = (e: MediaQueryListEvent) => setPrefersReducedMotion(e.matches)
+    mediaQuery.addEventListener('change', handler)
+    return () => mediaQuery.removeEventListener('change', handler)
+  }, [])
+
   // Initial header animation using WAAPI + anime.js
   useEffect(() => {
     const header = headerRef.current
     if (!header) return
 
-    // WAAPI for main header
-    header.animate(
-      [
-        { transform: 'translateY(-20px)', opacity: 0 },
-        { transform: 'translateY(0)', opacity: 1 }
-      ],
-      {
-        duration: 600,
-        easing: 'cubic-bezier(0.16, 1, 0.3, 1)',
-        fill: 'forwards'
-      }
-    )
+    // Helper to show all elements
+    const showAllElements = () => {
+      header.style.opacity = '1'
+      header.style.transform = 'translateY(0)'
+      header.classList.add('is-visible')
+      header.querySelectorAll('.nav-link').forEach((el) => {
+        ;(el as HTMLElement).style.opacity = '1'
+        ;(el as HTMLElement).style.transform = 'translateY(0)'
+        el.classList.add('is-visible')
+      })
+    }
 
-    // Anime.js for staggered nav links
-    animate(header.querySelectorAll('.nav-link'), {
-      translateY: [-10, 0],
-      opacity: [0, 1],
-      duration: 400,
-      easing: 'cubicBezier(0.16, 1, 0.3, 1)',
-      delay: stagger(50, { start: 200 }),
-    })
-  }, [])
+    // Skip animations if user prefers reduced motion
+    if (prefersReducedMotion) {
+      showAllElements()
+      return
+    }
+
+    try {
+      // WAAPI for main header
+      header.animate(
+        [
+          { transform: 'translateY(-20px)', opacity: 0 },
+          { transform: 'translateY(0)', opacity: 1 }
+        ],
+        {
+          duration: 600,
+          easing: 'cubic-bezier(0.16, 1, 0.3, 1)',
+          fill: 'forwards'
+        }
+      )
+
+      // Anime.js for staggered nav links
+      animate(header.querySelectorAll('.nav-link'), {
+        translateY: [-10, 0],
+        opacity: [0, 1],
+        duration: 400,
+        easing: 'cubicBezier(0.16, 1, 0.3, 1)',
+        delay: stagger(50, { start: 200 }),
+      })
+
+      // Fallback: ensure visibility after animations should complete
+      setTimeout(showAllElements, 1500)
+    } catch (e) {
+      console.error('Header animation error:', e)
+      showAllElements()
+    }
+  }, [prefersReducedMotion])
 
   // Scroll detection - hide on scroll down, show on scroll up
   useEffect(() => {
@@ -82,22 +119,46 @@ export default function Header() {
     if (!mobileMenu) return
 
     if (isMobileMenuOpen) {
-      // WAAPI for smooth fade in
-      mobileMenu.animate(
-        [{ opacity: 0 }, { opacity: 1 }],
-        { duration: 300, fill: 'forwards', easing: 'ease-out' }
-      )
+      // Helper to show all mobile elements
+      const showMobileElements = () => {
+        mobileMenu.style.opacity = '1'
+        mobileMenu.querySelectorAll('.mobile-link').forEach((el) => {
+          ;(el as HTMLElement).style.opacity = '1'
+          ;(el as HTMLElement).style.transform = 'translateY(0)'
+          el.classList.add('is-visible')
+        })
+      }
 
-      // Anime.js for staggered menu items
-      animate(mobileMenu.querySelectorAll('.mobile-link'), {
-        translateY: [30, 0],
-        opacity: [0, 1],
-        duration: 500,
-        easing: 'cubicBezier(0.16, 1, 0.3, 1)',
-        delay: stagger(80, { start: 100 }),
-      })
+      // Skip animations if user prefers reduced motion
+      if (prefersReducedMotion) {
+        showMobileElements()
+        return
+      }
+
+      try {
+        // WAAPI for smooth fade in
+        mobileMenu.animate(
+          [{ opacity: 0 }, { opacity: 1 }],
+          { duration: 300, fill: 'forwards', easing: 'ease-out' }
+        )
+
+        // Anime.js for staggered menu items
+        animate(mobileMenu.querySelectorAll('.mobile-link'), {
+          translateY: [30, 0],
+          opacity: [0, 1],
+          duration: 500,
+          easing: 'cubicBezier(0.16, 1, 0.3, 1)',
+          delay: stagger(80, { start: 100 }),
+        })
+
+        // Fallback
+        setTimeout(showMobileElements, 1000)
+      } catch (e) {
+        console.error('Mobile menu animation error:', e)
+        showMobileElements()
+      }
     }
-  }, [isMobileMenuOpen])
+  }, [isMobileMenuOpen, prefersReducedMotion])
 
   // Close theme menu on click outside
   useEffect(() => {
