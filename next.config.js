@@ -1,4 +1,6 @@
 /** @type {import('next').NextConfig} */
+const path = require('path')
+
 const nextConfig = {
   // Enable compression
   compress: true,
@@ -121,6 +123,26 @@ const nextConfig = {
         ],
       },
     ]
+  },
+
+  // Transpile Three.js packages for proper React internals resolution
+  transpilePackages: [
+    'three',
+    '@react-three/fiber',
+    '@react-three/drei',
+    'react-reconciler',
+  ],
+
+  // Force all packages to use the same React instance (client-side only)
+  webpack: (config, { isServer }) => {
+    if (!isServer) {
+      config.resolve.alias = {
+        ...config.resolve.alias,
+        'react': path.resolve(__dirname, 'node_modules/react'),
+        'react-dom': path.resolve(__dirname, 'node_modules/react-dom'),
+      }
+    }
+    return config
   },
 
   // Enable experimental features for performance

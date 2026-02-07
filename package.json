@@ -36,6 +36,9 @@
     "three": "^0.182.0",
     "typescript": "^5.9.3"
   },
+  "overrides": {
+    "react-reconciler": "0.29.2"
+  },
   "devDependencies": {
     "@types/three": "^0.182.0"
   }
