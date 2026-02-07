@@ -37,6 +37,46 @@ interface SkillCategory extends CachedCategory {
   icon: React.ReactNode
 }
 
+// Category configuration with icons and colors
+const categoryConfig: Record<string, { icon: React.ReactNode; color: string; bgLight: string; bgDark: string }> = {
+  languages: {
+    icon: <Code2 size={18} />,
+    color: '#3B82F6', // Blue
+    bgLight: 'rgba(59, 130, 246, 0.08)',
+    bgDark: 'rgba(59, 130, 246, 0.15)'
+  },
+  frameworks: {
+    icon: <Blocks size={18} />,
+    color: '#8B5CF6', // Purple
+    bgLight: 'rgba(139, 92, 246, 0.08)',
+    bgDark: 'rgba(139, 92, 246, 0.15)'
+  },
+  data: {
+    icon: <Database size={18} />,
+    color: '#10B981', // Green
+    bgLight: 'rgba(16, 185, 129, 0.08)',
+    bgDark: 'rgba(16, 185, 129, 0.15)'
+  },
+  ai: {
+    icon: <Brain size={18} />,
+    color: '#F59E0B', // Amber
+    bgLight: 'rgba(245, 158, 11, 0.08)',
+    bgDark: 'rgba(245, 158, 11, 0.15)'
+  },
+  databases: {
+    icon: <Server size={18} />,
+    color: '#EF4444', // Red
+    bgLight: 'rgba(239, 68, 68, 0.08)',
+    bgDark: 'rgba(239, 68, 68, 0.15)'
+  },
+  cloud: {
+    icon: <Cloud size={18} />,
+    color: '#06B6D4', // Cyan
+    bgLight: 'rgba(6, 182, 212, 0.08)',
+    bgDark: 'rgba(6, 182, 212, 0.15)'
+  },
+}
+
 // Icon map for categories (must be outside component to avoid recreation)
 const categoryIcons: Record<string, React.ReactNode> = {
   languages: <Code2 size={18} />,
@@ -148,6 +188,31 @@ const skillBadges: Record<string, { logo: string; color: string; logoColor?: str
   'Jira': { logo: 'jira', color: '0052CC' },
   'Confluence': { logo: 'confluence', color: '172B4D' },
   'Business Objects': { logo: 'sap', color: '0FAAFF' },
+  // Additional AI/ML
+  'Machine Learning': { logo: 'scikitlearn', color: 'F7931E' },
+  'Deep Learning': { logo: 'pytorch', color: 'EE4C2C' },
+  'NLP': { logo: 'spacy', color: '09A3D5' },
+  'Computer Vision': { logo: 'opencv', color: '5C3EE8' },
+  'AI': { logo: 'openai', color: '412991' },
+  'LLM': { logo: 'openai', color: '412991' },
+  'RAG': { logo: 'langchain', color: '1C3C3C' },
+  'Chatbot': { logo: 'dialogflow', color: 'FF9800' },
+  'Recommendation Systems': { logo: 'tensorflow', color: 'FF6F00' },
+  // Data concepts
+  'Data Science': { logo: 'anaconda', color: '44A833' },
+  'Data Engineering': { logo: 'apacheairflow', color: '017CEE' },
+  // Web concepts
+  'REST API': { logo: 'fastapi', color: '009688' },
+  'GraphQL': { logo: 'graphql', color: 'E10098' },
+  'WebSocket': { logo: 'socketdotio', color: '010101' },
+  'PWA': { logo: 'pwa', color: '5A0FC8' },
+  // Mobile
+  'React Native': { logo: 'react', color: '61DAFB', logoColor: 'black' },
+  'Flutter': { logo: 'flutter', color: '02569B' },
+  // Game/Graphics
+  'Game Dev': { logo: 'unity', color: '000000' },
+  'Canvas': { logo: 'html5', color: 'E34F26' },
+  'WebGL': { logo: 'webgl', color: '990000' },
 }
 
 // Extended topic mapping
@@ -642,17 +707,35 @@ export default function Competences() {
           </div>
 
           {/* Skills Grid */}
-          <section ref={gridRef} className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-px bg-[--border]">
-            {categories.map((category) => (
+          <section ref={gridRef} className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+            {categories.map((category) => {
+              const config = categoryConfig[category.key]
+              return (
               <div
                 key={category.key}
-                className="skill-category bg-[--bg-primary] p-8"
-                style={{ opacity: 0 }}
+                className="skill-category rounded-xl p-6 border transition-all hover:shadow-lg"
+                style={{
+                  opacity: 0,
+                  backgroundColor: 'var(--bg-surface)',
+                  borderColor: config?.color || 'var(--border)',
+                  borderLeftWidth: '4px',
+                }}
               >
-                <div className="flex items-center gap-3 mb-6">
-                  <span className="text-accent">{category.icon}</span>
-                  <h2 className="text-lg font-medium">{category.title}</h2>
-                  <span className="text-xs text-[--text-muted] ml-auto font-mono">
+                <div className="flex items-center gap-3 mb-5">
+                  <div
+                    className="w-9 h-9 rounded-lg flex items-center justify-center"
+                    style={{ backgroundColor: config?.bgLight || 'var(--bg-elevated)' }}
+                  >
+                    <span style={{ color: config?.color || 'var(--accent)' }}>{category.icon}</span>
+                  </div>
+                  <h2 className="text-lg font-semibold">{category.title}</h2>
+                  <span
+                    className="text-xs ml-auto font-mono px-2 py-1 rounded-full"
+                    style={{
+                      backgroundColor: config?.bgLight || 'var(--bg-elevated)',
+                      color: config?.color || 'var(--text-muted)'
+                    }}
+                  >
                     {category.skills.length}
                   </span>
                 </div>
@@ -676,6 +759,7 @@ export default function Competences() {
                       <span
                         key={skill.name}
                         className="tag hover:border-accent transition-colors cursor-default"
+                        style={{ borderColor: config?.color || undefined }}
                         title={`${skill.count} projet${skill.count > 1 ? 's' : ''}`}
                       >
                         {skill.name}
@@ -684,7 +768,8 @@ export default function Competences() {
                   })}
                 </div>
               </div>
-            ))}
+              )
+            })}
           </section>
 
           {/* Certifications */}
