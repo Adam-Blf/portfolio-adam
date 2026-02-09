@@ -109,7 +109,7 @@ export default function ScrollReveal({
   }, [animation, delay, duration, once, threshold])
 
   return (
-    <div ref={ref} className={className} style={{ opacity: 0 }}>
+    <div ref={ref} className={`${className} anim-hidden`}>
       {children}
     </div>
   )

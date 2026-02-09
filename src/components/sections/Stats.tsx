@@ -1,7 +1,6 @@
 'use client'
 
-import { useEffect, useRef, useState } from 'react'
-import { animate } from 'animejs'
+import { useEffect, useState } from 'react'
 import { staticMetrics, volunteering, certifications } from '@/lib/data'
 
 interface GitHubStats {
@@ -17,71 +16,32 @@ interface StatItem {
   loading: boolean
 }
 
-function AnimatedCounter({ value, suffix, label, loading }: StatItem) {
-  const containerRef = useRef<HTMLDivElement>(null)
-  const valueRef = useRef<HTMLSpanElement>(null)
-  const hasAnimated = useRef(false)
-
-  useEffect(() => {
-    const container = containerRef.current
-    const valueEl = valueRef.current
-    if (!container || !valueEl || loading) return
-
-    const observer = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting && !hasAnimated.current) {
-            hasAnimated.current = true
-
-            // Fade in container using WAAPI
-            container.animate(
-              [
-                { opacity: 0, transform: 'translateY(20px)' },
-                { opacity: 1, transform: 'translateY(0)' }
-              ],
-              {
-                duration: 600,
-                easing: 'cubic-bezier(0.16, 1, 0.3, 1)',
-                fill: 'forwards'
-              }
-            )
-
-            // Counter animation using anime.js
-            const counter = { val: 0 }
-            animate(counter, {
-              val: value,
-              duration: 2000,
-              easing: 'outExpo',
-              onUpdate: () => {
-                valueEl.textContent = Math.round(counter.val).toString()
-              },
-            })
-
-            observer.unobserve(container)
-          }
-        })
-      },
-      { threshold: 0.5 }
-    )
-
-    observer.observe(container)
-
-    return () => observer.disconnect()
-  }, [value, loading])
-
+function StatCard({ value, suffix, label, loading }: StatItem) {
   return (
-    <div ref={containerRef} className="text-center" style={{ opacity: loading ? 1 : 0 }} role="listitem">
-      <p className="metric-value" aria-label={loading ? `Chargement ${label}` : `${value}${suffix} ${label}`}>
+    <div className="text-center py-6 px-4" role="listitem">
+      <p
+        className="text-4xl md:text-5xl font-bold text-white leading-none"
+        aria-label={loading ? `Chargement ${label}` : `${value}${suffix} ${label}`}
+      >
         {loading ? (
-          <span className="inline-block w-12 h-10 bg-[--bg-elevated] rounded animate-pulse" aria-hidden="true" />
+          <span
+            className="inline-block w-16 h-10 rounded"
+            style={{ backgroundColor: 'var(--bg-surface, #1a1a1a)' }}
+            aria-hidden="true"
+          />
         ) : (
           <>
-            <span ref={valueRef} aria-hidden="true">0</span>
-            <span aria-hidden="true">{suffix}</span>
+            <span style={{ color: 'var(--accent, #E50914)' }}>{value}</span>
+            <span className="text-white">{suffix}</span>
           </>
         )}
       </p>
-      <p className="text-caption mt-2">{label}</p>
+      <p
+        className="text-sm mt-2 uppercase tracking-wider font-medium"
+        style={{ color: 'var(--text-secondary, #B3B3B3)' }}
+      >
+        {label}
+      </p>
     </div>
   )
 }
@@ -192,12 +152,20 @@ export default function Stats() {
   ]
 
   return (
-    <section className="py-20 border-t border-b border-[--border]" aria-labelledby="stats-heading">
+    <section
+      className="py-12"
+      style={{
+        backgroundColor: 'var(--bg-surface, #1a1a1a)',
+        borderTop: '1px solid var(--border, rgba(255,255,255,0.1))',
+        borderBottom: '1px solid var(--border, rgba(255,255,255,0.1))',
+      }}
+      aria-labelledby="stats-heading"
+    >
       <h2 id="stats-heading" className="sr-only">Statistiques en chiffres</h2>
       <div className="container-wide">
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-8" role="list">
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-8" role="list">
           {stats.map((stat) => (
-            <AnimatedCounter
+            <StatCard
               key={stat.label}
               value={stat.value}
               suffix={stat.suffix}

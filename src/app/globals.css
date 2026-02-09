@@ -2,100 +2,64 @@
 @tailwind components;
 @tailwind utilities;
 
-/* === MINIMAL PRO - Design System === */
-/* Modern, professional aesthetic with Amber/Blue logo palette */
+/* === NETFLIX-INSPIRED - Design System === */
+/* Bold, cinematic dark aesthetic with red accents */
 
-/* === DARK MODE (default) === */
+/* === DARK MODE (default & only) === */
 :root,
-:root.dark {
-  /* Deep backgrounds */
-  --bg-deep: #050508;
-  --bg-surface: #0B0F1A;
-  --bg-elevated: #151C28;
-  --bg-hover: #1C2536;
-  --bg-card: rgba(11, 15, 26, 0.95);
+:root.dark,
+:root.light {
+  /* Deep backgrounds - Netflix blacks */
+  --bg-deep: #141414;
+  --bg-surface: #1a1a1a;
+  --bg-elevated: #222222;
+  --bg-hover: #2a2a2a;
+  --bg-card: rgba(26, 26, 26, 0.97);
 
-  /* Primary accent - Amber/Gold (logo) */
-  --accent: #FFB000;
-  --accent-muted: rgba(255, 176, 0, 0.1);
-  --accent-glow: rgba(255, 176, 0, 0.4);
-  --accent-dim: #E09E00;
+  /* Primary accent - Netflix Red */
+  --accent: #E50914;
+  --accent-muted: rgba(229, 9, 20, 0.12);
+  --accent-glow: rgba(229, 9, 20, 0.4);
+  --accent-dim: #B20710;
 
-  /* Secondary - Blue */
-  --highlight: #3B82F6;
-  --highlight-muted: rgba(59, 130, 246, 0.1);
-  --highlight-glow: rgba(59, 130, 246, 0.3);
+  /* Secondary - Light grey */
+  --highlight: #E5E5E5;
+  --highlight-muted: rgba(229, 229, 229, 0.1);
+  --highlight-glow: rgba(229, 229, 229, 0.2);
 
-  /* Tertiary - Cyan */
-  --tertiary: #06B6D4;
-  --tertiary-muted: rgba(6, 182, 212, 0.1);
+  /* Tertiary - Mid grey */
+  --tertiary: #808080;
+  --tertiary-muted: rgba(128, 128, 128, 0.1);
 
   /* Success */
-  --success: #10B981;
-  --success-glow: rgba(16, 185, 129, 0.3);
+  --success: #46D369;
+  --success-glow: rgba(70, 211, 105, 0.3);
 
   /* Gradients */
-  --gradient-primary: linear-gradient(135deg, #FFB000, #3B82F6);
-  --gradient-subtle: linear-gradient(135deg, rgba(255, 176, 0, 0.1), rgba(59, 130, 246, 0.1));
+  --gradient-primary: linear-gradient(135deg, #E50914, #B20710);
+  --gradient-subtle: linear-gradient(135deg, rgba(229, 9, 20, 0.08), rgba(178, 7, 16, 0.04));
 
-  /* Text hierarchy */
-  --text-primary: #F9FAFB;
-  --text-secondary: #9CA3AF;
-  --text-muted: #6B7280;
-  --text-inverse: #050508;
+  /* Text hierarchy - high contrast */
+  --text-primary: #FFFFFF;
+  --text-secondary: #B3B3B3;
+  --text-muted: #808080;
+  --text-inverse: #141414;
 
   /* Borders */
-  --border: rgba(255, 255, 255, 0.08);
-  --border-accent: rgba(255, 176, 0, 0.25);
+  --border: rgba(255, 255, 255, 0.1);
+  --border-accent: rgba(229, 9, 20, 0.4);
 
   /* Shadows */
-  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.4);
-  --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.3);
-  --shadow-lg: 0 12px 40px rgba(0, 0, 0, 0.4);
-  --shadow-glow: 0 0 30px -10px var(--accent);
+  --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.5);
+  --shadow-md: 0 4px 16px rgba(0, 0, 0, 0.5);
+  --shadow-lg: 0 16px 48px rgba(0, 0, 0, 0.6);
+  --shadow-glow: 0 0 40px -10px var(--accent);
 
   /* Spacing */
   --space-unit: 8px;
-}
 
-/* === LIGHT MODE === */
-:root.light {
-  --bg-deep: #FAFAFA;
-  --bg-surface: #FFFFFF;
-  --bg-elevated: #F4F4F5;
-  --bg-hover: #E4E4E7;
-  --bg-card: rgba(255, 255, 255, 0.95);
-
-  --accent: #D97706;
-  --accent-muted: rgba(217, 119, 6, 0.08);
-  --accent-glow: rgba(217, 119, 6, 0.2);
-  --accent-dim: #B45309;
-
-  --highlight: #2563EB;
-  --highlight-muted: rgba(37, 99, 235, 0.08);
-  --highlight-glow: rgba(37, 99, 235, 0.2);
-
-  --tertiary: #0891B2;
-  --tertiary-muted: rgba(8, 145, 178, 0.08);
-
-  --success: #059669;
-  --success-glow: rgba(5, 150, 105, 0.2);
-
-  --gradient-primary: linear-gradient(135deg, #D97706, #2563EB);
-  --gradient-subtle: linear-gradient(135deg, rgba(217, 119, 6, 0.05), rgba(37, 99, 235, 0.05));
-
-  --text-primary: #18181B;
-  --text-secondary: #52525B;
-  --text-muted: #A1A1AA;
-  --text-inverse: #FAFAFA;
-
-  --border: rgba(0, 0, 0, 0.06);
-  --border-accent: rgba(217, 119, 6, 0.2);
-
-  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.05);
-  --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.08);
-  --shadow-lg: 0 12px 40px rgba(0, 0, 0, 0.1);
-  --shadow-glow: 0 0 30px -10px var(--accent);
+  /* Force dark color scheme */
+  color-scheme: dark;
 }
 
 /* === BASE === */
@@ -113,7 +77,7 @@ html {
 }
 
 body {
-  font-family: 'Inter', -apple-system, sans-serif;
+  font-family: var(--font-body), -apple-system, sans-serif;
   background: var(--bg-deep);
   color: var(--text-primary);
   line-height: 1.6;
@@ -132,19 +96,19 @@ body {
 
 /* === TYPOGRAPHY === */
 h1, h2, h3, h4, h5 {
-  font-family: 'Space Grotesk', sans-serif;
+  font-family: var(--font-display), sans-serif;
   font-weight: 700;
   letter-spacing: -0.02em;
   line-height: 1.1;
 }
 
 .font-mono, code, pre {
-  font-family: 'Fira Code', monospace;
+  font-family: var(--font-mono), monospace;
   font-feature-settings: 'liga' 1;
 }
 
 .text-display {
-  font-family: 'Space Grotesk', sans-serif;
+  font-family: var(--font-display), sans-serif;
   font-size: clamp(3rem, 12vw, 8rem);
   font-weight: 700;
   line-height: 0.9;
@@ -152,7 +116,7 @@ h1, h2, h3, h4, h5 {
 }
 
 .text-headline {
-  font-family: 'Space Grotesk', sans-serif;
+  font-family: var(--font-display), sans-serif;
   font-size: clamp(2rem, 5vw, 4rem);
   font-weight: 700;
   line-height: 1;
@@ -160,7 +124,7 @@ h1, h2, h3, h4, h5 {
 }
 
 .text-title {
-  font-family: 'Space Grotesk', sans-serif;
+  font-family: var(--font-display), sans-serif;
   font-size: clamp(1.25rem, 3vw, 2rem);
   font-weight: 600;
   line-height: 1.2;
@@ -180,7 +144,7 @@ h1, h2, h3, h4, h5 {
 }
 
 .text-caption {
-  font-family: 'Fira Code', monospace;
+  font-family: var(--font-mono), monospace;
   font-size: 0.75rem;
   font-weight: 500;
   letter-spacing: 0.1em;
@@ -230,7 +194,7 @@ h1, h2, h3, h4, h5 {
   justify-content: center;
   gap: 0.5rem;
   padding: 0.875rem 1.5rem;
-  font-family: 'Inter', sans-serif;
+  font-family: var(--font-body), sans-serif;
   font-weight: 600;
   font-size: 0.875rem;
   border: 1px solid transparent;
@@ -247,11 +211,13 @@ h1, h2, h3, h4, h5 {
 .btn-primary {
   background: var(--accent);
   color: white;
+  font-weight: 700;
 }
 
 .btn-primary:hover {
   background: var(--accent-dim);
   transform: translateY(-1px);
+  box-shadow: 0 4px 20px rgba(229, 9, 20, 0.4);
 }
 
 .btn-gradient {
@@ -492,10 +458,10 @@ h1, h2, h3, h4, h5 {
 }
 
 .glass-subtle {
-  background: rgba(11, 15, 26, 0.8);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
-  border: 1px solid var(--border);
+  background: rgba(20, 20, 20, 0.92);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border-bottom: 1px solid var(--border);
 }
 
 /* === GRADIENT TEXT === */
@@ -504,6 +470,40 @@ h1, h2, h3, h4, h5 {
   -webkit-background-clip: text;
   background-clip: text;
   -webkit-text-fill-color: transparent;
+}
+
+/* === NETFLIX-STYLE CARDS === */
+.netflix-card {
+  background: var(--bg-surface);
+  border-radius: 4px;
+  overflow: hidden;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.netflix-card:hover {
+  transform: scale(1.05);
+  box-shadow: var(--shadow-lg);
+  z-index: 10;
+}
+
+/* Netflix-style row */
+.netflix-row {
+  display: flex;
+  gap: 8px;
+  overflow-x: auto;
+  scroll-behavior: smooth;
+  padding-bottom: 1rem;
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+.netflix-row::-webkit-scrollbar {
+  display: none;
+}
+
+.netflix-row-item {
+  flex: 0 0 auto;
+  width: 280px;
 }
 
 /* === SKELETON LOADING === */
@@ -570,7 +570,7 @@ h1, h2, h3, h4, h5 {
 
 /* === METRIC === */
 .metric-value {
-  font-family: 'Fira Code', monospace;
+  font-family: var(--font-mono), monospace;
   font-size: clamp(2rem, 4vw, 3rem);
   font-weight: 700;
   line-height: 1;
@@ -628,8 +628,16 @@ h1, h2, h3, h4, h5 {
 }
 
 /* === ANIMATION FALLBACK === */
+/* Safety net: elements starting hidden become visible after 2.5s
+   in case JS animations fail to trigger */
 @keyframes ensureVisible {
-  to { opacity: 1; }
+  to { opacity: 1 !important; }
+}
+
+/* Class for animation-ready elements (starts hidden, revealed by JS) */
+.anim-hidden {
+  opacity: 0;
+  animation: ensureVisible 0.6s ease-out 2.5s forwards;
 }
 
 .nav-link,
@@ -641,8 +649,9 @@ h1, h2, h3, h4, h5 {
 .hero-metric,
 .hero-footer,
 .terminal-header,
-.mobile-link {
-  animation: ensureVisible 0.5s ease-out 2s forwards;
+.mobile-link,
+.animate-in {
+  animation: ensureVisible 0.6s ease-out 2.5s forwards;
 }
 
 /* === RESPONSIVE === */

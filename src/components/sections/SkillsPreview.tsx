@@ -1,7 +1,5 @@
 'use client'
 
-import { useEffect, useRef } from 'react'
-import { animate, stagger } from 'animejs'
 import Link from 'next/link'
 import { ArrowUpRight } from 'lucide-react'
 
@@ -29,112 +27,82 @@ const getBadgeUrl = (tech: typeof technologies[0]) => {
 }
 
 export default function SkillsPreview() {
-  const sectionRef = useRef<HTMLElement>(null)
-  const hasAnimated = useRef(false)
-
-  useEffect(() => {
-    const section = sectionRef.current
-    if (!section) return
-
-    const observer = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting && !hasAnimated.current) {
-            hasAnimated.current = true
-
-            const caption = section.querySelector('.skills-caption')
-            const headline = section.querySelector('.skills-headline')
-            const techTags = section.querySelectorAll('.tech-tag')
-            const cta = section.querySelector('.skills-cta')
-
-            if (caption) {
-              animate(caption, {
-                translateY: [20, 0],
-                opacity: [0, 1],
-                duration: 600,
-                easing: 'cubicBezier(0.16, 1, 0.3, 1)',
-              })
-            }
-
-            if (headline) {
-              animate(headline, {
-                translateY: [30, 0],
-                opacity: [0, 1],
-                duration: 700,
-                easing: 'cubicBezier(0.16, 1, 0.3, 1)',
-                delay: 100,
-              })
-            }
-
-            if (techTags.length > 0) {
-              animate(techTags, {
-                scale: [0.9, 1],
-                opacity: [0, 1],
-                duration: 400,
-                easing: 'cubicBezier(0.16, 1, 0.3, 1)',
-                delay: stagger(30, { start: 200 }),
-              })
-            }
-
-            if (cta) {
-              animate(cta, {
-                translateY: [20, 0],
-                opacity: [0, 1],
-                duration: 500,
-                easing: 'cubicBezier(0.16, 1, 0.3, 1)',
-                delay: 500,
-              })
-            }
-
-            observer.unobserve(section)
-          }
-        })
-      },
-      { threshold: 0.2 }
-    )
-
-    observer.observe(section)
-
-    return () => observer.disconnect()
-  }, [])
-
   return (
-    <section ref={sectionRef} className="section border-t border-[--border]">
+    <section
+      className="py-16"
+      style={{ borderTop: '1px solid var(--border, rgba(255,255,255,0.1))' }}
+    >
       <div className="container-wide">
 
-        {/* Header */}
-        <div className="layout-offset mb-16">
-          <p className="skills-caption text-caption" style={{ opacity: 0 }}>
+        {/* Netflix-style row header */}
+        <div className="flex items-center justify-between mb-6">
+          <Link
+            href="/competences"
+            className="group flex items-center gap-2"
+          >
+            <h2
+              className="text-xl md:text-2xl font-bold text-white"
+            >
+              Technologies
+            </h2>
+            <ArrowUpRight
+              size={20}
+              className="transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5"
+              style={{ color: 'var(--accent, #E50914)' }}
+            />
+          </Link>
+          <p
+            className="text-sm hidden sm:block"
+            style={{ color: 'var(--text-muted, #808080)' }}
+          >
             Stack technique
           </p>
-          <h2 className="skills-headline text-headline" style={{ opacity: 0 }}>
-            Technologies
-          </h2>
         </div>
 
-        {/* Tech Grid */}
-        <div className="flex flex-wrap gap-2 mb-12">
+        {/* Horizontal scrollable badge row */}
+        <div
+          className="flex gap-3 overflow-x-auto pb-4"
+          style={{
+            scrollbarWidth: 'thin',
+            scrollbarColor: 'var(--text-muted, #808080) transparent',
+          }}
+        >
           {technologies.map((tech) => (
             <img
               key={tech.name}
               src={getBadgeUrl(tech)}
               alt={tech.name}
-              className="tech-tag h-7 hover:scale-105 transition-transform cursor-default"
-              style={{ opacity: 0 }}
+              className="h-8 flex-shrink-0 hover:scale-105 transition-transform cursor-default"
               loading="lazy"
             />
           ))}
         </div>
 
-        {/* CTA */}
-        <Link
-          href="/competences"
-          className="skills-cta btn btn-outline"
-          style={{ opacity: 0 }}
-        >
-          Voir toutes les competences
-          <ArrowUpRight size={16} />
-        </Link>
+        {/* CTA button */}
+        <div className="mt-8">
+          <Link
+            href="/competences"
+            className="inline-flex items-center gap-2 px-6 py-2.5 rounded text-sm font-semibold transition-colors"
+            style={{
+              backgroundColor: 'var(--bg-surface, #1a1a1a)',
+              color: 'var(--text-secondary, #B3B3B3)',
+              border: '1px solid var(--border, rgba(255,255,255,0.1))',
+            }}
+            onMouseEnter={(e) => {
+              e.currentTarget.style.backgroundColor = 'var(--accent, #E50914)'
+              e.currentTarget.style.color = 'white'
+              e.currentTarget.style.borderColor = 'var(--accent, #E50914)'
+            }}
+            onMouseLeave={(e) => {
+              e.currentTarget.style.backgroundColor = 'var(--bg-surface, #1a1a1a)'
+              e.currentTarget.style.color = 'var(--text-secondary, #B3B3B3)'
+              e.currentTarget.style.borderColor = 'var(--border, rgba(255,255,255,0.1))'
+            }}
+          >
+            Voir toutes les compétences
+            <ArrowUpRight size={16} />
+          </Link>
+        </div>
       </div>
     </section>
   )

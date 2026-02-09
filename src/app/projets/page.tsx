@@ -6,6 +6,7 @@ import { animate, stagger } from 'animejs'
 import { ArrowUpRight, Github, Star, GitFork, GitCommit, ExternalLink, Mail, Download } from 'lucide-react'
 import ErrorBoundary from '@/components/ErrorBoundary'
 import { personalInfo } from '@/lib/data'
+import { useI18n } from '@/lib/i18n'
 
 const SpaceBackground = dynamic(
   () => import('@/components/three/SpaceBackground').catch(() => {
@@ -38,6 +39,7 @@ export default function Projets() {
   const [searchTerm, setSearchTerm] = useState('')
   const headerRef = useRef<HTMLDivElement>(null)
   const projectsRef = useRef<HTMLDivElement>(null)
+  const { t } = useI18n()
 
   // Fetch repos from API route
   useEffect(() => {
@@ -361,27 +363,26 @@ export default function Projets() {
           {/* Header - Bold Neo-Editorial */}
           <div ref={headerRef} className="mb-20">
             <div className="flex items-center gap-3 mb-6">
-              <span className="page-caption text-caption text-accent" style={{ opacity: 0 }}>// Portfolio GitHub</span>
+              <span className="page-caption text-caption text-accent anim-hidden">{t('projects.caption')}</span>
               <span className="w-16 h-px bg-accent" />
             </div>
 
-            <h1 className="page-title text-display mb-8 leading-[0.85]" style={{ opacity: 0 }}>
-              <span className="block text-[--text-primary] glitch-text" data-text="Mes">Mes</span>
-              <span className="block text-accent neon-glow-subtle">Projets</span>
+            <h1 className="page-title text-display mb-8 leading-[0.85] anim-hidden">
+              <span className="block text-[--text-primary] glitch-text" data-text={t('projects.titleLine1')}>{t('projects.titleLine1')}</span>
+              <span className="block text-accent neon-glow-subtle">{t('projects.titleLine2')}</span>
             </h1>
 
-            <p className="page-description text-body-lg max-w-2xl mb-12 text-[--text-secondary] border-l-2 border-accent/30 pl-6" style={{ opacity: 0 }}>
-              {totalProjects} projets publics couvrant l'IA, le Machine Learning,
-              le Fullstack, et bien plus. Données en temps réel depuis GitHub.
+            <p className="page-description text-body-lg max-w-2xl mb-12 text-[--text-secondary] border-l-2 border-accent/30 pl-6 anim-hidden">
+              {t('projects.description', { count: totalProjects })}
             </p>
 
             {/* Stats row - Grid style */}
-            <div className="stats-row grid grid-cols-2 md:grid-cols-4 gap-1 bg-[--border] mb-8" style={{ opacity: 0 }}>
+            <div className="stats-row grid grid-cols-2 md:grid-cols-4 gap-1 bg-[--border] mb-8 anim-hidden">
               <div className="bg-[--bg-surface] p-4 flex items-center gap-3">
                 <Github size={18} className="text-accent" />
                 <div>
                   <span className="font-mono text-2xl font-bold text-accent">{totalProjects}</span>
-                  <span className="text-xs text-[--text-muted] ml-2">repos</span>
+                  <span className="text-xs text-[--text-muted] ml-2">{t('projects.repos')}</span>
                 </div>
               </div>
               {totalCommits > 0 && (
@@ -389,7 +390,7 @@ export default function Projets() {
                   <GitCommit size={18} className="text-highlight" />
                   <div>
                     <span className="font-mono text-2xl font-bold text-highlight">{totalCommits}</span>
-                    <span className="text-xs text-[--text-muted] ml-2">commits</span>
+                    <span className="text-xs text-[--text-muted] ml-2">{t('projects.commits')}</span>
                   </div>
                 </div>
               )}
@@ -400,7 +401,7 @@ export default function Projets() {
                   rel="noopener noreferrer"
                   className="inline-flex items-center gap-2 text-accent hover:text-highlight transition-colors text-sm group"
                 >
-                  <span className="font-mono">View on GitHub</span>
+                  <span className="font-mono">{t('projects.viewOnGithub')}</span>
                   <ArrowUpRight size={14} className="group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform" />
                 </a>
               </div>
@@ -412,23 +413,22 @@ export default function Projets() {
             <div className="max-w-md mb-8">
               <input
                 type="text"
-                placeholder="Rechercher un projet..."
+                placeholder={t('projects.search')}
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
                 className="w-full px-4 py-3 bg-transparent border border-[--border] text-[--text-primary] placeholder:text-[--text-muted] focus:outline-none focus:border-accent transition-colors font-mono text-sm rounded-sm"
-                aria-label="Rechercher un projet"
+                aria-label={t('projects.search')}
               />
             </div>
 
             <div className="flex flex-wrap gap-2">
               <button
                 onClick={() => setActiveCategory(null)}
-                className={`filter-btn tag transition-colors cursor-pointer ${
+                className={`filter-btn tag transition-colors cursor-pointer anim-hidden ${
                   activeCategory === null ? 'tag-accent' : 'hover:border-accent'
                 }`}
-                style={{ opacity: 0 }}
               >
-                Tous ({totalProjects})
+                {t('projects.all')} ({totalProjects})
               </button>
               {categories.map((cat) => {
                 const count = projectsByCategory[cat]?.length || 0
@@ -436,10 +436,9 @@ export default function Projets() {
                   <button
                     key={cat}
                     onClick={() => setActiveCategory(cat)}
-                    className={`filter-btn tag transition-colors cursor-pointer ${
+                    className={`filter-btn tag transition-colors cursor-pointer anim-hidden ${
                       activeCategory === cat ? 'tag-accent' : 'hover:border-accent'
                     }`}
-                    style={{ opacity: 0 }}
                   >
                     {cat.split(' / ')[0]} ({count})
                   </button>
@@ -451,7 +450,7 @@ export default function Projets() {
           {/* Results count */}
           {searchTerm && (
             <p className="text-[--text-muted] text-sm mb-8">
-              {displayedProjects} projet{displayedProjects > 1 ? 's' : ''} trouvé{displayedProjects > 1 ? 's' : ''} pour "{searchTerm}"
+              {displayedProjects} {t('projects.found')} "{searchTerm}"
             </p>
           )}
 
@@ -463,7 +462,7 @@ export default function Projets() {
                   <span className="font-mono text-accent text-sm">0{catIndex + 1}</span>
                   <div>
                     <h2 className="text-title">{category}</h2>
-                    <p className="text-sm text-[--text-muted]">{categoryProjects.length} projets</p>
+                    <p className="text-sm text-[--text-muted]">{categoryProjects.length} {t('projects.projects')}</p>
                   </div>
                 </div>
 
@@ -471,9 +470,8 @@ export default function Projets() {
                   {categoryProjects.map((project) => (
                     <div
                       key={project.name}
-                      className="project-card group bg-[--bg-surface]/95 backdrop-blur-sm p-6 relative overflow-hidden transition-colors"
+                      className="project-card group bg-[--bg-surface]/95 backdrop-blur-sm p-6 relative overflow-hidden transition-all duration-300 hover:scale-[1.01] hover:shadow-lg hover:shadow-accent/5 hover:border-accent/30 border border-transparent anim-hidden"
                       style={{
-                        opacity: 0,
                         clipPath: 'polygon(0 0, calc(100% - 16px) 0, 100% 16px, 100% 100%, 0 100%)'
                       }}
                     >
@@ -540,7 +538,7 @@ export default function Projets() {
                           aria-label={`Voir le code source de ${project.name} sur GitHub`}
                         >
                           <Github size={12} />
-                          <span>Code</span>
+                          <span>{t('projects.code')}</span>
                           <ArrowUpRight size={10} />
                         </a>
                         {project.homepage && (
@@ -552,7 +550,7 @@ export default function Projets() {
                             aria-label={`Voir la démo live de ${project.name}`}
                           >
                             <ExternalLink size={12} />
-                            <span>Demo</span>
+                            <span>{t('projects.demo')}</span>
                             <ArrowUpRight size={10} />
                           </a>
                         )}
@@ -562,7 +560,7 @@ export default function Projets() {
                           aria-label={`Télécharger ${project.name}`}
                         >
                           <Download size={12} />
-                          <span>ZIP</span>
+                          <span>{t('projects.zip')}</span>
                         </a>
                       </div>
                     </div>
@@ -575,25 +573,25 @@ export default function Projets() {
           {/* No results */}
           {Object.keys(searchFilteredProjects).length === 0 && (
             <div className="text-center py-20">
-              <p className="text-[--text-muted] mb-2">Aucun projet trouvé</p>
-              <p className="text-sm text-[--text-muted]">Essayez un autre terme de recherche</p>
+              <p className="text-[--text-muted] mb-2">{t('projects.noResults')}</p>
+              <p className="text-sm text-[--text-muted]">{t('projects.tryAnother')}</p>
             </div>
           )}
 
           {/* CTA Section */}
           <section className="py-20 mt-12 border-t border-[--border]">
             <div className="max-w-2xl mx-auto text-center">
-              <p className="text-caption mb-4">Collaboration</p>
+              <p className="text-caption mb-4">{t('projects.cta.caption')}</p>
               <h2 className="text-headline mb-6">
-                Envie de <span className="accent-line">collaborer</span> ?
+                {t('projects.cta.title').split('{accent}')[0]}<span className="accent-line">{t('projects.cta.accent')}</span>{t('projects.cta.title').split('{accent}')[1]}
               </h2>
               <p className="text-body-lg text-[--text-secondary] mb-10">
-                Je suis toujours ouvert aux opportunités — stages, alternances, projets open-source, ou échanges techniques.
+                {t('projects.cta.description')}
               </p>
               <div className="flex flex-wrap justify-center gap-4">
                 <a href="/contact" className="btn btn-primary group">
                   <Mail size={16} />
-                  Me contacter
+                  {t('projects.cta.contact')}
                   <ArrowUpRight size={16} className="transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
                 </a>
                 <a
@@ -603,7 +601,7 @@ export default function Projets() {
                   className="btn btn-outline"
                 >
                   <Github size={16} />
-                  Profil GitHub
+                  {t('projects.cta.github')}
                   <ArrowUpRight size={16} />
                 </a>
               </div>

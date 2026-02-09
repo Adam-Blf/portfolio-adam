@@ -682,15 +682,15 @@ export default function Competences() {
 
           {/* Header */}
           <div ref={headerRef} className="layout-offset mb-20">
-            <p data-animate className="page-caption text-caption mb-4" style={{ opacity: 0 }}>Stack Technique</p>
-            <h1 data-animate className="page-title text-display mb-6" style={{ opacity: 0 }}>Competences</h1>
-            <p data-animate className="page-description text-body max-w-xl mb-8" style={{ opacity: 0 }}>
+            <p data-animate className="page-caption text-caption mb-4 anim-hidden">Stack Technique</p>
+            <h1 data-animate className="page-title text-display mb-6 anim-hidden">Competences</h1>
+            <p data-animate className="page-description text-body max-w-xl mb-8 anim-hidden">
               {totalSkills}+ technologies maitrisees dans {totalRepos}+ projets GitHub.
               Donnees en temps reel extraites de mes repositories.
             </p>
 
             {/* Stats row */}
-            <div data-animate className="flex flex-wrap items-center gap-6" style={{ opacity: 0 }}>
+            <div data-animate className="flex flex-wrap items-center gap-6 anim-hidden">
               <div className="flex items-center gap-2 text-sm text-[--text-secondary]">
                 <Github size={16} className="text-accent" />
                 <span className="font-mono font-semibold">{totalRepos}+</span>

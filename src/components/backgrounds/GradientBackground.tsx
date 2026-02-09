@@ -10,10 +10,10 @@ export default function GradientBackground({ showGrid = false }: GradientBackgro
       {/* Base background */}
       <div className="absolute inset-0 bg-[--bg-deep]" />
 
-      {/* Gradient orbs */}
-      <div className="absolute top-0 -left-1/4 w-1/2 h-1/2 bg-[--accent] rounded-full opacity-10 blur-[120px]" />
-      <div className="absolute top-1/4 -right-1/4 w-1/2 h-1/2 bg-[--highlight] rounded-full opacity-10 blur-[120px]" />
-      <div className="absolute -bottom-1/4 left-1/4 w-1/2 h-1/2 bg-[--tertiary] rounded-full opacity-10 blur-[120px]" />
+      {/* Gradient orbs - subtle Netflix red tones */}
+      <div className="absolute top-0 -left-1/4 w-1/2 h-1/2 bg-[--accent] rounded-full opacity-[0.06] blur-[120px]" />
+      <div className="absolute top-1/4 -right-1/4 w-1/2 h-1/2 bg-[--accent] rounded-full opacity-[0.04] blur-[120px]" />
+      <div className="absolute -bottom-1/4 left-1/4 w-1/2 h-1/2 bg-[--accent] rounded-full opacity-[0.05] blur-[120px]" />
 
       {/* Optional grid pattern */}
       {showGrid && (

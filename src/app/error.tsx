@@ -104,8 +104,7 @@ export default function Error({
     >
       <div
         ref={terminalRef}
-        className="w-full max-w-2xl border border-red-500/30 bg-[--bg-card]/90 backdrop-blur-md rounded-lg overflow-hidden"
-        style={{ opacity: 0 }}
+        className="w-full max-w-2xl border border-red-500/30 bg-[--bg-card]/90 backdrop-blur-md rounded-lg overflow-hidden anim-hidden"
       >
         {/* Terminal Header */}
         <div className="flex items-center gap-2 px-4 py-3 border-b border-red-500/20 bg-red-500/5">
@@ -125,14 +124,14 @@ export default function Error({
         {/* Terminal Content */}
         <div className="p-8 md:p-12">
           {/* Error Icon */}
-          <div className="animate-in flex justify-center mb-6" style={{ opacity: 0 }}>
+          <div className="animate-in flex justify-center mb-6 anim-hidden">
             <div className="error-icon inline-flex items-center justify-center w-20 h-20 rounded-full bg-red-500/10 border-2 border-red-500/30">
               <AlertTriangle className="w-10 h-10 text-red-400" />
             </div>
           </div>
 
           {/* Error output */}
-          <div className="animate-in font-mono text-xs bg-[--bg-deep]/70 p-4 rounded-lg mb-6 border border-red-500/20" style={{ opacity: 0 }}>
+          <div className="animate-in font-mono text-xs bg-[--bg-deep]/70 p-4 rounded-lg mb-6 border border-red-500/20 anim-hidden">
             <div className="flex items-center gap-2 text-red-400 mb-2">
               <Zap size={12} />
               <span>[FATAL] Unhandled exception caught</span>
@@ -151,7 +150,7 @@ export default function Error({
           </div>
 
           {/* Message */}
-          <div className="animate-in text-center mb-6" style={{ opacity: 0 }}>
+          <div className="animate-in text-center mb-6 anim-hidden">
             <h1 className="text-title mb-3">Une erreur est survenue</h1>
             <p className="text-body text-[--text-secondary] max-w-md mx-auto">
               Quelque chose s&apos;est mal passe. Veuillez reessayer ou retourner a l&apos;accueil.
@@ -160,7 +159,7 @@ export default function Error({
 
           {/* Error Details Toggle (dev mode) */}
           {process.env.NODE_ENV === 'development' && error.message && (
-            <div className="animate-in mb-6" style={{ opacity: 0 }}>
+            <div className="animate-in mb-6 anim-hidden">
               <button
                 onClick={() => setShowDetails(!showDetails)}
                 className="text-xs text-[--text-muted] hover:text-accent transition-colors flex items-center gap-2 mx-auto"
@@ -181,7 +180,7 @@ export default function Error({
           )}
 
           {/* Recovery animation */}
-          <div className="animate-in font-mono text-xs text-center mb-8 text-[--text-muted]" style={{ opacity: 0 }}>
+          <div className="animate-in font-mono text-xs text-center mb-8 text-[--text-muted] anim-hidden">
             <span className="inline-flex items-center gap-2">
               <span className="w-2 h-2 bg-yellow-400 rounded-full animate-pulse" />
               System ready for recovery
@@ -190,8 +189,7 @@ export default function Error({
 
           {/* Buttons */}
           <div
-            className="animate-in flex flex-col sm:flex-row gap-4 justify-center"
-            style={{ opacity: 0 }}
+            className="animate-in flex flex-col sm:flex-row gap-4 justify-center anim-hidden"
           >
             <button
               onClick={handleRetry}

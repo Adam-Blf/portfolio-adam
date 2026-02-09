@@ -68,10 +68,10 @@ const nextConfig = {
             value: [
               "default-src 'self'",
               "script-src 'self' 'unsafe-inline' 'unsafe-eval' https://vercel.live https://*.vercel.live",
-              "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com",
-              "font-src 'self' https://fonts.gstatic.com",
+              "style-src 'self' 'unsafe-inline'",
+              "font-src 'self'",
               "img-src 'self' data: blob: https://img.shields.io https://github-readme-stats.vercel.app https://github-readme-streak-stats.herokuapp.com https://vercel.live https://*.vercel.live",
-              "connect-src 'self' https://api.github.com https://fonts.googleapis.com https://fonts.gstatic.com https://vercel.live https://*.vercel.live wss://*.vercel.live",
+              "connect-src 'self' https://api.github.com https://vercel.live https://*.vercel.live wss://*.vercel.live",
               "worker-src 'self' blob:",
               "frame-src https://vercel.live https://*.vercel.live",
               "object-src 'none'",
@@ -143,6 +143,11 @@ const nextConfig = {
       }
     }
     return config
+  },
+
+  // Turbopack config (Next.js 16 default bundler)
+  turbopack: {
+    root: __dirname,
   },
 
   // Enable experimental features for performance

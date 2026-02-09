@@ -395,7 +395,7 @@ export default function Hero() {
       </div>
 
       {/* Terminal header bar */}
-      <header className="terminal-header relative z-10 pt-28 pb-6" style={{ opacity: 0 }}>
+      <header className="terminal-header relative z-10 pt-28 pb-6 anim-hidden">
         <div className="container-wide">
           <div className="flex items-center justify-between text-[--text-muted]">
             <div className="flex items-center gap-3">
@@ -425,9 +425,8 @@ export default function Hero() {
                   {'Adam'.split('').map((char, i) => (
                     <span
                       key={i}
-                      className="name-char inline-block glitch-text"
+                      className="name-char inline-block glitch-text anim-hidden"
                       data-text={char}
-                      style={{ opacity: 0 }}
                     >
                       {char}
                     </span>
@@ -437,8 +436,7 @@ export default function Hero() {
                   {'Beloucif'.split('').map((char, i) => (
                     <span
                       key={i}
-                      className="name-char inline-block text-accent neon-glow-subtle"
-                      style={{ opacity: 0 }}
+                      className="name-char inline-block text-accent neon-glow-subtle anim-hidden"
                     >
                       {char}
                     </span>
@@ -451,7 +449,7 @@ export default function Hero() {
               </h1>
 
               {/* Role - with corner brackets */}
-              <div className="hero-role" style={{ opacity: 0 }}>
+              <div className="hero-role anim-hidden">
                 <div className="corner-brackets inline-block">
                   <p className="text-title font-light tracking-tight">
                     <span className="text-[--text-primary]">Data Engineer</span>
@@ -462,7 +460,7 @@ export default function Hero() {
               </div>
 
               {/* Info */}
-              <div className="hero-info max-w-lg space-y-6" style={{ opacity: 0 }}>
+              <div className="hero-info max-w-lg space-y-6 anim-hidden">
                 <p className="text-body-lg">
                   {(() => {
                     const tagline = t('hero.tagline')
@@ -494,8 +492,7 @@ export default function Hero() {
                 <MagneticElement
                   as={Link}
                   href="/projets"
-                  className="hero-cta btn btn-primary group relative overflow-hidden"
-                  style={{ opacity: 0 }}
+                  className="hero-cta btn btn-primary group relative overflow-hidden anim-hidden"
                 >
                   <span className="relative z-10 flex items-center gap-2">
                     <span className="font-semibold">{t('hero.cta')}</span>
@@ -507,8 +504,7 @@ export default function Hero() {
                 <MagneticElement
                   as={Link}
                   href="/contact"
-                  className="hero-cta btn btn-outline group"
-                  style={{ opacity: 0 }}
+                  className="hero-cta btn btn-outline group anim-hidden"
                 >
                   <span className="accent-underline">{t('hero.ctaSecondary')}</span>
                 </MagneticElement>
@@ -518,9 +514,8 @@ export default function Hero() {
             {/* Right - Photo with geometric frame */}
             <div className="lg:col-span-5 flex justify-center lg:justify-end">
               <div
-                className="hero-photo relative perspective-card"
+                className="hero-photo relative perspective-card anim-hidden"
                 style={{
-                  opacity: 0,
                   transform: `translate(${mousePos.x * 10}px, ${mousePos.y * 10}px)`,
                   transition: 'transform 0.3s ease-out',
                 }}
@@ -572,8 +567,7 @@ export default function Hero() {
             ].map((metric, idx) => (
               <div
                 key={metric.label}
-                className="hero-metric bg-[--bg-surface] p-6 relative group cursor-default"
-                style={{ opacity: 0 }}
+                className="hero-metric bg-[--bg-surface] p-6 relative group cursor-default anim-hidden"
               >
                 {/* Hover line accent */}
                 <div className={`absolute top-0 left-0 right-0 h-1 bg-[--${metric.color}] transform scale-x-0 group-hover:scale-x-100 transition-transform origin-left duration-300`} />
@@ -596,7 +590,7 @@ export default function Hero() {
       </div>
 
       {/* Footer bar */}
-      <footer className="hero-footer relative z-10 border-t border-[--border] py-5" style={{ opacity: 0 }}>
+      <footer className="hero-footer relative z-10 border-t border-[--border] py-5 anim-hidden">
         <div className="container-wide">
           <div className="flex items-center justify-between">
             {/* Social links */}

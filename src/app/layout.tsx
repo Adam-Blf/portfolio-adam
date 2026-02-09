@@ -1,9 +1,31 @@
 import type { Metadata, Viewport } from 'next'
+import { Space_Grotesk, Inter, Fira_Code } from 'next/font/google'
 import './globals.css'
 import Header from '@/components/layout/Header'
 import Footer from '@/components/layout/Footer'
 import { ThemeProvider } from '@/components/providers/ThemeProvider'
 import { I18nProvider } from '@/lib/i18n'
+
+const spaceGrotesk = Space_Grotesk({
+  subsets: ['latin'],
+  weight: ['400', '500', '600', '700'],
+  display: 'swap',
+  variable: '--font-display',
+})
+
+const inter = Inter({
+  subsets: ['latin'],
+  weight: ['300', '400', '500', '600'],
+  display: 'swap',
+  variable: '--font-body',
+})
+
+const firaCode = Fira_Code({
+  subsets: ['latin'],
+  weight: ['400', '500'],
+  display: 'swap',
+  variable: '--font-mono',
+})
 
 export const metadata: Metadata = {
   title: {
@@ -48,10 +70,7 @@ export const viewport: Viewport = {
   width: 'device-width',
   initialScale: 1,
   maximumScale: 5,
-  themeColor: [
-    { media: '(prefers-color-scheme: light)', color: '#fafafa' },
-    { media: '(prefers-color-scheme: dark)', color: '#0c0c0c' },
-  ],
+  themeColor: '#141414',
 }
 
 export default function RootLayout({
@@ -60,18 +79,11 @@ export default function RootLayout({
   children: React.ReactNode
 }) {
   return (
-    <html lang="fr" suppressHydrationWarning>
+    <html lang="fr" suppressHydrationWarning className={`${spaceGrotesk.variable} ${inter.variable} ${firaCode.variable}`}>
       <head>
-        {/* Preconnect to Google Fonts for faster loading */}
-        <link rel="preconnect" href="https://fonts.googleapis.com" />
-        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
         {/* DNS prefetch for external resources */}
         <link rel="dns-prefetch" href="https://api.github.com" />
         <link rel="dns-prefetch" href="https://img.shields.io" />
-        <link
-          href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@300;400;500;600&family=Fira+Code:wght@400;500&display=swap"
-          rel="stylesheet"
-        />
         {/* 
           Inline theme detection script - prevents flash of wrong theme (FOUC).
           This is a static, self-contained script with no user input, so dangerouslySetInnerHTML
@@ -81,26 +93,65 @@ export default function RootLayout({
           dangerouslySetInnerHTML={{
             __html: `
               (function() {
-                try {
-                  var stored = localStorage.getItem('portfolio-theme');
-                  var theme = stored || 'system';
-                  var resolved = theme;
-                  if (theme === 'system') {
-                    resolved = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
-                  }
-                  if (resolved !== 'dark' && resolved !== 'light') resolved = 'dark';
-                  document.documentElement.classList.add(resolved);
-                  document.documentElement.style.colorScheme = resolved;
-                } catch (e) {
-                  document.documentElement.classList.add('dark');
-                }
+                document.documentElement.classList.add('dark');
+                document.documentElement.style.colorScheme = 'dark';
               })();
             `,
           }}
         />
+        {/* JSON-LD Structured Data for SEO */}
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify({
+              '@context': 'https://schema.org',
+              '@graph': [
+                {
+                  '@type': 'Person',
+                  '@id': 'https://adam-beloucif.vercel.app/#person',
+                  name: 'Adam Beloucif',
+                  jobTitle: 'Data Engineer & Fullstack Developer',
+                  url: 'https://adam-beloucif.vercel.app',
+                  sameAs: [
+                    'https://github.com/Adam-Blf',
+                    'https://linkedin.com/in/adambeloucif',
+                  ],
+                  email: 'adam.beloucif@efrei.net',
+                  alumniOf: {
+                    '@type': 'EducationalOrganization',
+                    name: 'EFREI Paris',
+                  },
+                  knowsAbout: [
+                    'Data Engineering',
+                    'Python',
+                    'Machine Learning',
+                    'React',
+                    'Next.js',
+                    'TypeScript',
+                    'SQL',
+                    'Docker',
+                    'NLP',
+                    'Deep Learning',
+                  ],
+                },
+                {
+                  '@type': 'WebSite',
+                  '@id': 'https://adam-beloucif.vercel.app/#website',
+                  name: 'Adam Beloucif — Portfolio',
+                  url: 'https://adam-beloucif.vercel.app',
+                  description:
+                    'Portfolio de Adam Beloucif, Data Engineer & Fullstack Developer. Projets Data, IA et Fullstack.',
+                  author: {
+                    '@id': 'https://adam-beloucif.vercel.app/#person',
+                  },
+                },
+              ],
+            }),
+          }}
+        />
       </head>
       <body className="noise" suppressHydrationWarning>
-        <ThemeProvider defaultTheme="system">
+        <ThemeProvider>
           <I18nProvider>
             {/* Skip link for accessibility */}
             <a href="#main-content" className="skip-link">

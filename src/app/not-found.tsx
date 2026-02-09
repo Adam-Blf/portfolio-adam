@@ -156,8 +156,8 @@ export default function NotFound() {
       >
         <div
           ref={terminalRef}
-          className="glow-border w-full max-w-2xl border border-[--border] bg-[--bg-card]/90 backdrop-blur-md rounded-lg overflow-hidden"
-          style={{ opacity: 0, perspective: '1000px' }}
+          className="glow-border w-full max-w-2xl border border-[--border] bg-[--bg-card]/90 backdrop-blur-md rounded-lg overflow-hidden anim-hidden"
+          style={{ perspective: '1000px' }}
         >
           {/* Terminal Header */}
           <div className="flex items-center gap-2 px-4 py-3 border-b border-[--border] bg-[--bg-elevated]/50">
@@ -177,13 +177,13 @@ export default function NotFound() {
           {/* Terminal Content */}
           <div className="p-8 md:p-12">
             {/* Command line */}
-            <div className="animate-in font-mono text-sm text-[--text-muted] mb-6" style={{ opacity: 0 }}>
+            <div className="animate-in font-mono text-sm text-[--text-muted] mb-6 anim-hidden">
               <span className="text-accent">{typedCommand}</span>
               <span className="animate-pulse">|</span>
             </div>
 
             {/* Error Code - Glitch Effect */}
-            <div className="animate-in text-center mb-6" style={{ opacity: 0 }}>
+            <div className="animate-in text-center mb-6 anim-hidden">
               <h1 className="text-[8rem] md:text-[10rem] font-black leading-none select-none relative">
                 <span className="text-accent/10 absolute inset-0 blur-xl">404</span>
                 <GlitchText text="404" className="relative text-accent/30" />
@@ -191,7 +191,7 @@ export default function NotFound() {
             </div>
 
             {/* Error message */}
-            <div className="animate-in font-mono text-sm mb-8 space-y-1" style={{ opacity: 0 }}>
+            <div className="animate-in font-mono text-sm mb-8 space-y-1 anim-hidden">
               <div className="text-red-400 flex items-center gap-2">
                 <Search size={14} />
                 Error: Page not found in filesystem
@@ -203,7 +203,7 @@ export default function NotFound() {
             </div>
 
             {/* Message */}
-            <div className="animate-in text-center mb-8" style={{ opacity: 0 }}>
+            <div className="animate-in text-center mb-8 anim-hidden">
               <h2 className="text-title mb-3">Page introuvable</h2>
               <p className="text-body text-[--text-secondary] max-w-md mx-auto">
                 La page que vous recherchez n&apos;existe pas ou a ete deplacee.
@@ -211,7 +211,7 @@ export default function NotFound() {
             </div>
 
             {/* Available routes */}
-            <div className="animate-in font-mono text-xs bg-[--bg-deep]/50 p-4 rounded-lg mb-8 max-w-sm mx-auto" style={{ opacity: 0 }}>
+            <div className="animate-in font-mono text-xs bg-[--bg-deep]/50 p-4 rounded-lg mb-8 max-w-sm mx-auto anim-hidden">
               <div className="text-[--text-muted] mb-2">
                 <span className="text-accent">$</span> ls ./pages/
               </div>
@@ -230,8 +230,7 @@ export default function NotFound() {
 
             {/* Buttons */}
             <div
-              className="animate-in flex flex-col sm:flex-row gap-4 justify-center"
-              style={{ opacity: 0 }}
+              className="animate-in flex flex-col sm:flex-row gap-4 justify-center anim-hidden"
             >
               <Link
                 href="/"

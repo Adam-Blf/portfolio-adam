@@ -1,6 +1,7 @@
 # Robots.txt for Adam Beloucif Portfolio
 User-agent: *
 Allow: /
+Disallow: /api/
 
 # Sitemap
-Sitemap: https://adam.beloucif.com/sitemap.xml
+Sitemap: https://adam-beloucif.vercel.app/sitemap.xml

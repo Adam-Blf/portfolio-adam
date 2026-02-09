@@ -113,7 +113,7 @@ export const stats = [
 ]
 
 export const staticMetrics = {
-  yearsExperience: 3,
+  yearsExperience: 4,
   certifications: 8,
   volunteerRoles: 6,
   languages: ["Français (Natif)", "Anglais (Professionnel)", "Espagnol (Professionnel)"],

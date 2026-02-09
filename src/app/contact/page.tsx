@@ -180,11 +180,11 @@ export default function Contact() {
 
             {/* Header */}
             <div ref={headerRef} className="mb-16">
-            <p className="page-caption text-caption mb-4" style={{ opacity: 0 }}>{t('contact.caption')}</p>
-            <h1 className="page-title text-display mb-6" style={{ opacity: 0 }}>
+            <p className="page-caption text-caption mb-4 anim-hidden">{t('contact.caption')}</p>
+            <h1 className="page-title text-display mb-6 anim-hidden">
               {t('contact.title')}
             </h1>
-            <p className="page-description text-body max-w-xl" style={{ opacity: 0 }}>
+            <p className="page-description text-body max-w-xl anim-hidden">
               {t('contact.description')}
             </p>
           </div>
@@ -192,7 +192,7 @@ export default function Contact() {
           <div ref={contentRef} className="grid grid-cols-1 lg:grid-cols-2 gap-16">
 
             {/* Contact Info */}
-            <div className="contact-info" style={{ opacity: 0 }}>
+            <div className="contact-info anim-hidden">
               <h2 className="sr-only">{t('contact.info')}</h2>
               <div className="space-y-8 mb-12">
                 <a
@@ -240,7 +240,7 @@ export default function Contact() {
             </div>
 
             {/* Contact Form */}
-            <div className="contact-form" style={{ opacity: 0 }} aria-live="polite">
+            <div className="contact-form anim-hidden" aria-live="polite">
               <h2 className="sr-only">{t('contact.form.title')}</h2>
               {isSubmitted ? (
                 <div className="border border-[--border] p-8 text-center rounded-lg bg-[--bg-card]" role="status" aria-live="assertive">
@@ -306,7 +306,7 @@ export default function Contact() {
 
                   <div>
                     <label htmlFor="subject" className="block text-caption mb-2">
-                      Subject <span className="text-accent" aria-hidden="true">*</span>
+                      {t('contact.form.subject')} <span className="text-accent" aria-hidden="true">*</span>
                     </label>
                     <input
                       type="text"
