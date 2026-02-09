@@ -5,7 +5,8 @@
     "projects": "Projetos",
     "skills": "Competências",
     "contact": "Contato",
-    "skipToContent": "Ir para o conteúdo principal"
+    "formation": "Formacao",
+    "skipToContent": "Ir para o conteudo principal"
   },
   "hero": {
     "tagline": "Transformo {data} em decisões e {code} em impacto.",

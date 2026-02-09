@@ -15,6 +15,7 @@ export default function Footer() {
     { href: '/evolution', key: 'timeline' },
     { href: '/pokedex', key: 'projects' },
     { href: '/types', key: 'skills' },
+    { href: '/formation', key: 'formation' },
     { href: '/centre-pokemon', key: 'contact' },
   ]
 
