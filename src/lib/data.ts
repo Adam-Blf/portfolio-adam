@@ -82,7 +82,7 @@ export const personalInfo = {
   name: "Adam Beloucif",
   title: "Data Engineer & Fullstack Developer",
   slogan: "From Data to Decisions. From Code to Impact.",
-  subtitle: "M1 Data Engineering & IA @ EFREI Paris | Ingenieur Data @ GHT Psy Sud | President BDE EFREI",
+  subtitle: "M1 Data Engineering & IA @ EFREI Paris | Apprenti Ingenieur PMSI / Data Engineer @ GHT Psy Sud",
   email: "adam.beloucif@efrei.net",
   location: "Paris, France",
   birthday: "20 juin 2004",
@@ -114,7 +114,7 @@ export const stats = [
 
 export const staticMetrics = {
   yearsExperience: 4,
-  certifications: 9,
+  certifications: 18,
   volunteerRoles: 6,
   languages: ["Français (Natif)", "Anglais (Professionnel)", "Espagnol (Professionnel)"],
 }
@@ -329,12 +329,12 @@ export const education = [
     level: "Bac+5, RNCP Niveau 7",
     rncp: "RNCP40875",
     current: true,
-    description: "Formation en alternance avec Inetum. Architecture Data & Cloud (Data Lakes, Data Mesh, AWS/Azure/GCP, Spark, Databricks). Engineering & Pipelines (ETL/ELT, Airflow, Kafka, Flink). IA & ML (TensorFlow, PyTorch, MLOps, NLP). Certifications cloud visees : AWS Solutions Architect, Azure Data Engineer, GCP Professional.",
+    description: "Formation en alternance 2 ans. Architecture Data & Cloud (Data Lakes, Data Mesh, AWS/Azure/GCP, Spark, Databricks). Engineering & Pipelines (ETL/ELT, Airflow, Kafka, Flink). IA & ML (TensorFlow, PyTorch, MLOps, NLP). Gouvernance & Securite (RGPD, Docker, Git, CI/CD). Certifications cloud visees : AWS Solutions Architect, Azure Data Engineer, GCP Professional.",
     highlights: [
-      "Partenariat industriel Inetum",
+      "Partenariat industriel Inetum (alternance data & IA)",
       "Mentor Programme Student Success EFREI",
-      "Hackathons & competitions ML",
-      "Certifications AWS/Azure/GCP",
+      "Hackathons, competitions ML, challenges cloud",
+      "Certifications visees AWS/Azure/GCP",
     ],
     skills: [
       "Data Lakes, Warehouses, Data Mesh",
@@ -444,15 +444,25 @@ export const education = [
 ]
 
 export const certifications = [
-  // 2025 - RNCP & IA
+  // 2025 - RNCP
   { name: "Chef de projets digitaux (RNCP 35541)", issuer: "EFREI", year: "2025", date: "2025-07", level: "Niveau 6", rncp: "RNCP35541", url: "https://www.francecompetences.fr/recherche/rncp/35541/" },
 
-  // LinkedIn Learning / Microsoft
+  // 2025 - Microsoft & LinkedIn Learning (IA)
+  { name: "Les competences humaines a l'ere de l'IA", issuer: "Microsoft", year: "2025", date: "2025-11" },
+  { name: "Integrer l'IA generative dans son processus creatif", issuer: "LinkedIn", year: "2025", date: "2025-11" },
+  { name: "Ameliorer sa prise de decision avec l'IA generative", issuer: "LinkedIn", year: "2025", date: "2025-11" },
+  { name: "Developper votre pensee critique avec l'IA generative", issuer: "LinkedIn", year: "2025", date: "2025-11" },
+  { name: "Exploiter la puissance de l'intelligence sociale a l'ere de l'IA", issuer: "LinkedIn", year: "2025", date: "2025-11" },
+  { name: "Developper ses competences en communication a l'ere de l'IA", issuer: "LinkedIn", year: "2025", date: "2025-11" },
+  { name: "Developper ses capacites d'adaptation a l'ere de l'IA", issuer: "LinkedIn", year: "2025", date: "2025-11" },
+  { name: "Miser sur les competences humaines a l'ere de l'IA", issuer: "LinkedIn", year: "2025", date: "2025-11" },
+  { name: "Career Essentials in Generative AI by Microsoft and LinkedIn", issuer: "Microsoft", year: "2025", date: "2025-10" },
+  { name: "Introduction to Artificial Intelligence", issuer: "LinkedIn", year: "2025", date: "2025-10" },
+
+  // 2024 - LinkedIn Learning & HubSpot
   { name: "Inbound", issuer: "HubSpot Academy", year: "2024", date: "2024-03", expires: "2026-04" },
   { name: "Generative AI: The Evolution of Thoughtful Online Search", issuer: "LinkedIn", year: "2024", date: "2024-06" },
-  { name: "Ameliorer sa prise de decision avec l'IA generative", issuer: "LinkedIn", year: "2024", date: "2024-06" },
   { name: "Streamlining Your Work with Microsoft Copilot", issuer: "LinkedIn", year: "2024", date: "2024-07" },
-  { name: "Integrer l'IA generative dans son processus creatif", issuer: "LinkedIn", year: "2024", date: "2024-07" },
 
   // Autres
   { name: "Certificat Pix", issuer: "Pix", year: "2022", date: "2022-03", credentialId: "P-F8T2HB8H" },
@@ -606,7 +616,7 @@ export const projects = {
 
 export const volunteering = [
   // Leadership
-  { role: "Vice-President", org: "BDE ISIT", period: "Fev 2024 - Present", startDate: "2024-02", endDate: null, scope: "800+ etudiants, Leadership associatif" },
+  { role: "Vice-President", org: "BDE ISIT", period: "Fev 2024 - Sept 2025", startDate: "2024-02", endDate: "2025-09", scope: "800+ etudiants, Leadership associatif" },
   { role: "President", org: "BDE Efrei", period: "Mars 2024 - Juin 2024", startDate: "2024-03", endDate: "2024-06", scope: "5700+ etudiants" },
   { role: "Responsable Communication", org: "BDE Efrei", period: "Nov 2022 - Mars 2023", startDate: "2022-11", endDate: "2023-03", scope: "Strategie digitale, Community management" },
 
