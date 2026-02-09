@@ -7,10 +7,9 @@ interface GradientBackgroundProps {
 export default function GradientBackground({ showGrid = false }: GradientBackgroundProps) {
   return (
     <div className="absolute inset-0 overflow-hidden">
-      {/* Base red Pokedex background */}
       <div
         className="absolute inset-0"
-        style={{ background: 'var(--pokedex-red)' }}
+        style={{ background: 'var(--bg-deep)' }}
       />
 
       {/* Subtle diagonal line texture */}

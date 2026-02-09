@@ -65,62 +65,51 @@ export default function Header() {
         className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
           isHidden ? '-translate-y-full' : 'translate-y-0'
         }`}
-        style={{ background: 'var(--pokedex-red)' }}
+        style={{
+          background: 'rgba(10, 10, 15, 0.85)',
+          backdropFilter: 'blur(16px)',
+          WebkitBackdropFilter: 'blur(16px)',
+        }}
       >
-        {/* Top Pokedex bar */}
         <div
           className={`transition-all duration-300 ${isScrolled ? 'py-2' : 'py-3'}`}
-          style={{
-            boxShadow: '0 4px 12px rgba(0,0,0,0.3)',
-          }}
         >
           <div className="container-wide">
             <nav className="flex items-center justify-between">
-              {/* Left: Big blue LED + small LEDs */}
+              {/* Left: Logo */}
               <div className="flex items-center gap-3">
-                {/* Big blue lens LED */}
-                <div
-                  className="pokedex-led pokedex-led-blue flex-shrink-0"
-                  style={{ width: 40, height: 40 }}
-                  aria-hidden="true"
-                />
-
-                {/* Three small LEDs */}
-                <div className="flex items-center gap-1.5" aria-hidden="true">
-                  <div className="pokedex-led pokedex-led-red" style={{ width: 10, height: 10 }} />
-                  <div className="pokedex-led pokedex-led-yellow" style={{ width: 10, height: 10 }} />
-                  <div className="pokedex-led pokedex-led-green" style={{ width: 10, height: 10 }} />
-                </div>
-
-                {/* Logo / POKÉDEX text */}
-                <Link href="/" className="group flex items-center gap-2 ml-3">
+                <Link href="/" className="group flex items-center gap-2">
                   <Image
                     src="/logo-adam.svg"
                     alt="Adam Beloucif"
                     width={32}
                     height={32}
-                    className="h-7 w-auto md:h-8 transition-transform group-hover:scale-105 brightness-0 invert"
+                    className="h-7 w-auto md:h-8 transition-transform group-hover:scale-105"
+                    style={{ filter: 'drop-shadow(0 0 6px rgba(0, 240, 255, 0.4))' }}
                   />
                   <span
                     className="hidden sm:inline text-sm md:text-base font-bold tracking-widest uppercase"
-                    style={{ color: 'var(--pokedex-white)', textShadow: '0 1px 2px rgba(0,0,0,0.3)' }}
+                    style={{ color: '#f0f0f0' }}
                   >
                     Portfolio
                   </span>
                 </Link>
               </div>
 
-              {/* Desktop Nav: round Pokedex buttons */}
-              <div className="hidden md:flex items-center gap-2 lg:gap-3">
+              {/* Desktop Nav */}
+              <div className="hidden md:flex items-center gap-1 lg:gap-2">
                 {navKeys.map((item) => (
                   <Link
                     key={item.href}
                     href={item.href}
-                    className={`pokedex-button text-xs relative ${
+                    className={`relative px-3 py-2 text-xs font-semibold uppercase tracking-wider transition-colors rounded-lg ${
                       pathname === item.href
-                        ? 'nav-link-active !bg-white !text-[--pokedex-red] font-bold'
-                        : ''
+                        ? 'nav-link-active'
+                        : 'hover:text-[#00f0ff]'
                     }`}
+                    style={{
+                      color: pathname === item.href ? '#00f0ff' : '#a0a0b0',
+                    }}
                     aria-current={pathname === item.href ? 'page' : undefined}
                   >
                     {t(`nav.${item.key}`)}
@@ -131,11 +120,12 @@ export default function Header() {
                 <div className="relative ml-2" ref={langMenuRef}>
                   <button
                     onClick={() => setShowLangMenu(!showLangMenu)}
-                    className="pokedex-button text-xs flex items-center gap-1"
+                    className="flex items-center gap-1 px-3 py-2 text-xs font-semibold uppercase tracking-wider rounded-lg transition-colors"
+                    style={{ color: '#a0a0b0' }}
                     aria-label="Change language"
                   >
-                    <span style={{ fontSize: '14px' }}>🌐</span>
-                    <span className="uppercase">{locale}</span>
+                    <span style={{ fontSize: '14px' }}>&#127760;</span>
+                    <span>{locale}</span>
                   </button>
 
                   {showLangMenu && (
@@ -144,19 +134,19 @@ export default function Header() {
                       aria-label="Language selection"
                       className="absolute right-0 top-full mt-2 py-2 px-1 rounded-xl shadow-lg min-w-[150px] max-h-[300px] overflow-y-auto"
                       style={{
-                        background: '#FFFFFF',
-                        border: '2px solid var(--pokedex-gray)',
+                        background: '#1a1a2e',
+                        border: '1px solid #2a2a3e',
                       }}
                     >
                       {[
-                        { value: 'fr', label: 'Français', flag: '🇫🇷' },
-                        { value: 'en', label: 'English', flag: '🇬🇧' },
-                        { value: 'de', label: 'Deutsch', flag: '🇩🇪' },
-                        { value: 'es', label: 'Español', flag: '🇪🇸' },
-                        { value: 'it', label: 'Italiano', flag: '🇮🇹' },
-                        { value: 'pt', label: 'Português', flag: '🇵🇹' },
-                        { value: 'nl', label: 'Nederlands', flag: '🇳🇱' },
-                        { value: 'pl', label: 'Polski', flag: '🇵🇱' },
+                        { value: 'fr', label: 'Fran\u00e7ais', flag: '\ud83c\uddeb\ud83c\uddf7' },
+                        { value: 'en', label: 'English', flag: '\ud83c\uddec\ud83c\udde7' },
+                        { value: 'de', label: 'Deutsch', flag: '\ud83c\udde9\ud83c\uddea' },
+                        { value: 'es', label: 'Espa\u00f1ol', flag: '\ud83c\uddea\ud83c\uddf8' },
+                        { value: 'it', label: 'Italiano', flag: '\ud83c\uddee\ud83c\uddf9' },
+                        { value: 'pt', label: 'Portugu\u00eas', flag: '\ud83c\uddf5\ud83c\uddf9' },
+                        { value: 'nl', label: 'Nederlands', flag: '\ud83c\uddf3\ud83c\uddf1' },
+                        { value: 'pl', label: 'Polski', flag: '\ud83c\uddf5\ud83c\uddf1' },
                       ].map((lang) => (
                         <button
                           key={lang.value}
@@ -168,9 +158,19 @@ export default function Header() {
                           aria-checked={locale === lang.value}
                           className={`flex items-center gap-2 w-full px-3 py-2 text-sm rounded-lg transition-colors ${
                             locale === lang.value
-                              ? 'bg-red-50 text-[--pokedex-red] font-semibold'
-                              : 'text-[--pokedex-dark] hover:bg-gray-100'
+                              ? 'font-semibold'
+                              : ''
                           }`}
+                          style={{
+                            color: locale === lang.value ? '#00f0ff' : '#a0a0b0',
+                            background: locale === lang.value ? 'rgba(0, 240, 255, 0.08)' : 'transparent',
+                          }}
+                          onMouseEnter={(e) => {
+                            if (locale !== lang.value) e.currentTarget.style.background = 'rgba(255,255,255,0.05)'
+                          }}
+                          onMouseLeave={(e) => {
+                            if (locale !== lang.value) e.currentTarget.style.background = 'transparent'
+                          }}
                         >
                           <span>{lang.flag}</span>
                           {lang.label}
@@ -187,8 +187,8 @@ export default function Header() {
                   onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
                   className="p-2 rounded-full transition-colors"
                   style={{
-                    background: 'rgba(255,255,255,0.15)',
-                    color: 'var(--pokedex-white)',
+                    background: 'rgba(255,255,255,0.08)',
+                    color: '#f0f0f0',
                   }}
                   aria-label={isMobileMenuOpen ? 'Fermer le menu' : 'Ouvrir le menu'}
                   aria-expanded={isMobileMenuOpen}
@@ -201,8 +201,8 @@ export default function Header() {
           </div>
         </div>
 
-        {/* Hinge line at bottom of header */}
-        <div className="pokedex-hinge" />
+        {/* Thin bottom border */}
+        <div style={{ height: '1px', background: 'rgba(0, 240, 255, 0.1)' }} />
       </header>
 
       {/* Mobile Menu */}
@@ -214,62 +214,48 @@ export default function Header() {
           aria-modal="true"
           aria-label="Menu de navigation"
           className="fixed inset-0 z-40 md:hidden"
-          style={{ background: 'var(--pokedex-red)' }}
+          style={{ background: '#0a0a0f' }}
         >
-          <div className="flex flex-col items-center justify-center h-full gap-4">
-            {/* LEDs decoration */}
-            <div className="flex items-center gap-2 mb-4" aria-hidden="true">
-              <div className="pokedex-led pokedex-led-blue" style={{ width: 32, height: 32 }} />
-              <div className="pokedex-led pokedex-led-red" style={{ width: 10, height: 10 }} />
-              <div className="pokedex-led pokedex-led-yellow" style={{ width: 10, height: 10 }} />
-              <div className="pokedex-led pokedex-led-green" style={{ width: 10, height: 10 }} />
-            </div>
-
-            {/* Nav as Pokedex screen */}
-            <div
-              className="pokedex-screen p-6 w-72"
-              style={{ animation: 'screen-on 0.5s ease-out' }}
-            >
-              {navKeys.map((item, index) => (
-                <Link
-                  key={item.href}
-                  href={item.href}
-                  onClick={() => setIsMobileMenuOpen(false)}
-                  className={`block py-3 px-4 text-lg font-bold transition-all rounded-lg mb-1 ${
-                    pathname === item.href
-                      ? 'bg-[--pokedex-screen-dark] text-[--pokedex-dark]'
-                      : 'text-[--pokedex-dark] hover:bg-[--pokedex-screen-dark]'
-                  }`}
-                  style={{
-                    fontFamily: 'var(--font-mono), monospace',
-                    animationDelay: `${index * 50}ms`,
-                  }}
-                >
-                  <span className="pokedex-entry-number mr-2">{String(index + 1).padStart(3, '0')}</span>
-                  {t(`nav.${item.key}`)}
-                </Link>
-              ))}
-            </div>
+          <div className="flex flex-col items-center justify-center h-full gap-3">
+            {navKeys.map((item, index) => (
+              <Link
+                key={item.href}
+                href={item.href}
+                onClick={() => setIsMobileMenuOpen(false)}
+                className={`block py-3 px-8 text-lg font-bold transition-all rounded-lg ${
+                  pathname === item.href
+                    ? ''
+                    : ''
+                }`}
+                style={{
+                  color: pathname === item.href ? '#00f0ff' : '#f0f0f0',
+                  fontFamily: 'var(--font-display), sans-serif',
+                  animationDelay: `${index * 50}ms`,
+                }}
+              >
+                {t(`nav.${item.key}`)}
+              </Link>
+            ))}
 
             {/* Mobile language switcher */}
-            <div className="flex flex-wrap justify-center gap-2 mt-4 max-w-xs">
+            <div className="flex flex-wrap justify-center gap-2 mt-6 max-w-xs">
               {[
-                { value: 'fr', flag: '🇫🇷' },
-                { value: 'en', flag: '🇬🇧' },
-                { value: 'de', flag: '🇩🇪' },
-                { value: 'es', flag: '🇪🇸' },
-                { value: 'it', flag: '🇮🇹' },
-                { value: 'pt', flag: '🇵🇹' },
-                { value: 'nl', flag: '🇳🇱' },
-                { value: 'pl', flag: '🇵🇱' },
+                { value: 'fr', flag: '\ud83c\uddeb\ud83c\uddf7' },
+                { value: 'en', flag: '\ud83c\uddec\ud83c\udde7' },
+                { value: 'de', flag: '\ud83c\udde9\ud83c\uddea' },
+                { value: 'es', flag: '\ud83c\uddea\ud83c\uddf8' },
+                { value: 'it', flag: '\ud83c\uddee\ud83c\uddf9' },
+                { value: 'pt', flag: '\ud83c\uddf5\ud83c\uddf9' },
+                { value: 'nl', flag: '\ud83c\uddf3\ud83c\uddf1' },
+                { value: 'pl', flag: '\ud83c\uddf5\ud83c\uddf1' },
               ].map((lang) => (
                 <button
                   key={lang.value}
                   onClick={() => setLocale(lang.value as Locale)}
-                  className={`px-3 py-2 rounded-full border-2 transition-all text-lg ${
+                  className={`px-3 py-2 rounded-full border transition-all text-lg ${
                     locale === lang.value
-                      ? 'border-white bg-white/20'
-                      : 'border-white/30'
+                      ? 'border-[#00f0ff] bg-[rgba(0,240,255,0.15)]'
+                      : 'border-[#2a2a3e]'
                   }`}
                   aria-label={lang.value.toUpperCase()}
                 >

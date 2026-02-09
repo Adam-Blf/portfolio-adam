@@ -30,14 +30,13 @@ interface SkillCategory extends CachedCategory {
   icon: React.ReactNode
 }
 
-// Type colors per category
-const categoryTypeColors: Record<string, { bg: string; text: string; label: string; light: string }> = {
-  languages: { bg: '#A8A878', text: '#fff', label: 'NORMAL', light: '#C6C6A7' },
-  frameworks: { bg: '#F8D030', text: '#333', label: 'ELECTRIC', light: '#FAE078' },
-  data: { bg: '#6890F0', text: '#fff', label: 'WATER', light: '#9DB7F5' },
-  ai: { bg: '#F95587', text: '#fff', label: 'PSYCHIC', light: '#FA92B2' },
-  databases: { bg: '#E0C068', text: '#333', label: 'GROUND', light: '#EBD69D' },
-  cloud: { bg: '#A890F0', text: '#fff', label: 'FLYING', light: '#C6B7F5' },
+const categoryAccentColors: Record<string, { bg: string; light: string }> = {
+  languages: { bg: '#00f0ff', light: '#00f0ff80' },
+  frameworks: { bg: '#f97316', light: '#f9731680' },
+  data: { bg: '#3b82f6', light: '#3b82f680' },
+  ai: { bg: '#8b5cf6', light: '#8b5cf680' },
+  databases: { bg: '#22c55e', light: '#22c55e80' },
+  cloud: { bg: '#a78bfa', light: '#a78bfa80' },
 }
 
 const categoryIcons: Record<string, React.ReactNode> = {
@@ -238,7 +237,7 @@ export default function SkillsPage() {
         setLoading(false)
       } catch (err) {
         console.error('GitHub API error:', err)
-        setError('Impossible de charger les compétences depuis GitHub')
+        setError('Impossible de charger les competences depuis GitHub')
         setLoading(false)
       }
     }
@@ -260,29 +259,24 @@ export default function SkillsPage() {
   if (loading) {
     return (
       <ErrorBoundary>
-        <main className="min-h-screen pt-28 pb-20" style={{ background: '#DC0A2D' }}>
+        <main className="min-h-screen pt-28 pb-20" style={{ background: 'var(--bg-deep, #0a0a0f)' }}>
           <div className="container-wide">
             <div className="text-center mb-10">
-              <div className="inline-flex items-center gap-2 mb-3">
-                <div className="pokedex-led pokedex-led-blue" style={{ width: 14, height: 14 }} />
-                <div className="pokedex-led pokedex-led-red" style={{ width: 8, height: 8 }} />
-                <div className="pokedex-led pokedex-led-yellow" style={{ width: 8, height: 8 }} />
-              </div>
-              <p
-                className="text-sm font-bold tracking-widest uppercase"
-                style={{ color: '#fff', fontFamily: 'monospace' }}
+              <h1
+                className="text-2xl md:text-3xl font-bold tracking-widest uppercase"
+                style={{ color: 'var(--text-primary, #f0f0f0)' }}
               >
-                SCANNING...
-              </p>
+                COMPETENCES
+              </h1>
             </div>
-            <div className="pokedex-screen p-6">
+            <div className="rounded-2xl p-6" style={{ background: 'var(--bg-elevated, #1a1a2e)', border: '1px solid var(--border, #2a2a3e)' }}>
               <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
                 {[1, 2, 3, 4].map(i => (
-                  <div key={i} className="h-24 rounded-xl" style={{ background: 'rgba(255,255,255,0.3)' }}>
+                  <div key={i} className="h-24 rounded-xl" style={{ background: 'rgba(255,255,255,0.05)' }}>
                     <div className="h-full w-full rounded-xl" style={{
-                      background: 'linear-gradient(90deg, rgba(255,255,255,0.2) 25%, rgba(255,255,255,0.4) 50%, rgba(255,255,255,0.2) 75%)',
+                      background: 'linear-gradient(90deg, rgba(255,255,255,0.03) 25%, rgba(255,255,255,0.08) 50%, rgba(255,255,255,0.03) 75%)',
                       backgroundSize: '200% 100%',
-                      animation: 'pokedex-scan 1.5s infinite',
+                      animation: 'shimmer 1.5s infinite',
                       animationDelay: `${i * 0.1}s`,
                     }} />
                   </div>
@@ -291,7 +285,7 @@ export default function SkillsPage() {
             </div>
           </div>
           <style>{`
-            @keyframes pokedex-scan {
+            @keyframes shimmer {
               0% { background-position: 200% 0; }
               100% { background-position: -200% 0; }
             }
@@ -304,14 +298,26 @@ export default function SkillsPage() {
   if (error) {
     return (
       <ErrorBoundary>
-        <main className="min-h-screen flex items-center justify-center" style={{ background: '#DC0A2D' }}>
-          <div className="pokedex-screen p-8 text-center" style={{ maxWidth: 500 }}>
-            <p className="mb-4 font-bold" style={{ color: 'var(--pokedex-dark, #333)' }}>{error}</p>
+        <main className="min-h-screen flex items-center justify-center" style={{ background: 'var(--bg-deep, #0a0a0f)' }}>
+          <div
+            className="rounded-2xl p-8 text-center"
+            style={{
+              maxWidth: 500,
+              background: 'rgba(26,26,46,0.85)',
+              border: '1px solid var(--border, #2a2a3e)',
+              backdropFilter: 'blur(12px)',
+            }}
+          >
+            <p className="mb-4 font-bold" style={{ color: 'var(--text-primary, #f0f0f0)' }}>{error}</p>
             <a
               href="https://github.com/Adam-Blf"
               target="_blank"
               rel="noopener noreferrer"
-              className="pokedex-button inline-flex items-center gap-2"
+              className="inline-flex items-center gap-2 px-6 py-2.5 rounded-full font-bold text-sm transition-all duration-200"
+              style={{
+                background: 'linear-gradient(135deg, var(--accent-cyan, #00f0ff), var(--accent-violet, #8b5cf6))',
+                color: '#fff',
+              }}
             >
               <Github size={18} />
               <span>Voir directement sur GitHub</span>
@@ -324,47 +330,43 @@ export default function SkillsPage() {
 
   return (
     <ErrorBoundary>
-      <main className="min-h-screen pt-28 pb-20" style={{ background: '#DC0A2D' }}>
+      <main className="min-h-screen pt-28 pb-20" style={{ background: 'var(--bg-deep, #0a0a0f)' }}>
         <div className="container-wide">
 
           {/* Page Header */}
           <div className="text-center mb-10">
-            <div className="inline-flex items-center gap-2 mb-3">
-              <div className="pokedex-led pokedex-led-blue" style={{ width: 14, height: 14 }} />
-              <div className="pokedex-led pokedex-led-red" style={{ width: 8, height: 8 }} />
-              <div className="pokedex-led pokedex-led-yellow" style={{ width: 8, height: 8 }} />
-            </div>
             <h1
               className="text-2xl md:text-3xl font-bold tracking-widest uppercase"
-              style={{ color: 'var(--pokedex-white)', textShadow: '0 2px 4px rgba(0,0,0,0.3)' }}
+              style={{ color: 'var(--text-primary, #f0f0f0)' }}
             >
               COMPETENCES
             </h1>
-            <p className="text-sm mt-2" style={{ color: 'rgba(255,255,255,0.7)' }}>
+            <p className="text-sm mt-2" style={{ color: 'var(--text-secondary, #a0a0b0)' }}>
               {totalSkills}+ technologies maitrisees - {totalRepos} repositories analyses
             </p>
           </div>
 
-          {/* Trainer Stats Overview */}
-          <div className="pokedex-screen p-4 md:p-6 mb-8" style={{ maxWidth: 1000, margin: '0 auto' }}>
+          {/* Stats Overview */}
+          <div className="mb-8" style={{ maxWidth: 1000, margin: '0 auto' }}>
             <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
               {[
-                { icon: <Code2 size={18} />, label: 'TECHNOLOGIES', value: totalSkills, color: '#A8A878' },
-                { icon: <Github size={18} />, label: 'REPOS ANALYSES', value: totalRepos, color: '#6890F0' },
-                { icon: <TrendingUp size={18} />, label: 'TOP LANGAGE', value: topLanguage, color: '#78C850' },
-                { icon: <Award size={18} />, label: 'BADGES LIGUE', value: certifications.length, color: '#F8D030' },
+                { icon: <Code2 size={18} />, label: 'TECHNOLOGIES', value: totalSkills, color: 'var(--accent-cyan, #00f0ff)' },
+                { icon: <Github size={18} />, label: 'REPOS ANALYSES', value: totalRepos, color: 'var(--accent-violet, #8b5cf6)' },
+                { icon: <TrendingUp size={18} />, label: 'TOP LANGAGE', value: topLanguage, color: 'var(--success, #00ff41)' },
+                { icon: <Award size={18} />, label: 'CERTIFICATIONS', value: certifications.length, color: 'var(--accent-warm, #f97316)' },
               ].map((stat) => (
                 <div
                   key={stat.label}
                   className="rounded-xl p-4 text-center transition-all duration-200 hover:-translate-y-1"
                   style={{
-                    background: 'rgba(255,255,255,0.9)',
-                    boxShadow: '0 2px 8px rgba(0,0,0,0.05)',
+                    background: 'rgba(26,26,46,0.85)',
+                    border: '1px solid var(--border, #2a2a3e)',
+                    backdropFilter: 'blur(12px)',
                   }}
                 >
                   <div className="flex items-center justify-center gap-2 mb-2">
                     <span style={{ color: stat.color }}>{stat.icon}</span>
-                    <span className="text-[10px] font-bold uppercase tracking-wider" style={{ color: '#999' }}>
+                    <span className="text-[10px] font-bold uppercase tracking-wider" style={{ color: 'var(--text-muted, #606070)' }}>
                       {stat.label}
                     </span>
                   </div>
@@ -376,35 +378,38 @@ export default function SkillsPage() {
             </div>
           </div>
 
-          <div className="pokedex-hinge mb-8" />
-
-          {/* Skills by Type (Category) */}
+          {/* Skills by Category */}
           {categories.map((category) => {
-            const typeStyle = categoryTypeColors[category.key] || { bg: '#A8A878', text: '#fff', label: 'NORMAL', light: '#C6C6A7' }
+            const accent = categoryAccentColors[category.key] || { bg: '#00f0ff', light: '#00f0ff80' }
             return (
               <section key={category.key} className="mb-8">
-                {/* Type Header */}
+                {/* Category Header */}
                 <div className="flex items-center gap-3 mb-4">
                   <span
-                    className="type-badge inline-flex items-center gap-2 px-4 py-1.5 rounded-full text-xs font-bold uppercase tracking-wider"
-                    style={{ background: typeStyle.bg, color: typeStyle.text }}
-                  >
-                    <span style={{ color: typeStyle.text }}>{category.icon}</span>
-                    {typeStyle.label}
-                  </span>
-                  <h2 className="text-lg font-bold" style={{ color: '#fff', textShadow: '0 1px 3px rgba(0,0,0,0.3)' }}>
+                    className="w-2.5 h-2.5 rounded-full flex-shrink-0"
+                    style={{ background: accent.bg }}
+                  />
+                  <span style={{ color: accent.bg }}>{category.icon}</span>
+                  <h2 className="text-lg font-bold" style={{ color: 'var(--text-primary, #f0f0f0)' }}>
                     {category.title}
                   </h2>
                   <span
                     className="text-xs font-bold px-2 py-0.5 rounded-full"
-                    style={{ background: typeStyle.light, color: typeStyle.text === '#fff' ? '#555' : '#333', fontFamily: 'monospace' }}
+                    style={{ background: 'var(--bg-surface, #12121a)', color: 'var(--text-secondary, #a0a0b0)', fontFamily: 'monospace', border: '1px solid var(--border, #2a2a3e)' }}
                   >
                     {category.skills.length}
                   </span>
                 </div>
 
-                {/* Skill Cards with stat bars */}
-                <div className="pokedex-screen p-4 mb-2">
+                {/* Skill bars */}
+                <div
+                  className="rounded-2xl p-4 mb-2"
+                  style={{
+                    background: 'rgba(26,26,46,0.85)',
+                    border: '1px solid var(--border, #2a2a3e)',
+                    backdropFilter: 'blur(12px)',
+                  }}
+                >
                   <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
                     {category.skills.map((skill) => {
                       const catMax = category.skills[0]?.count || 1
@@ -413,27 +418,26 @@ export default function SkillsPage() {
                         <div
                           key={skill.name}
                           className="flex items-center gap-3 p-2 rounded-lg transition-colors duration-200"
-                          style={{ background: 'rgba(255,255,255,0.3)' }}
+                          style={{ background: 'rgba(255,255,255,0.03)' }}
                         >
                           <span
                             className="text-sm font-semibold flex-shrink-0"
-                            style={{ width: '110px', color: 'var(--pokedex-dark, #333)', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}
+                            style={{ width: '110px', color: 'var(--text-primary, #f0f0f0)', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}
                           >
                             {skill.name}
                           </span>
-                          {/* Stat bar */}
-                          <div className="flex-1 h-3 rounded-full overflow-hidden" style={{ background: 'rgba(0,0,0,0.15)' }}>
+                          <div className="flex-1 h-3 rounded-full overflow-hidden" style={{ background: 'rgba(255,255,255,0.1)' }}>
                             <div
                               className="h-full rounded-full transition-all duration-500"
                               style={{
                                 width: `${pct}%`,
-                                background: `linear-gradient(90deg, ${typeStyle.bg}, ${typeStyle.light})`,
+                                background: `linear-gradient(90deg, ${accent.bg}, ${accent.light})`,
                               }}
                             />
                           </div>
                           <span
                             className="text-xs font-bold flex-shrink-0"
-                            style={{ width: '24px', textAlign: 'right', fontFamily: 'monospace', color: 'var(--pokedex-dark, #333)' }}
+                            style={{ width: '24px', textAlign: 'right', fontFamily: 'monospace', color: 'var(--text-secondary, #a0a0b0)' }}
                           >
                             {skill.count}
                           </span>
@@ -446,52 +450,51 @@ export default function SkillsPage() {
             )
           })}
 
-          <div className="pokedex-hinge mb-8" />
-
-          {/* EXP Bar Chart - Top 10 Skills */}
+          {/* Top 10 Chart */}
           {top10.length > 0 && (
             <section className="mb-10">
               <div className="flex items-center gap-3 mb-5">
-                <span
-                  className="type-badge inline-flex items-center gap-2 px-4 py-1.5 rounded-full text-xs font-bold uppercase tracking-wider"
-                  style={{ background: 'var(--pokedex-red-dark, #A00020)', color: '#fff' }}
-                >
-                  <BarChart3 size={14} />
-                  EXP
-                </span>
-                <h2 className="text-lg font-bold" style={{ color: '#fff', textShadow: '0 1px 3px rgba(0,0,0,0.3)' }}>
+                <BarChart3 size={18} style={{ color: 'var(--accent-cyan, #00f0ff)' }} />
+                <h2 className="text-lg font-bold" style={{ color: 'var(--text-primary, #f0f0f0)' }}>
                   Top 10 - Utilisation GitHub
                 </h2>
               </div>
-              <div className="pokedex-screen p-5">
+              <div
+                className="rounded-2xl p-5"
+                style={{
+                  background: 'rgba(26,26,46,0.85)',
+                  border: '1px solid var(--border, #2a2a3e)',
+                  backdropFilter: 'blur(12px)',
+                }}
+              >
                 {top10.map((skill) => {
-                  const typeStyle = categoryTypeColors[skill.categoryKey] || { bg: '#A8A878', text: '#fff', label: 'NORMAL', light: '#C6C6A7' }
+                  const accent = categoryAccentColors[skill.categoryKey] || { bg: '#00f0ff', light: '#00f0ff80' }
                   const pct = (skill.count / maxCount) * 100
                   return (
                     <div key={skill.name} className="flex items-center gap-3 mb-3 last:mb-0">
                       <span
                         className="text-sm font-semibold text-right"
-                        style={{ width: '130px', flexShrink: 0, color: 'var(--pokedex-dark, #333)', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}
+                        style={{ width: '130px', flexShrink: 0, color: 'var(--text-primary, #f0f0f0)', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}
                       >
                         {skill.name}
                       </span>
-                      <div className="flex-1 h-6 rounded-full overflow-hidden" style={{ background: 'rgba(0,0,0,0.15)' }}>
+                      <div className="flex-1 h-6 rounded-full overflow-hidden" style={{ background: 'rgba(255,255,255,0.1)' }}>
                         <div
                           className="h-full rounded-full transition-all duration-600 flex items-center justify-end pr-2"
                           style={{
                             width: `${pct}%`,
-                            background: `linear-gradient(90deg, ${typeStyle.bg}, ${typeStyle.light})`,
+                            background: `linear-gradient(90deg, ${accent.bg}, ${accent.light})`,
                             minWidth: '30px',
                           }}
                         >
-                          <span className="text-[10px] font-bold" style={{ color: typeStyle.text }}>
+                          <span className="text-[10px] font-bold" style={{ color: '#fff' }}>
                             {Math.round(pct)}%
                           </span>
                         </div>
                       </div>
                       <span
                         className="text-sm font-bold"
-                        style={{ width: '36px', flexShrink: 0, fontFamily: 'monospace', color: 'var(--pokedex-dark, #333)' }}
+                        style={{ width: '36px', flexShrink: 0, fontFamily: 'monospace', color: 'var(--text-secondary, #a0a0b0)' }}
                       >
                         {skill.count}
                       </span>
@@ -502,65 +505,55 @@ export default function SkillsPage() {
             </section>
           )}
 
-          <div className="pokedex-hinge mb-8" />
-
-          {/* Certifications = Badges de Ligue */}
+          {/* Certifications */}
           <section>
             <div className="flex items-center gap-3 mb-5">
-              <span
-                className="type-badge inline-flex items-center gap-2 px-4 py-1.5 rounded-full text-xs font-bold uppercase tracking-wider"
-                style={{ background: '#F8D030', color: '#333' }}
-              >
-                <Award size={14} />
-                BADGES
-              </span>
-              <h2 className="text-lg font-bold" style={{ color: '#fff', textShadow: '0 1px 3px rgba(0,0,0,0.3)' }}>
-                Badges de Ligue
+              <Award size={18} style={{ color: 'var(--accent-warm, #f97316)' }} />
+              <h2 className="text-lg font-bold" style={{ color: 'var(--text-primary, #f0f0f0)' }}>
+                CERTIFICATIONS
               </h2>
               <span
                 className="text-xs font-bold px-2 py-0.5 rounded-full"
-                style={{ background: '#FAE078', color: '#333', fontFamily: 'monospace' }}
+                style={{ background: 'var(--bg-surface, #12121a)', color: 'var(--text-secondary, #a0a0b0)', fontFamily: 'monospace', border: '1px solid var(--border, #2a2a3e)' }}
               >
                 {certifications.length}
               </span>
             </div>
-            <div className="pokedex-screen p-4 md:p-6">
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-                {certifications.map((cert) => (
-                  <div
-                    key={cert.name}
-                    className="rounded-xl p-4 transition-all duration-200 hover:-translate-y-1"
-                    style={{
-                      background: 'rgba(255,255,255,0.9)',
-                      border: '3px solid #FAE078',
-                      boxShadow: '0 2px 8px rgba(248,208,48,0.15)',
-                    }}
-                  >
-                    <div className="flex items-start gap-3">
-                      <div
-                        className="w-10 h-10 rounded-full flex-shrink-0 flex items-center justify-center"
-                        style={{ background: '#FFF8DC', border: '2px solid #F8D030' }}
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+              {certifications.map((cert) => (
+                <div
+                  key={cert.name}
+                  className="rounded-xl p-4 transition-all duration-200 hover:-translate-y-1"
+                  style={{
+                    background: 'rgba(26,26,46,0.85)',
+                    border: '1px solid var(--border, #2a2a3e)',
+                    backdropFilter: 'blur(12px)',
+                  }}
+                >
+                  <div className="flex items-start gap-3">
+                    <div
+                      className="w-10 h-10 rounded-full flex-shrink-0 flex items-center justify-center"
+                      style={{ background: 'rgba(249,115,22,0.15)', border: '1px solid rgba(249,115,22,0.3)' }}
+                    >
+                      <Award size={18} style={{ color: 'var(--accent-warm, #f97316)' }} />
+                    </div>
+                    <div className="min-w-0">
+                      <p
+                        className="text-sm font-bold leading-tight line-clamp-2"
+                        style={{ color: 'var(--text-primary, #f0f0f0)' }}
                       >
-                        <Award size={18} style={{ color: '#DAA520' }} />
-                      </div>
-                      <div className="min-w-0">
-                        <p
-                          className="text-sm font-bold leading-tight line-clamp-2"
-                          style={{ color: 'var(--pokedex-dark, #333)' }}
-                        >
-                          {cert.name}
-                        </p>
-                        <p className="text-xs mt-1" style={{ color: '#999' }}>
-                          {cert.issuer}
-                        </p>
-                        <p className="text-xs mt-0.5" style={{ color: '#bbb', fontFamily: 'monospace' }}>
-                          {cert.year}
-                        </p>
-                      </div>
+                        {cert.name}
+                      </p>
+                      <p className="text-xs mt-1" style={{ color: 'var(--text-secondary, #a0a0b0)' }}>
+                        {cert.issuer}
+                      </p>
+                      <p className="text-xs mt-0.5" style={{ color: 'var(--text-muted, #606070)', fontFamily: 'monospace' }}>
+                        {cert.year}
+                      </p>
                     </div>
                   </div>
-                ))}
-              </div>
+                </div>
+              ))}
             </div>
           </section>
 
