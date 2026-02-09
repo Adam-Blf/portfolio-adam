@@ -1,7 +1,14 @@
-# Robots.txt for Adam Beloucif Portfolio
+# Robots.txt - Adam Beloucif Portfolio
+# https://adam.beloucif.com
+
 User-agent: *
 Allow: /
 Disallow: /api/
+Disallow: /_next/
+Disallow: /projets
+Disallow: /competences
+Disallow: /frise
+Disallow: /contact
 
 # Sitemap
 Sitemap: https://adam.beloucif.com/sitemap.xml
