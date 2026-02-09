@@ -111,10 +111,10 @@ export default function RootLayout({
               '@graph': [
                 {
                   '@type': 'Person',
-                  '@id': 'https://adam-beloucif.vercel.app/#person',
+                  '@id': 'https://adam.beloucif.com/#person',
                   name: 'Adam Beloucif',
                   jobTitle: 'Data Engineer & Fullstack Developer',
-                  url: 'https://adam-beloucif.vercel.app',
+                  url: 'https://adam.beloucif.com',
                   sameAs: [
                     'https://github.com/Adam-Blf',
                     'https://linkedin.com/in/adambeloucif',
@@ -139,13 +139,13 @@ export default function RootLayout({
                 },
                 {
                   '@type': 'WebSite',
-                  '@id': 'https://adam-beloucif.vercel.app/#website',
+                  '@id': 'https://adam.beloucif.com/#website',
                   name: 'Adam Beloucif — Portfolio',
-                  url: 'https://adam-beloucif.vercel.app',
+                  url: 'https://adam.beloucif.com',
                   description:
                     'Portfolio de Adam Beloucif, Data Engineer & Fullstack Developer. Projets Data, IA et Fullstack.',
                   author: {
-                    '@id': 'https://adam-beloucif.vercel.app/#person',
+                    '@id': 'https://adam.beloucif.com/#person',
                   },
                 },
               ],
