@@ -353,36 +353,35 @@ export default function EvolutionPage() {
   let stageCounter = 0
 
   return (
-    <div className="min-h-screen" style={{ background: 'var(--pokedex-white, #F5F5F5)' }}>
+    <div className="min-h-screen" style={{ background: '#DC0A2D' }}>
 
-      {/* ═══ HEADER ═══ */}
+      {/* HEADER */}
       <header className="pt-28 pb-10 md:pt-32 md:pb-14 text-center">
         <div className="container-wide">
+          <div className="inline-flex items-center gap-2 mb-3">
+            <div className="pokedex-led pokedex-led-blue" style={{ width: 14, height: 14 }} />
+            <div className="pokedex-led pokedex-led-red" style={{ width: 8, height: 8 }} />
+            <div className="pokedex-led pokedex-led-yellow" style={{ width: 8, height: 8 }} />
+          </div>
           <h1
-            className="font-black tracking-wider leading-none"
-            style={{
-              fontSize: 'clamp(2rem, 6vw, 3.5rem)',
-              color: 'var(--pokedex-red, #DC0A2D)',
-              textShadow: '2px 2px 0 var(--pokedex-red-dark, #A00020), 4px 4px 0 rgba(0,0,0,0.1)',
-              fontFamily: 'var(--font-mono, monospace)',
-              letterSpacing: '0.1em',
-            }}
+            className="text-2xl md:text-3xl font-bold tracking-widest uppercase"
+            style={{ color: 'var(--pokedex-white)', textShadow: '0 2px 4px rgba(0,0,0,0.3)' }}
           >
-            CHAÎNE D&apos;ÉVOLUTION
+            CHAINE D&apos;EVOLUTION
           </h1>
-          <p className="text-sm mt-3 max-w-lg mx-auto" style={{ color: '#666', fontFamily: 'monospace' }}>
+          <p className="text-sm mt-3 max-w-lg mx-auto" style={{ color: 'rgba(255,255,255,0.7)' }}>
             {t('timeline.description')}
           </p>
         </div>
       </header>
 
-      {/* ═══ TYPE FILTER ROW ═══ */}
+      {/* TYPE FILTER ROW */}
       <nav
         className="sticky top-0 z-40 py-3"
         style={{
-          background: 'rgba(245,245,245,0.95)',
+          background: 'rgba(220,10,45,0.95)',
           backdropFilter: 'blur(12px)',
-          borderBottom: '3px solid #e0e0e0',
+          borderBottom: '3px solid var(--pokedex-red-dark, #A00020)',
         }}
       >
         <div className="container-wide">
@@ -394,20 +393,18 @@ export default function EvolutionPage() {
                 <button
                   key={key}
                   onClick={() => handleFilterChange(key)}
-                  className="type-badge flex-shrink-0 inline-flex items-center gap-1.5 px-4 py-1.5 rounded-full text-xs font-bold uppercase tracking-wider transition-all duration-200 cursor-pointer"
-                  style={{
-                    background: isActive ? (color || 'var(--pokedex-red, #DC0A2D)') : '#e0e0e0',
-                    color: isActive ? '#fff' : '#666',
-                    border: 'none',
-                    boxShadow: isActive ? `0 2px 8px ${color || '#DC0A2D'}44` : 'none',
-                  }}
+                  className={`pokedex-button text-xs flex items-center gap-1.5 transition-all ${
+                    isActive
+                      ? '!bg-white !text-[--pokedex-red] font-bold shadow-lg'
+                      : ''
+                  }`}
                 >
                   {BtnIcon ? <BtnIcon size={12} /> : <Filter size={12} />}
                   {t(labelKey)}
                   <span
                     className="ml-1 text-[10px] font-bold px-1.5 py-0.5 rounded-full"
                     style={{
-                      background: isActive ? 'rgba(255,255,255,0.25)' : 'rgba(0,0,0,0.08)',
+                      background: isActive ? 'rgba(220,10,45,0.15)' : 'rgba(0,0,0,0.08)',
                     }}
                   >
                     {count}
@@ -419,23 +416,22 @@ export default function EvolutionPage() {
         </div>
       </nav>
 
-      {/* ═══ MAIN CONTENT ═══ */}
+      {/* MAIN CONTENT */}
       <main className="pb-24 pt-8">
         <div className="container-wide max-w-3xl mx-auto">
 
           {/* Active filter indicator */}
           {filter !== 'all' && (
             <div className="flex items-center justify-center gap-2 mb-6">
-              <span className="text-sm" style={{ color: '#999', fontFamily: 'monospace' }}>
-                {filteredEvents.length} résultat{filteredEvents.length > 1 ? 's' : ''}
+              <span className="text-sm" style={{ color: 'rgba(255,255,255,0.7)', fontFamily: 'monospace' }}>
+                {filteredEvents.length} resultat{filteredEvents.length > 1 ? 's' : ''}
               </span>
               <button
                 onClick={() => handleFilterChange('all')}
-                className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-xs font-bold transition-colors duration-200 cursor-pointer"
-                style={{ background: '#e0e0e0', color: '#666' }}
+                className="pokedex-button text-xs inline-flex items-center gap-1"
               >
                 <X size={12} />
-                Réinitialiser
+                Reinitialiser
               </button>
             </div>
           )}
@@ -448,83 +444,86 @@ export default function EvolutionPage() {
                 <div
                   className="px-4 py-1.5 rounded-full text-sm font-black"
                   style={{
-                    background: 'var(--pokedex-red, #DC0A2D)',
-                    color: '#fff',
+                    background: '#fff',
+                    color: 'var(--pokedex-red, #DC0A2D)',
                     fontFamily: 'monospace',
                   }}
                 >
                   {year}
                 </div>
-                <div className="flex-1 h-[3px] rounded-full" style={{ background: '#e0e0e0' }} />
-                <span className="text-xs font-bold px-2 py-0.5 rounded-full" style={{ background: '#e0e0e0', color: '#999', fontFamily: 'monospace' }}>
+                <div className="flex-1 h-[3px] rounded-full" style={{ background: 'rgba(255,255,255,0.2)' }} />
+                <span className="text-xs font-bold px-2 py-0.5 rounded-full" style={{ background: 'rgba(255,255,255,0.2)', color: '#fff', fontFamily: 'monospace' }}>
                   {eventsByYear[year]?.length}
                 </span>
               </div>
 
-              {/* Evolution cards */}
-              {eventsByYear[year]?.map((event, idx) => {
-                stageCounter++
-                return (
-                  <EvolutionCard
-                    key={event.id}
-                    event={event}
-                    stageNumber={stageCounter}
-                    isExpanded={expandedCard === event.id}
-                    onToggle={() => setExpandedCard(expandedCard === event.id ? null : event.id)}
-                    isLast={idx === (eventsByYear[year]?.length || 0) - 1}
-                    t={t}
-                  />
-                )
-              })}
+              {/* Evolution cards in green screen */}
+              <div className="pokedex-screen p-4">
+                {eventsByYear[year]?.map((event, idx) => {
+                  stageCounter++
+                  return (
+                    <EvolutionCard
+                      key={event.id}
+                      event={event}
+                      stageNumber={stageCounter}
+                      isExpanded={expandedCard === event.id}
+                      onToggle={() => setExpandedCard(expandedCard === event.id ? null : event.id)}
+                      isLast={idx === (eventsByYear[year]?.length || 0) - 1}
+                      t={t}
+                    />
+                  )
+                })}
+              </div>
             </section>
           ))}
 
+          <div className="pokedex-hinge my-8" />
+
           {/* End of evolution */}
-          <div className="flex items-center justify-center pt-6 pb-4">
-            <div
-              className="pokedex-screen flex items-center gap-3 px-6 py-3 rounded-xl"
-              style={{
-                background: 'var(--pokedex-screen, #98CB98)',
-                border: '3px solid #7baa7b',
-              }}
-            >
+          <div className="flex items-center justify-center pb-4">
+            <div className="pokedex-screen flex items-center gap-3 px-6 py-3 rounded-xl">
               <span className="text-sm font-bold" style={{ color: 'var(--pokedex-dark, #333)', fontFamily: 'monospace' }}>
-                🥚 {t('timeline.startOfJourney')}
+                {t('timeline.startOfJourney')}
               </span>
             </div>
           </div>
 
-          {/* ═══ STATS ROW ═══ */}
-          <div className="mt-12 grid grid-cols-2 md:grid-cols-4 gap-3">
-            {[
-              { value: years.length, label: t('timeline.stats.years'), color: '#E74C3C' },
-              { value: countByType.experience, label: t('timeline.stats.experiences'), color: '#E74C3C' },
-              { value: countByType.education, label: t('timeline.stats.formations'), color: '#3498DB' },
-              { value: countByType.volunteering, label: t('timeline.stats.engagements'), color: '#2ECC71' },
-            ].map((stat) => (
-              <div
-                key={stat.label}
-                className="rounded-xl p-4 text-center transition-all duration-200 hover:-translate-y-1"
-                style={{
-                  background: '#fff',
-                  border: '3px solid #e0e0e0',
-                }}
-              >
-                <p className="font-black text-3xl tracking-tight" style={{ color: stat.color, fontFamily: 'monospace' }}>
-                  {stat.value}<span className="text-lg" style={{ color: '#ccc' }}>+</span>
-                </p>
-                <p className="text-[10px] font-bold uppercase tracking-wider mt-1" style={{ color: '#999' }}>{stat.label}</p>
+          {/* STATS ROW */}
+          <div className="mt-12">
+            <div className="pokedex-screen p-4">
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+                {[
+                  { value: years.length, label: t('timeline.stats.years'), color: '#E74C3C' },
+                  { value: countByType.experience, label: t('timeline.stats.experiences'), color: '#E74C3C' },
+                  { value: countByType.education, label: t('timeline.stats.formations'), color: '#3498DB' },
+                  { value: countByType.volunteering, label: t('timeline.stats.engagements'), color: '#2ECC71' },
+                ].map((stat) => (
+                  <div
+                    key={stat.label}
+                    className="rounded-xl p-4 text-center transition-all duration-200 hover:-translate-y-1"
+                    style={{
+                      background: 'rgba(255,255,255,0.9)',
+                    }}
+                  >
+                    <p className="font-black text-3xl tracking-tight" style={{ color: stat.color, fontFamily: 'monospace' }}>
+                      {stat.value}<span className="text-lg" style={{ color: '#ccc' }}>+</span>
+                    </p>
+                    <p className="text-[10px] font-bold uppercase tracking-wider mt-1" style={{ color: '#999' }}>{stat.label}</p>
+                  </div>
+                ))}
               </div>
-            ))}
+            </div>
           </div>
 
-          {/* ═══ CTA ═══ */}
-          <section className="mt-16 py-10 border-t-[3px]" style={{ borderColor: '#e0e0e0' }}>
+          <div className="pokedex-hinge my-8" />
+
+          {/* CTA */}
+          <section className="py-10">
             <div className="max-w-xl mx-auto text-center">
-              <h2 className="text-xl font-black uppercase mb-4" style={{ color: 'var(--pokedex-dark, #333)' }}>
+              <h2 className="text-xl font-black uppercase mb-4" style={{ color: '#fff', textShadow: '0 2px 4px rgba(0,0,0,0.3)' }}>
                 {t('timeline.cta.title')}
               </h2>
-              <p className="text-sm mb-6" style={{ color: '#999', fontFamily: 'monospace' }}>
+              <p className="text-sm mb-6" style={{ color: 'rgba(255,255,255,0.7)', fontFamily: 'monospace' }}>
                 {t('timeline.cta.description')}
               </p>
               <div className="flex flex-wrap justify-center gap-3">
@@ -532,8 +531,8 @@ export default function EvolutionPage() {
                   href="/centre-pokemon"
                   className="pokedex-button inline-flex items-center gap-2 px-6 py-2.5 rounded-full text-sm font-bold uppercase tracking-wider transition-all duration-200"
                   style={{
-                    background: 'var(--pokedex-red, #DC0A2D)',
-                    color: '#fff',
+                    background: '#fff',
+                    color: 'var(--pokedex-red, #DC0A2D)',
                     border: '3px solid var(--pokedex-red-dark, #A00020)',
                   }}
                 >
@@ -543,11 +542,6 @@ export default function EvolutionPage() {
                 <Link
                   href="/pokedex"
                   className="pokedex-button inline-flex items-center gap-2 px-6 py-2.5 rounded-full text-sm font-bold uppercase tracking-wider transition-all duration-200"
-                  style={{
-                    background: '#e0e0e0',
-                    color: '#555',
-                    border: '3px solid #ccc',
-                  }}
                 >
                   {t('timeline.cta.projects')}
                   <ArrowUpRight size={15} />

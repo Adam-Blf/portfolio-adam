@@ -17,7 +17,8 @@ export const logoMap: Record<string, string> = {
   "EFREI Paris x ISIT (Double diplome)": "/logos/efrei_logo.jpg",
   "ISIT Paris": "/logos/isit_paris_logo.jpg",
   "Universidad de Malaga": "/logos/universidad_de_malaga_logo.jpg",
-  "Lycee Saint-Joseph": "/logos/lycee_saint_joseph_logo.jpg",
+  "Lycee Saint-Joseph": "/logos/lycee_saint_joseph_logo.svg",
+  "College Liberte": "/logos/college_liberte_logo.svg",
 
   // Partenaires
   "Inetum": "/logos/inetum_logo.svg",
@@ -506,20 +507,42 @@ export const education = [
     period: "2019 - 2022",
     startDate: "2019-09",
     endDate: "2022-06",
-    level: "Baccalaureat",
+    level: "Mention Assez Bien",
     current: false,
-    description: "Baccalaureat general au Lycee Saint-Joseph de Villejuif. Specialites Premiere : Mathematiques, Physique-Chimie, SVT. Specialites Terminale : Mathematiques, SVT.",
+    description: "Baccalaureat general au Lycee Saint-Joseph de Villejuif. Specialites Premiere : Mathematiques, Physique-Chimie, SVT. Specialites Terminale : Mathematiques, SVT. Obtenu avec Mention Assez Bien.",
     highlights: [
+      "Mention Assez Bien",
       "Specialite Mathematiques",
       "Specialite SVT",
       "Physique-Chimie en Premiere",
-      "Villejuif, Ile-de-France",
     ],
     skills: [
       "Mathematiques",
       "Sciences de la Vie et de la Terre",
       "Physique-Chimie",
       "Raisonnement scientifique",
+    ],
+    debouches: [],
+  },
+  {
+    id: 7,
+    degree: "Brevet des Colleges",
+    school: "College Liberte",
+    period: "2015 - 2019",
+    startDate: "2015-09",
+    endDate: "2019-06",
+    level: "Mention Tres Bien",
+    current: false,
+    description: "Diplome National du Brevet obtenu au College Liberte de Chevilly-Larue avec la Mention Tres Bien.",
+    highlights: [
+      "Mention Tres Bien",
+      "Chevilly-Larue",
+    ],
+    skills: [
+      "Mathematiques",
+      "Francais",
+      "Histoire-Geographie",
+      "Sciences",
     ],
     debouches: [],
   },
@@ -881,6 +904,26 @@ export const formationCourses = {
       ],
     },
   },
+  college: {
+    title: "Brevet des Colleges - Mention Tres Bien",
+    school: "College Liberte, Chevilly-Larue",
+    period: "2015 - 2019",
+    rncp: null,
+    rncpTitle: null,
+    years: {
+      "College (2015-2019)": [
+        { name: "Mathematiques", category: "sciences" },
+        { name: "Francais", category: "communication" },
+        { name: "Histoire-Geographie", category: "general" },
+        { name: "Sciences (Physique-Chimie, SVT, Technologie)", category: "sciences" },
+        { name: "Anglais", category: "international" },
+        { name: "Espagnol", category: "international" },
+        { name: "Arts Plastiques", category: "design" },
+        { name: "Education Musicale", category: "general" },
+        { name: "EPS", category: "general" },
+      ],
+    },
+  },
 }
 
 export const projects = {
@@ -1049,4 +1092,4 @@ export const getTimelineEvents = (): TimelineEvent[] => {
 }
 
 // Years for timeline
-export const timelineYears = ['2027', '2026', '2025', '2024', '2023', '2022', '2021', '2020', '2019']
+export const timelineYears = ['2027', '2026', '2025', '2024', '2023', '2022', '2021', '2020', '2019', '2018', '2017', '2016', '2015']

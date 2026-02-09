@@ -260,35 +260,34 @@ export default function Types() {
   if (loading) {
     return (
       <ErrorBoundary>
-        <main className="min-h-screen pt-28 pb-20" style={{ background: 'var(--pokedex-white, #F5F5F5)' }}>
+        <main className="min-h-screen pt-28 pb-20" style={{ background: '#DC0A2D' }}>
           <div className="container-wide">
             <div className="text-center mb-10">
-              <div
-                className="inline-block h-12 w-48 rounded-lg mb-4"
-                style={{
-                  background: 'linear-gradient(90deg, #e0e0e0 25%, #f0f0f0 50%, #e0e0e0 75%)',
-                  backgroundSize: '200% 100%',
-                  animation: 'pokedex-scan 1.5s infinite',
-                }}
-              />
+              <div className="inline-flex items-center gap-2 mb-3">
+                <div className="pokedex-led pokedex-led-blue" style={{ width: 14, height: 14 }} />
+                <div className="pokedex-led pokedex-led-red" style={{ width: 8, height: 8 }} />
+                <div className="pokedex-led pokedex-led-yellow" style={{ width: 8, height: 8 }} />
+              </div>
               <p
                 className="text-sm font-bold tracking-widest uppercase"
-                style={{ color: 'var(--pokedex-red, #DC0A2D)', fontFamily: 'monospace' }}
+                style={{ color: '#fff', fontFamily: 'monospace' }}
               >
                 SCANNING...
               </p>
             </div>
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-              {[1, 2, 3, 4].map(i => (
-                <div key={i} className="h-24 rounded-xl" style={{ background: '#fff', border: '3px solid #e0e0e0' }}>
-                  <div className="h-full w-full rounded-xl" style={{
-                    background: 'linear-gradient(90deg, #f5f5f5 25%, #fafafa 50%, #f5f5f5 75%)',
-                    backgroundSize: '200% 100%',
-                    animation: 'pokedex-scan 1.5s infinite',
-                    animationDelay: `${i * 0.1}s`,
-                  }} />
-                </div>
-              ))}
+            <div className="pokedex-screen p-6">
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                {[1, 2, 3, 4].map(i => (
+                  <div key={i} className="h-24 rounded-xl" style={{ background: 'rgba(255,255,255,0.3)' }}>
+                    <div className="h-full w-full rounded-xl" style={{
+                      background: 'linear-gradient(90deg, rgba(255,255,255,0.2) 25%, rgba(255,255,255,0.4) 50%, rgba(255,255,255,0.2) 75%)',
+                      backgroundSize: '200% 100%',
+                      animation: 'pokedex-scan 1.5s infinite',
+                      animationDelay: `${i * 0.1}s`,
+                    }} />
+                  </div>
+                ))}
+              </div>
             </div>
           </div>
           <style>{`
@@ -305,15 +304,14 @@ export default function Types() {
   if (error) {
     return (
       <ErrorBoundary>
-        <main className="min-h-screen flex items-center justify-center" style={{ background: 'var(--pokedex-white, #F5F5F5)' }}>
-          <div className="text-center">
-            <p className="mb-4 font-bold" style={{ color: 'var(--pokedex-red, #DC0A2D)' }}>{error}</p>
+        <main className="min-h-screen flex items-center justify-center" style={{ background: '#DC0A2D' }}>
+          <div className="pokedex-screen p-8 text-center" style={{ maxWidth: 500 }}>
+            <p className="mb-4 font-bold" style={{ color: 'var(--pokedex-dark, #333)' }}>{error}</p>
             <a
               href="https://github.com/Adam-Blf"
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-flex items-center gap-2"
-              style={{ color: 'var(--pokedex-dark, #333)' }}
+              className="pokedex-button inline-flex items-center gap-2"
             >
               <Github size={18} />
               <span>Voir directement sur GitHub</span>
@@ -326,60 +324,59 @@ export default function Types() {
 
   return (
     <ErrorBoundary>
-      <main className="min-h-screen pt-28 pb-20" style={{ background: 'var(--pokedex-white, #F5F5F5)', color: 'var(--pokedex-dark, #333)' }}>
+      <main className="min-h-screen pt-28 pb-20" style={{ background: '#DC0A2D' }}>
         <div className="container-wide">
 
           {/* Page Header */}
           <div className="text-center mb-10">
+            <div className="inline-flex items-center gap-2 mb-3">
+              <div className="pokedex-led pokedex-led-blue" style={{ width: 14, height: 14 }} />
+              <div className="pokedex-led pokedex-led-red" style={{ width: 8, height: 8 }} />
+              <div className="pokedex-led pokedex-led-yellow" style={{ width: 8, height: 8 }} />
+            </div>
             <h1
-              className="font-black tracking-wider leading-none"
-              style={{
-                fontSize: 'clamp(2.5rem, 7vw, 4rem)',
-                color: 'var(--pokedex-red, #DC0A2D)',
-                textShadow: '2px 2px 0 var(--pokedex-red-dark, #A00020), 4px 4px 0 rgba(0,0,0,0.1)',
-                fontFamily: 'var(--font-mono, monospace)',
-                letterSpacing: '0.15em',
-              }}
+              className="text-2xl md:text-3xl font-bold tracking-widest uppercase"
+              style={{ color: 'var(--pokedex-white)', textShadow: '0 2px 4px rgba(0,0,0,0.3)' }}
             >
               TYPES
             </h1>
-            <p
-              className="mt-2 text-sm"
-              style={{ color: '#666', fontFamily: 'monospace' }}
-            >
-              {totalSkills}+ technologies maîtrisées · {totalRepos} repositories analysés
+            <p className="text-sm mt-2" style={{ color: 'rgba(255,255,255,0.7)' }}>
+              {totalSkills}+ technologies maitrisees - {totalRepos} repositories analyses
             </p>
           </div>
 
           {/* Trainer Stats Overview */}
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-10">
-            {[
-              { icon: <Code2 size={18} />, label: 'TECHNOLOGIES', value: totalSkills, color: '#A8A878' },
-              { icon: <Github size={18} />, label: 'REPOS ANALYSÉS', value: totalRepos, color: '#6890F0' },
-              { icon: <TrendingUp size={18} />, label: 'TOP LANGAGE', value: topLanguage, color: '#78C850' },
-              { icon: <Award size={18} />, label: 'BADGES LIGUE', value: certifications.length, color: '#F8D030' },
-            ].map((stat) => (
-              <div
-                key={stat.label}
-                className="rounded-xl p-4 text-center transition-all duration-200 hover:-translate-y-1"
-                style={{
-                  background: '#fff',
-                  border: '3px solid #e0e0e0',
-                  boxShadow: '0 2px 8px rgba(0,0,0,0.05)',
-                }}
-              >
-                <div className="flex items-center justify-center gap-2 mb-2">
-                  <span style={{ color: stat.color }}>{stat.icon}</span>
-                  <span className="text-[10px] font-bold uppercase tracking-wider" style={{ color: '#999' }}>
-                    {stat.label}
+          <div className="pokedex-screen p-4 md:p-6 mb-8" style={{ maxWidth: 1000, margin: '0 auto' }}>
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+              {[
+                { icon: <Code2 size={18} />, label: 'TECHNOLOGIES', value: totalSkills, color: '#A8A878' },
+                { icon: <Github size={18} />, label: 'REPOS ANALYSES', value: totalRepos, color: '#6890F0' },
+                { icon: <TrendingUp size={18} />, label: 'TOP LANGAGE', value: topLanguage, color: '#78C850' },
+                { icon: <Award size={18} />, label: 'BADGES LIGUE', value: certifications.length, color: '#F8D030' },
+              ].map((stat) => (
+                <div
+                  key={stat.label}
+                  className="rounded-xl p-4 text-center transition-all duration-200 hover:-translate-y-1"
+                  style={{
+                    background: 'rgba(255,255,255,0.9)',
+                    boxShadow: '0 2px 8px rgba(0,0,0,0.05)',
+                  }}
+                >
+                  <div className="flex items-center justify-center gap-2 mb-2">
+                    <span style={{ color: stat.color }}>{stat.icon}</span>
+                    <span className="text-[10px] font-bold uppercase tracking-wider" style={{ color: '#999' }}>
+                      {stat.label}
+                    </span>
+                  </div>
+                  <span className="text-2xl font-black" style={{ fontFamily: 'monospace', color: stat.color }}>
+                    {stat.value}
                   </span>
                 </div>
-                <span className="text-2xl font-black" style={{ fontFamily: 'monospace', color: stat.color }}>
-                  {stat.value}
-                </span>
-              </div>
-            ))}
+              ))}
+            </div>
           </div>
+
+          <div className="pokedex-hinge mb-8" />
 
           {/* Skills by Type (Category) */}
           {categories.map((category) => {
@@ -395,7 +392,7 @@ export default function Types() {
                     <span style={{ color: typeStyle.text }}>{category.icon}</span>
                     {typeStyle.label}
                   </span>
-                  <h2 className="text-lg font-bold" style={{ color: 'var(--pokedex-dark, #333)' }}>
+                  <h2 className="text-lg font-bold" style={{ color: '#fff', textShadow: '0 1px 3px rgba(0,0,0,0.3)' }}>
                     {category.title}
                   </h2>
                   <span
@@ -407,13 +404,7 @@ export default function Types() {
                 </div>
 
                 {/* Skill Cards with stat bars */}
-                <div
-                  className="rounded-xl p-4 mb-2"
-                  style={{
-                    background: '#fff',
-                    border: `3px solid ${typeStyle.light}`,
-                  }}
-                >
+                <div className="pokedex-screen p-4 mb-2">
                   <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
                     {category.skills.map((skill) => {
                       const catMax = category.skills[0]?.count || 1
@@ -421,7 +412,8 @@ export default function Types() {
                       return (
                         <div
                           key={skill.name}
-                          className="flex items-center gap-3 p-2 rounded-lg transition-colors duration-200 hover:bg-gray-50"
+                          className="flex items-center gap-3 p-2 rounded-lg transition-colors duration-200"
+                          style={{ background: 'rgba(255,255,255,0.3)' }}
                         >
                           <span
                             className="text-sm font-semibold flex-shrink-0"
@@ -430,7 +422,7 @@ export default function Types() {
                             {skill.name}
                           </span>
                           {/* Pokemon stat bar */}
-                          <div className="flex-1 h-3 rounded-full overflow-hidden" style={{ background: '#f0f0f0' }}>
+                          <div className="flex-1 h-3 rounded-full overflow-hidden" style={{ background: 'rgba(0,0,0,0.15)' }}>
                             <div
                               className="h-full rounded-full transition-all duration-500"
                               style={{
@@ -441,7 +433,7 @@ export default function Types() {
                           </div>
                           <span
                             className="text-xs font-bold flex-shrink-0"
-                            style={{ width: '24px', textAlign: 'right', fontFamily: 'monospace', color: '#999' }}
+                            style={{ width: '24px', textAlign: 'right', fontFamily: 'monospace', color: 'var(--pokedex-dark, #333)' }}
                           >
                             {skill.count}
                           </span>
@@ -454,28 +446,24 @@ export default function Types() {
             )
           })}
 
+          <div className="pokedex-hinge mb-8" />
+
           {/* EXP Bar Chart - Top 10 Skills */}
           {top10.length > 0 && (
-            <section className="mt-10 mb-10">
+            <section className="mb-10">
               <div className="flex items-center gap-3 mb-5">
                 <span
                   className="type-badge inline-flex items-center gap-2 px-4 py-1.5 rounded-full text-xs font-bold uppercase tracking-wider"
-                  style={{ background: 'var(--pokedex-red, #DC0A2D)', color: '#fff' }}
+                  style={{ background: 'var(--pokedex-red-dark, #A00020)', color: '#fff' }}
                 >
                   <BarChart3 size={14} />
                   EXP
                 </span>
-                <h2 className="text-lg font-bold" style={{ color: 'var(--pokedex-dark, #333)' }}>
+                <h2 className="text-lg font-bold" style={{ color: '#fff', textShadow: '0 1px 3px rgba(0,0,0,0.3)' }}>
                   Top 10 - Utilisation GitHub
                 </h2>
               </div>
-              <div
-                className="rounded-xl p-5"
-                style={{
-                  background: '#fff',
-                  border: '3px solid #e0e0e0',
-                }}
-              >
+              <div className="pokedex-screen p-5">
                 {top10.map((skill) => {
                   const typeStyle = categoryTypeColors[skill.categoryKey] || { bg: '#A8A878', text: '#fff', label: 'NORMAL', light: '#C6C6A7' }
                   const pct = (skill.count / maxCount) * 100
@@ -487,7 +475,7 @@ export default function Types() {
                       >
                         {skill.name}
                       </span>
-                      <div className="flex-1 h-6 rounded-full overflow-hidden" style={{ background: '#f0f0f0' }}>
+                      <div className="flex-1 h-6 rounded-full overflow-hidden" style={{ background: 'rgba(0,0,0,0.15)' }}>
                         <div
                           className="h-full rounded-full transition-all duration-600 flex items-center justify-end pr-2"
                           style={{
@@ -514,8 +502,10 @@ export default function Types() {
             </section>
           )}
 
+          <div className="pokedex-hinge mb-8" />
+
           {/* Certifications = Badges de Ligue */}
-          <section className="mt-10">
+          <section>
             <div className="flex items-center gap-3 mb-5">
               <span
                 className="type-badge inline-flex items-center gap-2 px-4 py-1.5 rounded-full text-xs font-bold uppercase tracking-wider"
@@ -524,7 +514,7 @@ export default function Types() {
                 <Award size={14} />
                 BADGES
               </span>
-              <h2 className="text-lg font-bold" style={{ color: 'var(--pokedex-dark, #333)' }}>
+              <h2 className="text-lg font-bold" style={{ color: '#fff', textShadow: '0 1px 3px rgba(0,0,0,0.3)' }}>
                 Badges de Ligue
               </h2>
               <span
@@ -534,41 +524,43 @@ export default function Types() {
                 {certifications.length}
               </span>
             </div>
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-              {certifications.map((cert) => (
-                <div
-                  key={cert.name}
-                  className="rounded-xl p-4 transition-all duration-200 hover:-translate-y-1"
-                  style={{
-                    background: '#fff',
-                    border: '3px solid #FAE078',
-                    boxShadow: '0 2px 8px rgba(248,208,48,0.15)',
-                  }}
-                >
-                  <div className="flex items-start gap-3">
-                    <div
-                      className="w-10 h-10 rounded-full flex-shrink-0 flex items-center justify-center"
-                      style={{ background: '#FFF8DC', border: '2px solid #F8D030' }}
-                    >
-                      <Award size={18} style={{ color: '#DAA520' }} />
-                    </div>
-                    <div className="min-w-0">
-                      <p
-                        className="text-sm font-bold leading-tight line-clamp-2"
-                        style={{ color: 'var(--pokedex-dark, #333)' }}
+            <div className="pokedex-screen p-4 md:p-6">
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                {certifications.map((cert) => (
+                  <div
+                    key={cert.name}
+                    className="rounded-xl p-4 transition-all duration-200 hover:-translate-y-1"
+                    style={{
+                      background: 'rgba(255,255,255,0.9)',
+                      border: '3px solid #FAE078',
+                      boxShadow: '0 2px 8px rgba(248,208,48,0.15)',
+                    }}
+                  >
+                    <div className="flex items-start gap-3">
+                      <div
+                        className="w-10 h-10 rounded-full flex-shrink-0 flex items-center justify-center"
+                        style={{ background: '#FFF8DC', border: '2px solid #F8D030' }}
                       >
-                        {cert.name}
-                      </p>
-                      <p className="text-xs mt-1" style={{ color: '#999' }}>
-                        {cert.issuer}
-                      </p>
-                      <p className="text-xs mt-0.5" style={{ color: '#bbb', fontFamily: 'monospace' }}>
-                        {cert.year}
-                      </p>
+                        <Award size={18} style={{ color: '#DAA520' }} />
+                      </div>
+                      <div className="min-w-0">
+                        <p
+                          className="text-sm font-bold leading-tight line-clamp-2"
+                          style={{ color: 'var(--pokedex-dark, #333)' }}
+                        >
+                          {cert.name}
+                        </p>
+                        <p className="text-xs mt-1" style={{ color: '#999' }}>
+                          {cert.issuer}
+                        </p>
+                        <p className="text-xs mt-0.5" style={{ color: '#bbb', fontFamily: 'monospace' }}>
+                          {cert.year}
+                        </p>
+                      </div>
                     </div>
                   </div>
-                </div>
-              ))}
+                ))}
+              </div>
             </div>
           </section>
 

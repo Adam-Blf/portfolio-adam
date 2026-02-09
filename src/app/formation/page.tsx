@@ -24,7 +24,7 @@ const categoryColors: Record<string, string> = {
   sciences: '#10B981',
 }
 
-const formationKeys = ['bachelor', 'master', 'erasmus', 'pmm', 'lycee'] as const
+const formationKeys = ['bachelor', 'master', 'erasmus', 'pmm', 'lycee', 'college'] as const
 type FormationKey = typeof formationKeys[number]
 
 const formationIcons: Record<FormationKey, React.ReactNode> = {
@@ -33,6 +33,7 @@ const formationIcons: Record<FormationKey, React.ReactNode> = {
   erasmus: <Star size={16} />,
   pmm: <Award size={16} />,
   lycee: <GraduationCap size={16} />,
+  college: <GraduationCap size={16} />,
 }
 
 const formationLabels: Record<FormationKey, string> = {
@@ -41,6 +42,7 @@ const formationLabels: Record<FormationKey, string> = {
   erasmus: 'Erasmus',
   pmm: 'PMM',
   lycee: 'Lycee',
+  college: 'College',
 }
 
 export default function FormationPage() {

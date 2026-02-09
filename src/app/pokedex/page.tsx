@@ -245,46 +245,45 @@ export default function Pokedex() {
     return Object.values(searchFilteredProjects).flat()
   }, [searchFilteredProjects])
 
-  // --- LOADING STATE: Pokédex SCANNING skeleton ---
+  // --- LOADING STATE: Pokedex SCANNING skeleton ---
   if (loading) {
     return (
       <ErrorBoundary>
-        <main className="min-h-screen pt-28 pb-20" style={{ background: 'var(--pokedex-white, #F5F5F5)' }}>
+        <main className="min-h-screen pt-28 pb-20" style={{ background: '#DC0A2D' }}>
           <div className="container-wide">
             <div className="text-center mb-10">
-              <div
-                className="inline-block h-12 w-64 rounded-lg mb-4"
-                style={{
-                  background: 'linear-gradient(90deg, #e0e0e0 25%, #f0f0f0 50%, #e0e0e0 75%)',
-                  backgroundSize: '200% 100%',
-                  animation: 'pokedex-scan 1.5s infinite',
-                }}
-              />
+              <div className="inline-flex items-center gap-2 mb-3">
+                <div className="pokedex-led pokedex-led-blue" style={{ width: 14, height: 14 }} />
+                <div className="pokedex-led pokedex-led-red" style={{ width: 8, height: 8 }} />
+                <div className="pokedex-led pokedex-led-yellow" style={{ width: 8, height: 8 }} />
+              </div>
               <p
                 className="text-sm font-bold tracking-widest uppercase"
-                style={{ color: 'var(--pokedex-red, #DC0A2D)', fontFamily: 'monospace' }}
+                style={{ color: '#fff', fontFamily: 'monospace' }}
               >
                 SCANNING...
               </p>
             </div>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
-              {[1, 2, 3, 4, 5, 6].map((i) => (
-                <div
-                  key={i}
-                  className="rounded-xl overflow-hidden"
-                  style={{ background: '#fff', height: 280, border: '3px solid #e0e0e0' }}
-                >
+            <div className="pokedex-screen p-6">
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
+                {[1, 2, 3, 4, 5, 6].map((i) => (
                   <div
-                    className="h-full w-full"
-                    style={{
-                      background: 'linear-gradient(90deg, #f5f5f5 25%, #fafafa 50%, #f5f5f5 75%)',
-                      backgroundSize: '200% 100%',
-                      animation: 'pokedex-scan 1.5s infinite',
-                      animationDelay: `${i * 0.12}s`,
-                    }}
-                  />
-                </div>
-              ))}
+                    key={i}
+                    className="rounded-xl overflow-hidden"
+                    style={{ background: '#fff', height: 280, border: '3px solid #e0e0e0' }}
+                  >
+                    <div
+                      className="h-full w-full"
+                      style={{
+                        background: 'linear-gradient(90deg, #f5f5f5 25%, #fafafa 50%, #f5f5f5 75%)',
+                        backgroundSize: '200% 100%',
+                        animation: 'pokedex-scan 1.5s infinite',
+                        animationDelay: `${i * 0.12}s`,
+                      }}
+                    />
+                  </div>
+                ))}
+              </div>
             </div>
           </div>
           <style>{`
@@ -304,16 +303,15 @@ export default function Pokedex() {
       <ErrorBoundary>
         <main
           className="min-h-screen flex items-center justify-center"
-          style={{ background: 'var(--pokedex-white, #F5F5F5)' }}
+          style={{ background: '#DC0A2D' }}
         >
-          <div className="text-center">
-            <p className="text-lg mb-4 font-bold" style={{ color: 'var(--pokedex-red, #DC0A2D)' }}>{error}</p>
+          <div className="pokedex-screen p-8 text-center" style={{ maxWidth: 500 }}>
+            <p className="text-lg mb-4 font-bold" style={{ color: 'var(--pokedex-dark, #333)' }}>{error}</p>
             <a
               href="https://github.com/Adam-Blf"
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-flex items-center gap-2 hover:underline"
-              style={{ color: 'var(--pokedex-dark, #333)' }}
+              className="pokedex-button inline-flex items-center gap-2"
             >
               <Github size={18} />
               <span>Voir directement sur GitHub</span>
@@ -327,41 +325,31 @@ export default function Pokedex() {
   // --- MAIN RENDER ---
   return (
     <ErrorBoundary>
-      <main className="min-h-screen pt-28 pb-20" style={{ background: 'var(--pokedex-white, #F5F5F5)' }}>
+      <main className="min-h-screen pt-28 pb-20" style={{ background: '#DC0A2D' }}>
         <div className="container-wide">
 
-          {/* ====== POKÉDEX HEADER ====== */}
+          {/* ====== POKEDEX HEADER ====== */}
           <div className="text-center mb-8">
+            <div className="inline-flex items-center gap-2 mb-3">
+              <div className="pokedex-led pokedex-led-blue" style={{ width: 14, height: 14 }} />
+              <div className="pokedex-led pokedex-led-red" style={{ width: 8, height: 8 }} />
+              <div className="pokedex-led pokedex-led-yellow" style={{ width: 8, height: 8 }} />
+            </div>
             <h1
-              className="font-black tracking-wider leading-none"
-              style={{
-                fontSize: 'clamp(2.5rem, 7vw, 4rem)',
-                color: 'var(--pokedex-red, #DC0A2D)',
-                textShadow: '2px 2px 0 var(--pokedex-red-dark, #A00020), 4px 4px 0 rgba(0,0,0,0.1)',
-                fontFamily: 'var(--font-mono, monospace)',
-                letterSpacing: '0.15em',
-              }}
+              className="text-2xl md:text-3xl font-bold tracking-widest uppercase"
+              style={{ color: 'var(--pokedex-white)', textShadow: '0 2px 4px rgba(0,0,0,0.3)' }}
             >
-              POKÉDEX
+              POKEDEX
             </h1>
-            <p
-              className="mt-2 text-sm font-mono"
-              style={{ color: 'var(--pokedex-dark, #333)', fontFamily: 'monospace' }}
-            >
+            <p className="text-sm mt-2" style={{ color: 'rgba(255,255,255,0.7)' }}>
               {t('projects.description', { count: totalProjects })}
             </p>
           </div>
 
-          {/* ====== SEARCH BAR (Pokédex screen style) ====== */}
+          {/* ====== SEARCH BAR (Pokedex screen style) ====== */}
           <div className="max-w-xl mx-auto mb-8">
             <div
               className="pokedex-screen flex items-center gap-3 px-4 py-3"
-              style={{
-                background: 'var(--pokedex-screen, #98CB98)',
-                borderRadius: '12px',
-                border: '3px solid var(--pokedex-dark, #333)',
-                boxShadow: 'inset 0 2px 8px rgba(0,0,0,0.15)',
-              }}
             >
               <Search size={18} style={{ color: 'var(--pokedex-dark, #333)', flexShrink: 0 }} />
               <input
@@ -389,17 +377,14 @@ export default function Pokedex() {
           </div>
 
           {/* ====== TYPE FILTER BADGES ====== */}
-          <div
-            className="flex flex-wrap justify-center gap-2 mb-8"
-          >
+          <div className="flex flex-wrap justify-center gap-2 mb-8">
             <button
               onClick={() => setActiveCategory(null)}
-              className="type-badge px-5 py-2 rounded-full text-xs font-bold uppercase tracking-wider transition-all duration-200 cursor-pointer"
-              style={{
-                background: activeCategory === null ? 'var(--pokedex-red, #DC0A2D)' : '#e0e0e0',
-                color: activeCategory === null ? '#fff' : '#666',
-                border: 'none',
-              }}
+              className={`pokedex-button text-xs flex items-center gap-1.5 transition-all ${
+                activeCategory === null
+                  ? '!bg-white !text-[--pokedex-red] font-bold shadow-lg'
+                  : ''
+              }`}
             >
               {t('projects.all')}
             </button>
@@ -410,13 +395,11 @@ export default function Pokedex() {
                 <button
                   key={cat}
                   onClick={() => setActiveCategory(cat)}
-                  className="type-badge px-5 py-2 rounded-full text-xs font-bold uppercase tracking-wider transition-all duration-200 cursor-pointer"
-                  style={{
-                    background: isActive ? typeStyle.bg : '#e0e0e0',
-                    color: isActive ? typeStyle.text : '#666',
-                    border: 'none',
-                    boxShadow: isActive ? `0 2px 8px ${typeStyle.bg}66` : 'none',
-                  }}
+                  className={`pokedex-button text-xs flex items-center gap-1.5 transition-all ${
+                    isActive
+                      ? '!bg-white !text-[--pokedex-red] font-bold shadow-lg'
+                      : ''
+                  }`}
                 >
                   {typeStyle.label}
                 </button>
@@ -426,189 +409,180 @@ export default function Pokedex() {
 
           {/* Results count */}
           {searchTerm && (
-            <p className="text-sm mb-6 text-center" style={{ color: '#666', fontFamily: 'monospace' }}>
+            <p className="text-sm mb-6 text-center" style={{ color: 'rgba(255,255,255,0.7)', fontFamily: 'monospace' }}>
               {displayedProjects} {t('projects.found')} &ldquo;{searchTerm}&rdquo;
             </p>
           )}
 
-          {/* ====== POKÉDEX ENTRY CARDS GRID ====== */}
+          {/* ====== POKEDEX ENTRY CARDS GRID ====== */}
           {allFilteredProjects.length > 0 ? (
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
-              {allFilteredProjects.map((project, index) => {
-                const entryNumber = String(index + 1).padStart(3, '0')
-                const typeColor = LANG_TYPE_COLORS[project.lang] || { bg: '#A8A878', text: '#fff' }
-                const cp = project.stars + project.forks
+            <div className="pokedex-screen p-4 md:p-6">
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
+                {allFilteredProjects.map((project, index) => {
+                  const entryNumber = String(index + 1).padStart(3, '0')
+                  const typeColor = LANG_TYPE_COLORS[project.lang] || { bg: '#A8A878', text: '#fff' }
+                  const cp = project.stars + project.forks
 
-                return (
-                  <div
-                    key={project.name}
-                    className="pokedex-card group relative flex flex-col rounded-xl overflow-hidden transition-all duration-300"
-                    style={{
-                      background: '#fff',
-                      border: '3px solid #e0e0e0',
-                      boxShadow: '0 2px 8px rgba(0,0,0,0.08)',
-                    }}
-                  >
-                    {/* Top bar with entry number and shiny indicator */}
+                  return (
                     <div
-                      className="flex items-center justify-between px-4 py-2"
-                      style={{ background: 'var(--pokedex-red, #DC0A2D)' }}
+                      key={project.name}
+                      className="pokedex-card group relative flex flex-col rounded-xl overflow-hidden transition-all duration-300"
+                      style={{
+                        background: '#fff',
+                        border: '3px solid #e0e0e0',
+                        boxShadow: '0 2px 8px rgba(0,0,0,0.08)',
+                      }}
                     >
-                      <span
-                        className="pokedex-entry-number text-xs font-bold"
-                        style={{ color: 'rgba(255,255,255,0.8)', fontFamily: 'monospace' }}
-                      >
-                        #{entryNumber}
-                      </span>
-                      {project.homepage && (
-                        <span
-                          className="flex items-center gap-1 text-[10px] font-bold uppercase tracking-wider"
-                          style={{ color: 'var(--pokedex-yellow, #FFD700)' }}
-                        >
-                          ✦ LIVE
-                        </span>
-                      )}
-                    </div>
-
-                    <div className="flex flex-col flex-1 p-4">
-                      {/* Pokemon Name (Project Name) */}
-                      <h3
-                        className="text-base font-black uppercase tracking-wide mb-2 line-clamp-1"
-                        style={{ color: 'var(--pokedex-dark, #333)' }}
-                      >
-                        {project.name}
-                      </h3>
-
-                      {/* Primary Type Badge (Language) */}
-                      <div className="flex items-center gap-2 mb-3">
-                        <span
-                          className="type-badge inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[11px] font-bold uppercase"
-                          style={{
-                            background: typeColor.bg,
-                            color: typeColor.text,
-                          }}
-                        >
-                          <span
-                            className="inline-block w-2 h-2 rounded-full"
-                            style={{ background: LANG_COLORS[project.lang] || '#888' }}
-                          />
-                          {project.lang}
-                        </span>
-                      </div>
-
-                      {/* LCD Description Screen */}
+                      {/* Top bar with entry number and shiny indicator */}
                       <div
-                        className="pokedex-screen rounded-lg p-3 mb-3"
-                        style={{
-                          background: 'var(--pokedex-screen, #98CB98)',
-                          border: '2px solid #7baa7b',
-                          boxShadow: 'inset 0 1px 4px rgba(0,0,0,0.1)',
-                        }}
+                        className="flex items-center justify-between px-4 py-2"
+                        style={{ background: 'var(--pokedex-red, #DC0A2D)' }}
                       >
-                        <p
-                          className="text-xs leading-relaxed line-clamp-2"
-                          style={{ color: 'var(--pokedex-dark, #333)', fontFamily: 'monospace' }}
+                        <span
+                          className="pokedex-entry-number text-xs font-bold"
+                          style={{ color: 'rgba(255,255,255,0.8)', fontFamily: 'monospace' }}
                         >
-                          {project.desc}
-                        </p>
-                      </div>
-
-                      {/* Tags (Secondary Types / Abilities) */}
-                      <div className="flex flex-wrap gap-1.5 mb-3">
-                        {project.tags.slice(0, 4).map((tag) => (
+                          #{entryNumber}
+                        </span>
+                        {project.homepage && (
                           <span
-                            key={tag}
-                            className="text-[10px] font-semibold px-2 py-0.5 rounded-full"
-                            style={{
-                              background: '#f0f0f0',
-                              color: '#666',
-                              border: '1px solid #ddd',
-                            }}
+                            className="flex items-center gap-1 text-[10px] font-bold uppercase tracking-wider"
+                            style={{ color: 'var(--pokedex-yellow, #FFD700)' }}
                           >
-                            {tag}
-                          </span>
-                        ))}
-                        {project.tags.length > 4 && (
-                          <span
-                            className="text-[10px] px-2 py-0.5 rounded-full font-semibold"
-                            style={{ color: 'var(--pokedex-red, #DC0A2D)' }}
-                          >
-                            +{project.tags.length - 4}
+                            LIVE
                           </span>
                         )}
                       </div>
 
-                      {/* CP (Stars + Forks) */}
-                      {cp > 0 && (
-                        <div className="flex items-center gap-3 text-xs mb-3" style={{ color: '#999' }}>
-                          <span className="font-bold" style={{ color: 'var(--pokedex-dark, #333)', fontFamily: 'monospace' }}>
-                            CP {cp}
+                      <div className="flex flex-col flex-1 p-4">
+                        {/* Pokemon Name (Project Name) */}
+                        <h3
+                          className="text-base font-black uppercase tracking-wide mb-2 line-clamp-1"
+                          style={{ color: 'var(--pokedex-dark, #333)' }}
+                        >
+                          {project.name}
+                        </h3>
+
+                        {/* Primary Type Badge (Language) */}
+                        <div className="flex items-center gap-2 mb-3">
+                          <span
+                            className="type-badge inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[11px] font-bold uppercase"
+                            style={{
+                              background: typeColor.bg,
+                              color: typeColor.text,
+                            }}
+                          >
+                            <span
+                              className="inline-block w-2 h-2 rounded-full"
+                              style={{ background: LANG_COLORS[project.lang] || '#888' }}
+                            />
+                            {project.lang}
                           </span>
-                          {project.stars > 0 && (
-                            <span className="flex items-center gap-1" title="Stars">
-                              <Star size={12} />
-                              {project.stars}
+                        </div>
+
+                        {/* LCD Description Screen */}
+                        <div
+                          className="pokedex-screen rounded-lg p-3 mb-3"
+                        >
+                          <p
+                            className="text-xs leading-relaxed line-clamp-2"
+                            style={{ color: 'var(--pokedex-dark, #333)', fontFamily: 'monospace' }}
+                          >
+                            {project.desc}
+                          </p>
+                        </div>
+
+                        {/* Tags (Secondary Types / Abilities) */}
+                        <div className="flex flex-wrap gap-1.5 mb-3">
+                          {project.tags.slice(0, 4).map((tag) => (
+                            <span
+                              key={tag}
+                              className="text-[10px] font-semibold px-2 py-0.5 rounded-full"
+                              style={{
+                                background: '#f0f0f0',
+                                color: '#666',
+                                border: '1px solid #ddd',
+                              }}
+                            >
+                              {tag}
                             </span>
-                          )}
-                          {project.forks > 0 && (
-                            <span className="flex items-center gap-1" title="Forks">
-                              <GitFork size={12} />
-                              {project.forks}
+                          ))}
+                          {project.tags.length > 4 && (
+                            <span
+                              className="text-[10px] px-2 py-0.5 rounded-full font-semibold"
+                              style={{ color: 'var(--pokedex-red, #DC0A2D)' }}
+                            >
+                              +{project.tags.length - 4}
                             </span>
                           )}
                         </div>
-                      )}
 
-                      {/* Spacer */}
-                      <div className="flex-1" />
+                        {/* CP (Stars + Forks) */}
+                        {cp > 0 && (
+                          <div className="flex items-center gap-3 text-xs mb-3" style={{ color: '#999' }}>
+                            <span className="font-bold" style={{ color: 'var(--pokedex-dark, #333)', fontFamily: 'monospace' }}>
+                              CP {cp}
+                            </span>
+                            {project.stars > 0 && (
+                              <span className="flex items-center gap-1" title="Stars">
+                                <Star size={12} />
+                                {project.stars}
+                              </span>
+                            )}
+                            {project.forks > 0 && (
+                              <span className="flex items-center gap-1" title="Forks">
+                                <GitFork size={12} />
+                                {project.forks}
+                              </span>
+                            )}
+                          </div>
+                        )}
 
-                      {/* Action Buttons: CATCH + INSPECT */}
-                      <div className="flex items-center gap-2 mt-2">
-                        {project.homepage && (
+                        {/* Spacer */}
+                        <div className="flex-1" />
+
+                        {/* Action Buttons: CATCH + INSPECT */}
+                        <div className="flex items-center gap-2 mt-2">
+                          {project.homepage && (
+                            <a
+                              href={project.homepage}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className="pokedex-button inline-flex items-center gap-1.5 px-4 py-2 rounded-full text-xs font-bold uppercase tracking-wider transition-all duration-200"
+                              style={{
+                                background: '#fff',
+                                color: 'var(--pokedex-red, #DC0A2D)',
+                                border: '2px solid var(--pokedex-red, #DC0A2D)',
+                              }}
+                            >
+                              CATCH
+                            </a>
+                          )}
                           <a
-                            href={project.homepage}
+                            href={project.url}
                             target="_blank"
                             rel="noopener noreferrer"
                             className="pokedex-button inline-flex items-center gap-1.5 px-4 py-2 rounded-full text-xs font-bold uppercase tracking-wider transition-all duration-200"
                             style={{
-                              background: '#fff',
-                              color: 'var(--pokedex-red, #DC0A2D)',
-                              border: '2px solid var(--pokedex-red, #DC0A2D)',
+                              background: '#e0e0e0',
+                              color: '#555',
+                              border: '2px solid #ccc',
                             }}
                           >
-                            ● CATCH
+                            <Github size={12} />
+                            INSPECT
                           </a>
-                        )}
-                        <a
-                          href={project.url}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="pokedex-button inline-flex items-center gap-1.5 px-4 py-2 rounded-full text-xs font-bold uppercase tracking-wider transition-all duration-200"
-                          style={{
-                            background: '#e0e0e0',
-                            color: '#555',
-                            border: '2px solid #ccc',
-                          }}
-                        >
-                          <Github size={12} />
-                          INSPECT
-                        </a>
+                        </div>
                       </div>
                     </div>
-                  </div>
-                )
-              })}
+                  )
+                })}
+              </div>
             </div>
           ) : (
             /* ====== EMPTY STATE ====== */
             <div className="flex flex-col items-center justify-center py-24">
-              <div
-                className="pokedex-screen rounded-xl p-8 text-center"
-                style={{
-                  background: 'var(--pokedex-screen, #98CB98)',
-                  border: '3px solid #7baa7b',
-                }}
-              >
+              <div className="pokedex-screen rounded-xl p-8 text-center">
                 <Search size={48} style={{ color: 'var(--pokedex-dark, #333)', opacity: 0.4, margin: '0 auto' }} />
                 <p
                   className="text-lg font-bold mt-4"
@@ -626,18 +600,20 @@ export default function Pokedex() {
             </div>
           )}
 
+          <div className="pokedex-hinge my-8" />
+
           {/* ====== FOOTER CTA ====== */}
-          <div className="mt-16 pt-10 flex justify-center" style={{ borderTop: '3px solid #e0e0e0' }}>
+          <div className="flex justify-center">
             <a
               href="https://github.com/Adam-Blf"
               target="_blank"
               rel="noopener noreferrer"
               className="pokedex-button inline-flex items-center gap-3 px-8 py-3.5 rounded-full text-sm font-bold uppercase tracking-wider transition-all duration-200"
               style={{
-                background: 'var(--pokedex-red, #DC0A2D)',
-                color: '#fff',
+                background: '#fff',
+                color: 'var(--pokedex-red, #DC0A2D)',
                 border: '3px solid var(--pokedex-red-dark, #A00020)',
-                boxShadow: '0 4px 12px rgba(220,10,45,0.3)',
+                boxShadow: '0 4px 12px rgba(0,0,0,0.2)',
               }}
             >
               <Github size={18} />
@@ -646,7 +622,7 @@ export default function Pokedex() {
           </div>
         </div>
 
-        {/* Scoped Pokédex styles */}
+        {/* Scoped Pokedex styles */}
         <style>{`
           .pokedex-card:hover {
             transform: translateY(-4px);

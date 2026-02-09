@@ -119,27 +119,23 @@ export default function CentrePokemon() {
 
   return (
     <ErrorBoundary>
-      <main className="pt-32 pb-24" style={{ background: 'var(--pokedex-white, #F5F5F5)' }}>
+      <main className="min-h-screen pt-28 pb-20" style={{ background: '#DC0A2D' }}>
         <div className="container-wide">
 
           {/* Header */}
           <div className="mb-12 text-center">
-            <div className="flex items-center justify-center gap-3 mb-3">
-              <span className="text-4xl">✚</span>
+            <div className="inline-flex items-center gap-2 mb-3">
+              <div className="pokedex-led pokedex-led-blue" style={{ width: 14, height: 14 }} />
+              <div className="pokedex-led pokedex-led-red" style={{ width: 8, height: 8 }} />
+              <div className="pokedex-led pokedex-led-yellow" style={{ width: 8, height: 8 }} />
             </div>
             <h1
-              className="font-black tracking-wider leading-none"
-              style={{
-                fontSize: 'clamp(2rem, 6vw, 3.5rem)',
-                color: 'var(--pokedex-red, #DC0A2D)',
-                textShadow: '2px 2px 0 var(--pokedex-red-dark, #A00020), 4px 4px 0 rgba(0,0,0,0.1)',
-                fontFamily: 'var(--font-mono, monospace)',
-                letterSpacing: '0.1em',
-              }}
+              className="text-2xl md:text-3xl font-bold tracking-widest uppercase"
+              style={{ color: 'var(--pokedex-white)', textShadow: '0 2px 4px rgba(0,0,0,0.3)' }}
             >
-              CENTRE POKÉMON
+              CENTRE POKEMON
             </h1>
-            <p className="mt-3 text-sm" style={{ color: '#666', fontFamily: 'monospace' }}>
+            <p className="text-sm mt-2" style={{ color: 'rgba(255,255,255,0.7)' }}>
               Soignez votre projet ici
             </p>
           </div>
@@ -147,16 +143,11 @@ export default function CentrePokemon() {
           {/* Two-column layout */}
           <div className="grid grid-cols-1 lg:grid-cols-5 gap-8 max-w-5xl mx-auto">
 
-            {/* Left: Form (Pokédex screen input style) */}
+            {/* Left: Form (Pokedex screen input style) */}
             <div className="lg:col-span-3" aria-live="polite">
               {isSubmitted ? (
                 <div
                   className="pokedex-screen rounded-xl p-10 text-center"
-                  style={{
-                    background: 'var(--pokedex-screen, #98CB98)',
-                    border: '3px solid #7baa7b',
-                    boxShadow: 'inset 0 2px 8px rgba(0,0,0,0.1)',
-                  }}
                   role="status"
                   aria-live="assertive"
                 >
@@ -190,15 +181,16 @@ export default function CentrePokemon() {
                   </button>
                 </div>
               ) : (
-                <div
-                  className="rounded-xl p-6"
-                  style={{
-                    background: 'var(--pokedex-dark, #333)',
-                    border: '3px solid #222',
-                    boxShadow: '0 4px 16px rgba(0,0,0,0.2)',
-                  }}
-                >
-                  <form onSubmit={handleSubmit} className="space-y-4" noValidate>
+                <div className="pokedex-screen p-2">
+                  <div
+                    className="rounded-xl p-6"
+                    style={{
+                      background: 'var(--pokedex-dark, #333)',
+                      border: '3px solid #222',
+                      boxShadow: '0 4px 16px rgba(0,0,0,0.2)',
+                    }}
+                  >
+                    <form onSubmit={handleSubmit} className="space-y-4" noValidate>
                     {/* Name */}
                     <div>
                       <label
@@ -347,31 +339,33 @@ export default function CentrePokemon() {
                       ENVOYER
                     </button>
                   </form>
+                  </div>
                 </div>
               )}
             </div>
 
-            {/* Right: INFIRMIÈRE JOËLLE info card */}
+            {/* Right: INFIRMIERE JOELLE info card */}
             <div className="lg:col-span-2">
-              <div
-                className="rounded-xl overflow-hidden"
-                style={{
-                  background: '#fff',
-                  border: '3px solid var(--pokedex-red, #DC0A2D)',
-                  boxShadow: '0 4px 16px rgba(220,10,45,0.1)',
-                }}
-              >
-                {/* Card header */}
+              <div className="pokedex-screen p-2">
                 <div
-                  className="px-5 py-3"
-                  style={{ background: 'var(--pokedex-red, #DC0A2D)' }}
+                  className="rounded-xl overflow-hidden"
+                  style={{
+                    background: '#fff',
+                    border: '3px solid var(--pokedex-red, #DC0A2D)',
+                    boxShadow: '0 4px 16px rgba(220,10,45,0.1)',
+                  }}
                 >
-                  <h2
-                    className="text-sm font-black uppercase tracking-wider"
-                    style={{ color: '#fff', fontFamily: 'monospace' }}
+                  {/* Card header */}
+                  <div
+                    className="px-5 py-3"
+                    style={{ background: 'var(--pokedex-red, #DC0A2D)' }}
                   >
-                    INFIRMIÈRE JOËLLE
-                  </h2>
+                    <h2
+                      className="text-sm font-black uppercase tracking-wider"
+                      style={{ color: '#fff', fontFamily: 'monospace' }}
+                    >
+                      INFIRMIERE JOELLE
+                    </h2>
                   <p className="text-[10px] uppercase tracking-wider" style={{ color: 'rgba(255,255,255,0.7)' }}>
                     {t('contact.info')}
                   </p>
@@ -433,15 +427,12 @@ export default function CentrePokemon() {
                 <div className="px-5 pb-4">
                   <div
                     className="pokedex-screen rounded-lg p-3 text-center"
-                    style={{
-                      background: 'var(--pokedex-screen, #98CB98)',
-                      border: '2px solid #7baa7b',
-                    }}
                   >
                     <p className="text-[10px] font-bold uppercase" style={{ color: 'var(--pokedex-dark, #333)', fontFamily: 'monospace' }}>
-                      ♪ Bienvenue au Centre Pokémon ♪
+                      Bienvenue au Centre Pokemon
                     </p>
                   </div>
+                </div>
                 </div>
               </div>
             </div>
