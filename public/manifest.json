@@ -1,11 +1,11 @@
 {
   "name": "Adam Beloucif - Portfolio",
-  "short_name": "Adam Portfolio",
-  "description": "Data Engineer & Fullstack Developer - Portfolio",
+  "short_name": "Adam B.",
+  "description": "Data Engineer & Fullstack Developer - Portfolio de Adam Beloucif",
   "start_url": "/",
   "display": "standalone",
-  "background_color": "#0c0c0c",
-  "theme_color": "#FFB000",
+  "background_color": "#141414",
+  "theme_color": "#141414",
   "orientation": "portrait-primary",
   "icons": [
     {

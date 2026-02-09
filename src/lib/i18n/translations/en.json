@@ -76,7 +76,7 @@
       "caption": "Collaboration",
       "title": "Want to {accent}?",
       "accent": "collaborate",
-      "description": "I'm always open to opportunities — internships, work-study, open-source projects, or technical discussions.",
+      "description": "I'm always open to opportunities - internships, work-study, open-source projects, or technical discussions.",
       "contact": "Contact me",
       "github": "GitHub Profile"
     },
@@ -87,7 +87,7 @@
   "timeline": {
     "caption": "My Journey",
     "title": "Experience & Education",
-    "description": "From the French Navy to hospitals, through leading the EFREI student body — each step shaped my unique vision of Data Engineering.",
+    "description": "From the French Navy to hospitals, through leading the EFREI student body - each step shaped my unique vision of Data Engineering.",
     "filters": {
       "all": "All",
       "experience": "Experience",

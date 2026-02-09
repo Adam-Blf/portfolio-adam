@@ -76,7 +76,7 @@
       "caption": "Colaboração",
       "title": "Quer {accent}?",
       "accent": "colaborar",
-      "description": "Estou sempre aberto a oportunidades — estágios, alternância, projetos open-source ou trocas técnicas.",
+      "description": "Estou sempre aberto a oportunidades - estágios, alternância, projetos open-source ou trocas técnicas.",
       "contact": "Contato",
       "github": "Perfil GitHub"
     },
@@ -87,7 +87,7 @@
   "timeline": {
     "caption": "Meu Percurso",
     "title": "Experiência e Formação",
-    "description": "Da Marinha Nacional aos hospitais, passando pela presidência do BDE EFREI — cada etapa moldou minha visão única de Data Engineering.",
+    "description": "Da Marinha Nacional aos hospitais, passando pela presidência do BDE EFREI - cada etapa moldou minha visão única de Data Engineering.",
     "filters": {
       "all": "Tudo",
       "experience": "Experiência",

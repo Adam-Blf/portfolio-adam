@@ -108,13 +108,13 @@ export const personalInfo = {
 export const stats = [
   { label: "Projets GitHub", value: "35+", icon: "code" },
   { label: "Commits", value: "500+", icon: "git-commit" },
-  { label: "Années d'expérience", value: "3+", icon: "briefcase" },
+  { label: "Annees d'experience", value: "4+", icon: "briefcase" },
   { label: "Technologies", value: "30+", icon: "layers" },
 ]
 
 export const staticMetrics = {
   yearsExperience: 4,
-  certifications: 8,
+  certifications: 9,
   volunteerRoles: 6,
   languages: ["Français (Natif)", "Anglais (Professionnel)", "Espagnol (Professionnel)"],
 }

@@ -1,22 +1,10 @@
 'use client'
 
-import { useState, useEffect, useRef } from 'react'
-import dynamic from 'next/dynamic'
-import { animate } from 'animejs'
-import { ArrowUpRight } from 'lucide-react'
+import { useState } from 'react'
+import { Mail, Github, MapPin, Linkedin, Send, CheckCircle } from 'lucide-react'
 import { personalInfo } from '@/lib/data'
 import ErrorBoundary from '@/components/ErrorBoundary'
 import { useI18n } from '@/lib/i18n'
-
-const SpaceBackground = dynamic(
-  () => import('@/components/three/SpaceBackground').catch(() => {
-    return { default: () => null }
-  }),
-  {
-    ssr: false,
-    loading: () => <div className="fixed inset-0 -z-10 bg-[#050508]" />,
-  }
-)
 
 export default function Contact() {
   const [formState, setFormState] = useState({
@@ -27,25 +15,20 @@ export default function Contact() {
   })
   const [isSubmitted, setIsSubmitted] = useState(false)
   const [errors, setErrors] = useState<Record<string, string>>({})
-  const headerRef = useRef<HTMLDivElement>(null)
-  const contentRef = useRef<HTMLDivElement>(null)
   const { t } = useI18n()
 
-  // Input sanitization - strip HTML tags and limit length
   function sanitize(input: string, maxLength: number = 500): string {
     return input
-      .replace(/<[^>]*>/g, '') // strip HTML tags
-      .replace(/[<>]/g, '')    // strip remaining angle brackets
+      .replace(/<[^>]*>/g, '')
+      .replace(/[<>]/g, '')
       .slice(0, maxLength)
   }
 
-  // Email validation
   function isValidEmail(email: string): boolean {
     const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/
     return emailRegex.test(email) && email.length <= 254
   }
 
-  // Form validation
   function validateForm(): boolean {
     const newErrors: Record<string, string> = {}
 
@@ -85,7 +68,6 @@ export default function Contact() {
 
     if (!validateForm()) return
 
-    // Sanitize inputs before constructing mailto link
     const cleanName = sanitize(formState.name, 100)
     const cleanEmail = sanitize(formState.email, 254)
     const cleanSubject = sanitize(formState.subject, 200)
@@ -99,172 +81,116 @@ export default function Contact() {
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target
     setFormState(prev => ({ ...prev, [name]: value }))
-    // Clear error on change
     if (errors[name]) {
       setErrors(prev => ({ ...prev, [name]: '' }))
     }
   }
 
-  // Animations
-  useEffect(() => {
-    const header = headerRef.current
-    const content = contentRef.current
-
-    if (header) {
-      const caption = header.querySelector('.page-caption')
-      const title = header.querySelector('.page-title')
-      const description = header.querySelector('.page-description')
-
-      if (caption) {
-        animate(caption, {
-          translateY: [20, 0],
-          opacity: [0, 1],
-          duration: 600,
-          easing: 'cubicBezier(0.16, 1, 0.3, 1)',
-        })
-      }
-
-      if (title) {
-        animate(title, {
-          translateY: [40, 0],
-          opacity: [0, 1],
-          duration: 800,
-          easing: 'cubicBezier(0.16, 1, 0.3, 1)',
-          delay: 100,
-        })
-      }
-
-      if (description) {
-        animate(description, {
-          translateY: [20, 0],
-          opacity: [0, 1],
-          duration: 600,
-          easing: 'cubicBezier(0.16, 1, 0.3, 1)',
-          delay: 200,
-        })
-      }
-    }
-
-    if (content) {
-      const contactInfo = content.querySelector('.contact-info')
-      const contactForm = content.querySelector('.contact-form')
-
-      if (contactInfo) {
-        animate(contactInfo, {
-          translateX: [-30, 0],
-          opacity: [0, 1],
-          duration: 700,
-          easing: 'cubicBezier(0.16, 1, 0.3, 1)',
-          delay: 300,
-        })
-      }
-
-      if (contactForm) {
-        animate(contactForm, {
-          translateX: [30, 0],
-          opacity: [0, 1],
-          duration: 700,
-          easing: 'cubicBezier(0.16, 1, 0.3, 1)',
-          delay: 400,
-        })
-      }
-    }
-  }, [])
+  const contactItems = [
+    {
+      icon: Mail,
+      label: t('contact.email'),
+      value: personalInfo.email,
+      href: `mailto:${personalInfo.email}`,
+      external: false,
+    },
+    {
+      icon: Github,
+      label: 'GitHub',
+      value: 'Adam-Blf',
+      href: personalInfo.github,
+      external: true,
+    },
+    {
+      icon: Linkedin,
+      label: 'LinkedIn',
+      value: 'adambeloucif',
+      href: personalInfo.linkedin,
+      external: true,
+    },
+    {
+      icon: MapPin,
+      label: t('contact.location'),
+      value: personalInfo.location,
+      href: undefined,
+      external: false,
+    },
+  ]
 
   return (
-    <>
-      <ErrorBoundary><SpaceBackground variant="minimal" /></ErrorBoundary>
-      <main className="pt-32 pb-24">
+    <ErrorBoundary>
+      <main className="pt-32 pb-24" style={{ backgroundColor: 'var(--bg-deep)' }}>
         <div className="container-wide">
-          <div className="max-w-4xl mx-auto">
 
-            {/* Header */}
-            <div ref={headerRef} className="mb-16">
-            <p className="page-caption text-caption mb-4 anim-hidden">{t('contact.caption')}</p>
-            <h1 className="page-title text-display mb-6 anim-hidden">
-              {t('contact.title')}
+          {/* Header */}
+          <div className="mb-16 text-center">
+            <h1
+              className="text-5xl md:text-6xl font-bold mb-4"
+              style={{ color: 'var(--text-primary)' }}
+            >
+              Contact
             </h1>
-            <p className="page-description text-body max-w-xl anim-hidden">
-              {t('contact.description')}
+            <p
+              className="text-lg md:text-xl"
+              style={{ color: 'var(--text-secondary)' }}
+            >
+              Un projet en tête ? Discutons-en.
             </p>
           </div>
 
-          <div ref={contentRef} className="grid grid-cols-1 lg:grid-cols-2 gap-16">
+          {/* Two-column layout: form left, contact info right */}
+          <div className="grid grid-cols-1 lg:grid-cols-5 gap-12 max-w-6xl mx-auto">
 
-            {/* Contact Info */}
-            <div className="contact-info anim-hidden">
-              <h2 className="sr-only">{t('contact.info')}</h2>
-              <div className="space-y-8 mb-12">
-                <a
-                  href={`mailto:${personalInfo.email}`}
-                  className="block group"
-                >
-                  <p className="text-caption mb-1">{t('contact.email')}</p>
-                  <p className="text-lg group-hover:text-accent transition-colors">
-                    {personalInfo.email}
-                  </p>
-                </a>
-
-                <div>
-                  <p className="text-caption mb-1">{t('contact.location')}</p>
-                  <p className="text-lg">{personalInfo.location}</p>
-                </div>
-              </div>
-
-              {/* Social Links */}
-              <div>
-                <p className="text-caption mb-4">{t('contact.social')}</p>
-                <div className="flex gap-6">
-                  <a
-                    href={personalInfo.linkedin}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="flex items-center gap-2 text-[--text-secondary] hover:text-accent transition-colors"
-                    aria-label={`LinkedIn ${t('footer.opensInNewWindow')}`}
-                  >
-                    <span>LinkedIn</span>
-                    <ArrowUpRight size={14} aria-hidden="true" />
-                  </a>
-                  <a
-                    href={personalInfo.github}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="flex items-center gap-2 text-[--text-secondary] hover:text-accent transition-colors"
-                    aria-label={`GitHub ${t('footer.opensInNewWindow')}`}
-                  >
-                    <span>GitHub</span>
-                    <ArrowUpRight size={14} aria-hidden="true" />
-                  </a>
-                </div>
-              </div>
-            </div>
-
-            {/* Contact Form */}
-            <div className="contact-form anim-hidden" aria-live="polite">
-              <h2 className="sr-only">{t('contact.form.title')}</h2>
+            {/* Left: Form */}
+            <div className="lg:col-span-3" aria-live="polite">
               {isSubmitted ? (
-                <div className="border border-[--border] p-8 text-center rounded-lg bg-[--bg-card]" role="status" aria-live="assertive">
-                  <div className="w-16 h-16 mx-auto mb-4 rounded-full bg-[--success]/10 flex items-center justify-center">
-                    <svg className="w-8 h-8 text-[--success]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-                    </svg>
-                  </div>
-                  <p className="text-title mb-2">{t('contact.form.success')}</p>
-                  <p className="text-[--text-secondary] mb-6">
+                <div
+                  className="rounded-lg p-12 text-center"
+                  style={{
+                    backgroundColor: '#1a1a1a',
+                    border: '1px solid rgba(255,255,255,0.1)',
+                  }}
+                  role="status"
+                  aria-live="assertive"
+                >
+                  <CheckCircle
+                    size={64}
+                    className="mx-auto mb-6"
+                    style={{ color: '#E50914' }}
+                    aria-hidden="true"
+                  />
+                  <p
+                    className="text-2xl font-bold mb-3"
+                    style={{ color: 'var(--text-primary)' }}
+                  >
+                    {t('contact.form.success')}
+                  </p>
+                  <p
+                    className="mb-8"
+                    style={{ color: 'var(--text-secondary)' }}
+                  >
                     {t('contact.form.sending')}
                   </p>
                   <button
                     onClick={() => setIsSubmitted(false)}
-                    className="text-accent hover:underline cursor-pointer"
+                    className="px-8 py-3 rounded font-bold text-white transition-colors duration-200 cursor-pointer"
+                    style={{ backgroundColor: '#E50914' }}
+                    onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = '#b20710')}
+                    onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = '#E50914')}
                   >
                     {t('contact.form.send')}
                   </button>
                 </div>
               ) : (
-                <form onSubmit={handleSubmit} className="space-y-6" noValidate>
+                <form onSubmit={handleSubmit} className="space-y-5" noValidate>
+                  {/* Name */}
                   <div>
-                    <label htmlFor="name" className="block text-caption mb-2">
-                      {t('contact.form.name')} <span className="text-accent" aria-hidden="true">*</span>
+                    <label
+                      htmlFor="name"
+                      className="block text-sm mb-2"
+                      style={{ color: 'var(--text-muted)' }}
+                    >
+                      {t('contact.form.name')} <span style={{ color: '#E50914' }} aria-hidden="true">*</span>
                     </label>
                     <input
                       type="text"
@@ -278,14 +204,25 @@ export default function Contact() {
                       maxLength={100}
                       value={formState.name}
                       onChange={handleChange}
-                      className={`w-full px-4 py-3 bg-[--bg-elevated] border ${errors.name ? 'border-red-500' : 'border-[--border]'} text-[--text-primary] placeholder:text-[--text-muted] focus:outline-none focus:border-accent transition-colors rounded-lg`}
+                      className="w-full px-4 py-3 rounded text-white placeholder:text-gray-500 outline-none transition-colors duration-200"
+                      style={{
+                        backgroundColor: '#1a1a1a',
+                        border: errors.name ? '1px solid #E50914' : '1px solid rgba(255,255,255,0.1)',
+                      }}
+                      onFocus={(e) => { if (!errors.name) e.currentTarget.style.borderColor = '#E50914' }}
+                      onBlur={(e) => { if (!errors.name) e.currentTarget.style.borderColor = 'rgba(255,255,255,0.1)' }}
                     />
-                    {errors.name && <p id="name-error" className="text-red-500 text-sm mt-1" role="alert">{errors.name}</p>}
+                    {errors.name && <p id="name-error" className="text-sm mt-1" style={{ color: '#E50914' }} role="alert">{errors.name}</p>}
                   </div>
 
+                  {/* Email */}
                   <div>
-                    <label htmlFor="email" className="block text-caption mb-2">
-                      {t('contact.form.email')} <span className="text-accent" aria-hidden="true">*</span>
+                    <label
+                      htmlFor="email"
+                      className="block text-sm mb-2"
+                      style={{ color: 'var(--text-muted)' }}
+                    >
+                      {t('contact.form.email')} <span style={{ color: '#E50914' }} aria-hidden="true">*</span>
                     </label>
                     <input
                       type="email"
@@ -299,14 +236,25 @@ export default function Contact() {
                       maxLength={254}
                       value={formState.email}
                       onChange={handleChange}
-                      className={`w-full px-4 py-3 bg-[--bg-elevated] border ${errors.email ? 'border-red-500' : 'border-[--border]'} text-[--text-primary] placeholder:text-[--text-muted] focus:outline-none focus:border-accent transition-colors rounded-lg`}
+                      className="w-full px-4 py-3 rounded text-white placeholder:text-gray-500 outline-none transition-colors duration-200"
+                      style={{
+                        backgroundColor: '#1a1a1a',
+                        border: errors.email ? '1px solid #E50914' : '1px solid rgba(255,255,255,0.1)',
+                      }}
+                      onFocus={(e) => { if (!errors.email) e.currentTarget.style.borderColor = '#E50914' }}
+                      onBlur={(e) => { if (!errors.email) e.currentTarget.style.borderColor = 'rgba(255,255,255,0.1)' }}
                     />
-                    {errors.email && <p id="email-error" className="text-red-500 text-sm mt-1" role="alert">{errors.email}</p>}
+                    {errors.email && <p id="email-error" className="text-sm mt-1" style={{ color: '#E50914' }} role="alert">{errors.email}</p>}
                   </div>
 
+                  {/* Subject */}
                   <div>
-                    <label htmlFor="subject" className="block text-caption mb-2">
-                      {t('contact.form.subject')} <span className="text-accent" aria-hidden="true">*</span>
+                    <label
+                      htmlFor="subject"
+                      className="block text-sm mb-2"
+                      style={{ color: 'var(--text-muted)' }}
+                    >
+                      {t('contact.form.subject')} <span style={{ color: '#E50914' }} aria-hidden="true">*</span>
                     </label>
                     <input
                       type="text"
@@ -319,14 +267,25 @@ export default function Contact() {
                       maxLength={200}
                       value={formState.subject}
                       onChange={handleChange}
-                      className={`w-full px-4 py-3 bg-[--bg-elevated] border ${errors.subject ? 'border-red-500' : 'border-[--border]'} text-[--text-primary] placeholder:text-[--text-muted] focus:outline-none focus:border-accent transition-colors rounded-lg`}
+                      className="w-full px-4 py-3 rounded text-white placeholder:text-gray-500 outline-none transition-colors duration-200"
+                      style={{
+                        backgroundColor: '#1a1a1a',
+                        border: errors.subject ? '1px solid #E50914' : '1px solid rgba(255,255,255,0.1)',
+                      }}
+                      onFocus={(e) => { if (!errors.subject) e.currentTarget.style.borderColor = '#E50914' }}
+                      onBlur={(e) => { if (!errors.subject) e.currentTarget.style.borderColor = 'rgba(255,255,255,0.1)' }}
                     />
-                    {errors.subject && <p id="subject-error" className="text-red-500 text-sm mt-1" role="alert">{errors.subject}</p>}
+                    {errors.subject && <p id="subject-error" className="text-sm mt-1" style={{ color: '#E50914' }} role="alert">{errors.subject}</p>}
                   </div>
 
+                  {/* Message */}
                   <div>
-                    <label htmlFor="message" className="block text-caption mb-2">
-                      {t('contact.form.message')} <span className="text-accent" aria-hidden="true">*</span>
+                    <label
+                      htmlFor="message"
+                      className="block text-sm mb-2"
+                      style={{ color: 'var(--text-muted)' }}
+                    >
+                      {t('contact.form.message')} <span style={{ color: '#E50914' }} aria-hidden="true">*</span>
                     </label>
                     <textarea
                       id="message"
@@ -335,29 +294,110 @@ export default function Contact() {
                       aria-required="true"
                       aria-invalid={!!errors.message}
                       aria-describedby={errors.message ? 'message-error' : undefined}
-                      rows={5}
+                      rows={6}
                       maxLength={5000}
                       value={formState.message}
                       onChange={handleChange}
-                      className={`w-full px-4 py-3 bg-[--bg-elevated] border ${errors.message ? 'border-red-500' : 'border-[--border]'} text-[--text-primary] placeholder:text-[--text-muted] focus:outline-none focus:border-accent transition-colors resize-none rounded-lg`}
+                      className="w-full px-4 py-3 rounded text-white placeholder:text-gray-500 outline-none transition-colors duration-200 resize-none"
+                      style={{
+                        backgroundColor: '#1a1a1a',
+                        border: errors.message ? '1px solid #E50914' : '1px solid rgba(255,255,255,0.1)',
+                      }}
+                      onFocus={(e) => { if (!errors.message) e.currentTarget.style.borderColor = '#E50914' }}
+                      onBlur={(e) => { if (!errors.message) e.currentTarget.style.borderColor = 'rgba(255,255,255,0.1)' }}
                     />
-                    {errors.message && <p id="message-error" className="text-red-500 text-sm mt-1" role="alert">{errors.message}</p>}
+                    {errors.message && <p id="message-error" className="text-sm mt-1" style={{ color: '#E50914' }} role="alert">{errors.message}</p>}
                   </div>
 
+                  {/* Submit */}
                   <button
                     type="submit"
-                    className="btn btn-primary w-full justify-center group"
+                    className="w-full py-4 rounded font-bold text-white text-lg flex items-center justify-center gap-2 transition-colors duration-200 cursor-pointer"
+                    style={{ backgroundColor: '#E50914' }}
+                    onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = '#b20710')}
+                    onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = '#E50914')}
                   >
+                    <Send size={18} aria-hidden="true" />
                     {t('contact.form.send')}
-                    <ArrowUpRight size={16} className="transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
                   </button>
                 </form>
               )}
+            </div>
+
+            {/* Right: Contact Info */}
+            <div className="lg:col-span-2">
+              <div
+                className="rounded-lg p-8 space-y-6"
+                style={{
+                  backgroundColor: '#1a1a1a',
+                  border: '1px solid rgba(255,255,255,0.1)',
+                }}
+              >
+                <h2
+                  className="text-xl font-bold mb-6"
+                  style={{ color: 'var(--text-primary)' }}
+                >
+                  {t('contact.info')}
+                </h2>
+
+                {contactItems.map((item) => {
+                  const Icon = item.icon
+                  const content = (
+                    <div className="flex items-center gap-4 group">
+                      <div
+                        className="w-10 h-10 rounded-lg flex items-center justify-center shrink-0 transition-colors duration-200"
+                        style={{ backgroundColor: 'rgba(229,9,20,0.1)' }}
+                      >
+                        <Icon
+                          size={20}
+                          className="transition-colors duration-200"
+                          style={{ color: '#E50914' }}
+                          aria-hidden="true"
+                        />
+                      </div>
+                      <div>
+                        <p
+                          className="text-xs uppercase tracking-wider mb-0.5"
+                          style={{ color: 'var(--text-muted)' }}
+                        >
+                          {item.label}
+                        </p>
+                        <p
+                          className="text-sm font-medium transition-colors duration-200 group-hover:text-[#E50914]"
+                          style={{ color: 'var(--text-primary)' }}
+                        >
+                          {item.value}
+                        </p>
+                      </div>
+                    </div>
+                  )
+
+                  if (item.href) {
+                    return (
+                      <a
+                        key={item.label}
+                        href={item.href}
+                        target={item.external ? '_blank' : undefined}
+                        rel={item.external ? 'noopener noreferrer' : undefined}
+                        className="block"
+                        aria-label={item.external ? `${item.label} - ouvre dans un nouvel onglet` : item.label}
+                      >
+                        {content}
+                      </a>
+                    )
+                  }
+
+                  return (
+                    <div key={item.label}>
+                      {content}
+                    </div>
+                  )
+                })}
               </div>
             </div>
           </div>
         </div>
       </main>
-    </>
+    </ErrorBoundary>
   )
 }

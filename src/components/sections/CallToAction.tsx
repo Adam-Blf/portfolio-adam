@@ -54,7 +54,7 @@ export default function CallToAction({ variant = 'default' }: CallToActionProps)
               Envie de collaborer ?
             </h2>
             <p className="text-lg mb-10" style={{ color: 'var(--text-secondary, #B3B3B3)' }}>
-              Je suis toujours ouvert aux opportunités intéressantes — stages, alternances, projets open-source, ou échanges techniques.
+              Je suis toujours ouvert aux opportunités intéressantes - stages, alternances, projets open-source, ou échanges techniques.
             </p>
             <div className="flex flex-wrap justify-center gap-4">
               <Link
@@ -99,7 +99,7 @@ export default function CallToAction({ variant = 'default' }: CallToActionProps)
             Transformons vos données en impact
           </h2>
           <p className="text-lg mb-10 max-w-xl mx-auto" style={{ color: 'var(--text-secondary, #B3B3B3)' }}>
-            Data Engineering, Machine Learning, développement Fullstack — je suis disponible pour des projets ambitieux et des collaborations techniques.
+            Data Engineering, Machine Learning, développement Fullstack - je suis disponible pour des projets ambitieux et des collaborations techniques.
           </p>
           <div className="flex flex-wrap justify-center gap-4">
             <Link

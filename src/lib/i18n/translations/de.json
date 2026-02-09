@@ -76,7 +76,7 @@
       "caption": "Zusammenarbeit",
       "title": "Lust auf {accent}?",
       "accent": "Zusammenarbeit",
-      "description": "Ich bin immer offen für Möglichkeiten — Praktika, Werkstudentenstellen, Open-Source-Projekte oder fachlichen Austausch.",
+      "description": "Ich bin immer offen für Möglichkeiten - Praktika, Werkstudentenstellen, Open-Source-Projekte oder fachlichen Austausch.",
       "contact": "Kontaktieren",
       "github": "GitHub-Profil"
     },
@@ -87,7 +87,7 @@
   "timeline": {
     "caption": "Mein Werdegang",
     "title": "Erfahrung & Ausbildung",
-    "description": "Von der Marine über Krankenhäuser bis zur Leitung der EFREI-Studentenvertretung — jeder Schritt hat meine einzigartige Vision des Data Engineering geprägt.",
+    "description": "Von der Marine über Krankenhäuser bis zur Leitung der EFREI-Studentenvertretung - jeder Schritt hat meine einzigartige Vision des Data Engineering geprägt.",
     "filters": {
       "all": "Alle",
       "experience": "Erfahrung",

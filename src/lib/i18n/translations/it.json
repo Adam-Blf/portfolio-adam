@@ -76,7 +76,7 @@
       "caption": "Collaborazione",
       "title": "Vuoi {accent}?",
       "accent": "collaborare",
-      "description": "Sono sempre aperto a opportunità — stage, alternanza, progetti open-source o scambi tecnici.",
+      "description": "Sono sempre aperto a opportunità - stage, alternanza, progetti open-source o scambi tecnici.",
       "contact": "Contattami",
       "github": "Profilo GitHub"
     },
@@ -87,7 +87,7 @@
   "timeline": {
     "caption": "Il Mio Percorso",
     "title": "Esperienza e Formazione",
-    "description": "Dalla Marina Militare agli ospedali, passando per la presidenza del BDE EFREI — ogni tappa ha forgiato la mia visione unica del Data Engineering.",
+    "description": "Dalla Marina Militare agli ospedali, passando per la presidenza del BDE EFREI - ogni tappa ha forgiato la mia visione unica del Data Engineering.",
     "filters": {
       "all": "Tutto",
       "experience": "Esperienza",

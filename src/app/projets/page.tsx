@@ -1,22 +1,32 @@
 'use client'
 
-import { useState, useEffect, useRef, useMemo } from 'react'
-import dynamic from 'next/dynamic'
-import { animate, stagger } from 'animejs'
-import { ArrowUpRight, Github, Star, GitFork, GitCommit, ExternalLink, Mail, Download } from 'lucide-react'
+import { useState, useEffect, useMemo } from 'react'
+import { ArrowUpRight, Github, Star, GitFork, GitCommit, ExternalLink, Search, X, Loader2 } from 'lucide-react'
 import ErrorBoundary from '@/components/ErrorBoundary'
-import { personalInfo } from '@/lib/data'
 import { useI18n } from '@/lib/i18n'
 
-const SpaceBackground = dynamic(
-  () => import('@/components/three/SpaceBackground').catch(() => {
-    return { default: () => null }
-  }),
-  {
-    ssr: false,
-    loading: () => <div className="fixed inset-0 -z-10 bg-[#050508]" />,
-  }
-)
+const LANG_COLORS: Record<string, string> = {
+  Python: '#3572A5',
+  TypeScript: '#3178C6',
+  JavaScript: '#F1E05A',
+  HTML: '#E34C26',
+  CSS: '#563D7C',
+  Java: '#B07219',
+  'C++': '#F34B7D',
+  C: '#555555',
+  Go: '#00ADD8',
+  Rust: '#DEA584',
+  Shell: '#89E051',
+  Ruby: '#701516',
+  PHP: '#4F5D95',
+  Swift: '#F05138',
+  Kotlin: '#A97BFF',
+  Dart: '#00B4AB',
+  R: '#198CE7',
+  Jupyter: '#DA5B0B',
+  'Jupyter Notebook': '#DA5B0B',
+  Multi: '#888888',
+}
 
 interface ProcessedProject {
   name: string
@@ -31,14 +41,19 @@ interface ProcessedProject {
   category: string
 }
 
+const CATEGORY_MAP: Record<string, string> = {
+  'IA / Machine Learning': 'Data & ML',
+  'Fullstack / Web': 'Web & Fullstack',
+  'Autres': 'Other',
+}
+
 export default function Projets() {
   const [projects, setProjects] = useState<ProcessedProject[]>([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
   const [activeCategory, setActiveCategory] = useState<string | null>(null)
   const [searchTerm, setSearchTerm] = useState('')
-  const headerRef = useRef<HTMLDivElement>(null)
-  const projectsRef = useRef<HTMLDivElement>(null)
+  const [searchOpen, setSearchOpen] = useState(false)
   const { t } = useI18n()
 
   // Fetch repos from API route
@@ -202,413 +217,465 @@ export default function Projets() {
 
   const totalProjects = projects.length
   const displayedProjects = Object.values(searchFilteredProjects).flat().length
-  const totalCommits = projects.reduce((sum, p) => sum + p.commits, 0)
 
-  // Header animation
-  useEffect(() => {
-    if (loading) return
-    const header = headerRef.current
-    if (header) {
-      const caption = header.querySelector('.page-caption')
-      const title = header.querySelector('.page-title')
-      const description = header.querySelector('.page-description')
-      const stats = header.querySelector('.stats-row')
-      const filterBtns = header.querySelectorAll('.filter-btn')
+  const allFilteredProjects = useMemo(() => {
+    return Object.values(searchFilteredProjects).flat()
+  }, [searchFilteredProjects])
 
-      if (caption) {
-        animate(caption, {
-          translateY: [20, 0],
-          opacity: [0, 1],
-          duration: 600,
-          easing: 'cubicBezier(0.16, 1, 0.3, 1)',
-        })
-      }
-
-      if (title) {
-        animate(title, {
-          translateY: [40, 0],
-          opacity: [0, 1],
-          duration: 800,
-          easing: 'cubicBezier(0.16, 1, 0.3, 1)',
-          delay: 100,
-        })
-      }
-
-      if (description) {
-        animate(description, {
-          translateY: [20, 0],
-          opacity: [0, 1],
-          duration: 600,
-          easing: 'cubicBezier(0.16, 1, 0.3, 1)',
-          delay: 200,
-        })
-      }
-
-      if (stats) {
-        animate(stats, {
-          translateY: [10, 0],
-          opacity: [0, 1],
-          duration: 500,
-          easing: 'cubicBezier(0.16, 1, 0.3, 1)',
-          delay: 300,
-        })
-      }
-
-      if (filterBtns.length > 0) {
-        animate(filterBtns, {
-          scale: [0.9, 1],
-          opacity: [0, 1],
-          duration: 400,
-          easing: 'cubicBezier(0.16, 1, 0.3, 1)',
-          delay: stagger(30, { start: 400 }),
-        })
-      }
-    }
-  }, [loading])
-
-  // Animate projects when they change
-  useEffect(() => {
-    if (loading) return
-    const container = projectsRef.current
-    if (!container) return
-
-    const cards = container.querySelectorAll('.project-card')
-    cards.forEach(card => {
-      (card as HTMLElement).style.opacity = '0'
-    })
-
-    animate(cards, {
-      translateY: [30, 0],
-      opacity: [0, 1],
-      duration: 500,
-      easing: 'cubicBezier(0.16, 1, 0.3, 1)',
-      delay: stagger(30),
-    })
-  }, [activeCategory, searchTerm, loading])
-
+  // --- LOADING STATE: Netflix skeleton shimmer ---
   if (loading) {
     return (
-      <>
-        <ErrorBoundary><SpaceBackground variant="minimal" /></ErrorBoundary>
-        <main className="pt-32 pb-24">
+      <ErrorBoundary>
+        <main
+          className="min-h-screen pt-28 pb-20"
+          style={{ background: 'var(--bg-deep)' }}
+        >
           <div className="container-wide">
-            {/* Header Skeleton */}
-            <div className="layout-offset mb-16">
-              <div className="h-4 w-32 bg-[--bg-elevated] rounded animate-pulse mb-4" />
-              <div className="h-12 w-48 bg-[--bg-elevated] rounded animate-pulse mb-6" />
-              <div className="h-6 w-96 bg-[--bg-elevated] rounded animate-pulse" />
+            {/* Header skeleton */}
+            <div className="mb-10">
+              <div
+                className="h-10 w-64 rounded mb-4"
+                style={{
+                  background: 'linear-gradient(90deg, #222 25%, #2a2a2a 50%, #222 75%)',
+                  backgroundSize: '200% 100%',
+                  animation: 'nfx-shimmer 1.5s infinite',
+                }}
+              />
+              <div
+                className="h-11 w-80 rounded"
+                style={{
+                  background: 'linear-gradient(90deg, #222 25%, #2a2a2a 50%, #222 75%)',
+                  backgroundSize: '200% 100%',
+                  animation: 'nfx-shimmer 1.5s infinite',
+                  animationDelay: '0.1s',
+                }}
+              />
             </div>
-
-            {/* Filter Skeleton */}
-            <div className="flex gap-2 mb-12">
-              {[1, 2, 3, 4].map((i) => (
-                <div key={i} className="h-8 w-24 bg-[--bg-elevated] rounded animate-pulse" />
+            {/* Filter skeleton */}
+            <div className="flex gap-3 mb-10">
+              {[1, 2, 3, 4, 5].map((i) => (
+                <div
+                  key={i}
+                  className="h-9 rounded-full"
+                  style={{
+                    width: `${60 + i * 18}px`,
+                    background: 'linear-gradient(90deg, #222 25%, #2a2a2a 50%, #222 75%)',
+                    backgroundSize: '200% 100%',
+                    animation: 'nfx-shimmer 1.5s infinite',
+                    animationDelay: `${i * 0.07}s`,
+                  }}
+                />
               ))}
             </div>
-
-            {/* Projects Grid Skeleton */}
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-px bg-[--border]">
+            {/* Cards skeleton */}
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
               {[1, 2, 3, 4, 5, 6].map((i) => (
-                <div key={i} className="bg-[--bg-surface] p-6">
-                  <div className="flex justify-between mb-4">
-                    <div className="h-6 w-16 bg-[--bg-elevated] rounded animate-pulse" />
-                    <div className="h-4 w-12 bg-[--bg-elevated] rounded animate-pulse" />
-                  </div>
-                  <div className="h-5 w-3/4 bg-[--bg-elevated] rounded animate-pulse mb-2" />
-                  <div className="h-4 w-full bg-[--bg-elevated] rounded animate-pulse mb-4" />
-                  <div className="flex gap-2">
-                    <div className="h-4 w-12 bg-[--bg-elevated] rounded animate-pulse" />
-                    <div className="h-4 w-16 bg-[--bg-elevated] rounded animate-pulse" />
-                  </div>
+                <div
+                  key={i}
+                  className="rounded-md overflow-hidden"
+                  style={{
+                    background: '#1a1a1a',
+                    height: 260,
+                  }}
+                >
+                  <div
+                    className="h-full w-full"
+                    style={{
+                      background: 'linear-gradient(90deg, #1a1a1a 25%, #242424 50%, #1a1a1a 75%)',
+                      backgroundSize: '200% 100%',
+                      animation: 'nfx-shimmer 1.5s infinite',
+                      animationDelay: `${i * 0.12}s`,
+                    }}
+                  />
                 </div>
               ))}
             </div>
           </div>
+          <style>{`
+            @keyframes nfx-shimmer {
+              0% { background-position: 200% 0; }
+              100% { background-position: -200% 0; }
+            }
+          `}</style>
         </main>
-      </>
+      </ErrorBoundary>
     )
   }
 
+  // --- ERROR STATE ---
   if (error) {
     return (
-      <>
-        <ErrorBoundary><SpaceBackground variant="minimal" /></ErrorBoundary>
-        <main className="pt-32 pb-24 min-h-screen flex items-center justify-center">
+      <ErrorBoundary>
+        <main
+          className="min-h-screen flex items-center justify-center"
+          style={{ background: 'var(--bg-deep)' }}
+        >
           <div className="text-center">
-            <p className="text-red-500 mb-4">{error}</p>
+            <p className="text-[#E50914] text-lg mb-4">{error}</p>
             <a
               href="https://github.com/Adam-Blf"
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-flex items-center gap-2 text-accent hover:underline"
+              className="inline-flex items-center gap-2 text-white hover:underline"
             >
               <Github size={18} />
               <span>Voir directement sur GitHub</span>
             </a>
           </div>
         </main>
-      </>
+      </ErrorBoundary>
     )
   }
 
+  // --- MAIN RENDER ---
   return (
-    <>
-      {/* Three.js Space Background */}
-      <ErrorBoundary>
-        <SpaceBackground variant="default" />
-      </ErrorBoundary>
-      <main className="pt-32 pb-24 relative z-10">
+    <ErrorBoundary>
+      <main
+        className="min-h-screen pt-28 pb-20"
+        style={{ background: 'var(--bg-deep)' }}
+      >
         <div className="container-wide">
 
-          {/* Header - Bold Neo-Editorial */}
-          <div ref={headerRef} className="mb-20">
-            <div className="flex items-center gap-3 mb-6">
-              <span className="page-caption text-caption text-accent anim-hidden">{t('projects.caption')}</span>
-              <span className="w-16 h-px bg-accent" />
-            </div>
-
-            <h1 className="page-title text-display mb-8 leading-[0.85] anim-hidden">
-              <span className="block text-[--text-primary] glitch-text" data-text={t('projects.titleLine1')}>{t('projects.titleLine1')}</span>
-              <span className="block text-accent neon-glow-subtle">{t('projects.titleLine2')}</span>
-            </h1>
-
-            <p className="page-description text-body-lg max-w-2xl mb-12 text-[--text-secondary] border-l-2 border-accent/30 pl-6 anim-hidden">
-              {t('projects.description', { count: totalProjects })}
-            </p>
-
-            {/* Stats row - Grid style */}
-            <div className="stats-row grid grid-cols-2 md:grid-cols-4 gap-1 bg-[--border] mb-8 anim-hidden">
-              <div className="bg-[--bg-surface] p-4 flex items-center gap-3">
-                <Github size={18} className="text-accent" />
-                <div>
-                  <span className="font-mono text-2xl font-bold text-accent">{totalProjects}</span>
-                  <span className="text-xs text-[--text-muted] ml-2">{t('projects.repos')}</span>
-                </div>
-              </div>
-              {totalCommits > 0 && (
-                <div className="bg-[--bg-surface] p-4 flex items-center gap-3">
-                  <GitCommit size={18} className="text-highlight" />
-                  <div>
-                    <span className="font-mono text-2xl font-bold text-highlight">{totalCommits}</span>
-                    <span className="text-xs text-[--text-muted] ml-2">{t('projects.commits')}</span>
-                  </div>
-                </div>
-              )}
-              <div className="bg-[--bg-surface] p-4 col-span-2 md:col-span-1 flex items-center">
-                <a
-                  href="https://github.com/Adam-Blf"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="inline-flex items-center gap-2 text-accent hover:text-highlight transition-colors text-sm group"
-                >
-                  <span className="font-mono">{t('projects.viewOnGithub')}</span>
-                  <ArrowUpRight size={14} className="group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform" />
-                </a>
-              </div>
-            </div>
-          </div>
-
-          {/* Search & Filters */}
-          <div className="mb-12">
-            <div className="max-w-md mb-8">
-              <input
-                type="text"
-                placeholder={t('projects.search')}
-                value={searchTerm}
-                onChange={(e) => setSearchTerm(e.target.value)}
-                className="w-full px-4 py-3 bg-transparent border border-[--border] text-[--text-primary] placeholder:text-[--text-muted] focus:outline-none focus:border-accent transition-colors font-mono text-sm rounded-sm"
-                aria-label={t('projects.search')}
-              />
-            </div>
-
-            <div className="flex flex-wrap gap-2">
-              <button
-                onClick={() => setActiveCategory(null)}
-                className={`filter-btn tag transition-colors cursor-pointer anim-hidden ${
-                  activeCategory === null ? 'tag-accent' : 'hover:border-accent'
-                }`}
+          {/* ====== PAGE HEADER ====== */}
+          <div className="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-6 mb-8">
+            <div>
+              <h1
+                className="font-bold leading-none tracking-tight"
+                style={{
+                  fontSize: 'clamp(2rem, 5vw, 3rem)',
+                  color: 'var(--text-primary)',
+                }}
               >
-                {t('projects.all')} ({totalProjects})
-              </button>
-              {categories.map((cat) => {
-                const count = projectsByCategory[cat]?.length || 0
-                return (
-                  <button
-                    key={cat}
-                    onClick={() => setActiveCategory(cat)}
-                    className={`filter-btn tag transition-colors cursor-pointer anim-hidden ${
-                      activeCategory === cat ? 'tag-accent' : 'hover:border-accent'
-                    }`}
-                  >
-                    {cat.split(' / ')[0]} ({count})
-                  </button>
-                )
-              })}
+                {t('projects.titleLine1')} {t('projects.titleLine2')}
+              </h1>
+              <p
+                className="mt-2 text-sm"
+                style={{ color: 'var(--text-secondary)' }}
+              >
+                {t('projects.description', { count: totalProjects })}
+              </p>
+            </div>
+
+            {/* Netflix-style search */}
+            <div className="relative flex items-center">
+              <div
+                className="flex items-center overflow-hidden transition-all duration-300"
+                style={{
+                  width: searchOpen ? 280 : 40,
+                  height: 40,
+                  background: searchOpen ? '#333' : 'transparent',
+                  border: searchOpen ? '1px solid #555' : '1px solid transparent',
+                  borderRadius: 4,
+                }}
+              >
+                <button
+                  onClick={() => {
+                    setSearchOpen(!searchOpen)
+                    if (searchOpen) setSearchTerm('')
+                  }}
+                  className="flex-shrink-0 flex items-center justify-center cursor-pointer"
+                  style={{ width: 40, height: 40, color: 'var(--text-primary)' }}
+                  aria-label={t('projects.search')}
+                >
+                  {searchOpen ? <X size={18} /> : <Search size={18} />}
+                </button>
+                {searchOpen && (
+                  <input
+                    autoFocus
+                    type="text"
+                    placeholder={t('projects.search')}
+                    value={searchTerm}
+                    onChange={(e) => setSearchTerm(e.target.value)}
+                    className="flex-1 bg-transparent outline-none text-sm pr-3"
+                    style={{
+                      color: 'var(--text-primary)',
+                      caretColor: 'var(--accent)',
+                    }}
+                  />
+                )}
+              </div>
             </div>
           </div>
 
-          {/* Results count */}
+          {/* ====== CATEGORY PILLS ====== */}
+          <div
+            className="flex gap-2 overflow-x-auto pb-2 mb-8 scrollbar-hide"
+            style={{ WebkitOverflowScrolling: 'touch' }}
+          >
+            <button
+              onClick={() => setActiveCategory(null)}
+              className="flex-shrink-0 px-5 py-2 rounded-full text-sm font-semibold transition-all duration-200 cursor-pointer"
+              style={{
+                background: activeCategory === null ? 'var(--accent)' : 'transparent',
+                color: activeCategory === null ? '#fff' : 'var(--text-secondary)',
+                border: activeCategory === null ? '1px solid var(--accent)' : '1px solid var(--border)',
+              }}
+            >
+              {t('projects.all')}
+            </button>
+            {categories.map((cat) => {
+              const label = CATEGORY_MAP[cat] || cat
+              const isActive = activeCategory === cat
+              return (
+                <button
+                  key={cat}
+                  onClick={() => setActiveCategory(cat)}
+                  className="flex-shrink-0 px-5 py-2 rounded-full text-sm font-semibold transition-all duration-200 cursor-pointer"
+                  style={{
+                    background: isActive ? 'var(--accent)' : 'transparent',
+                    color: isActive ? '#fff' : 'var(--text-secondary)',
+                    border: isActive ? '1px solid var(--accent)' : '1px solid var(--border)',
+                  }}
+                >
+                  {label}
+                </button>
+              )
+            })}
+          </div>
+
+          {/* Results count when searching */}
           {searchTerm && (
-            <p className="text-[--text-muted] text-sm mb-8">
-              {displayedProjects} {t('projects.found')} "{searchTerm}"
+            <p className="text-sm mb-6" style={{ color: 'var(--text-muted)' }}>
+              {displayedProjects} {t('projects.found')} &ldquo;{searchTerm}&rdquo;
             </p>
           )}
 
-          {/* Projects */}
-          <div ref={projectsRef}>
-            {Object.entries(searchFilteredProjects).map(([category, categoryProjects], catIndex) => (
-              <section key={category} className="mb-16">
-                <div className="flex items-baseline gap-8 mb-8">
-                  <span className="font-mono text-accent text-sm">0{catIndex + 1}</span>
-                  <div>
-                    <h2 className="text-title">{category}</h2>
-                    <p className="text-sm text-[--text-muted]">{categoryProjects.length} {t('projects.projects')}</p>
-                  </div>
-                </div>
+          {/* ====== PROJECT CARDS GRID ====== */}
+          {allFilteredProjects.length > 0 ? (
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
+              {allFilteredProjects.map((project) => (
+                <div
+                  key={project.name}
+                  className="nfx-card group relative flex flex-col rounded-md overflow-hidden"
+                  style={{
+                    background: 'var(--bg-surface)',
+                    border: '1px solid transparent',
+                    transition: 'transform 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease',
+                  }}
+                >
+                  {/* Red top border on hover */}
+                  <div
+                    className="absolute top-0 left-0 right-0 h-[3px] origin-left"
+                    style={{
+                      background: 'var(--accent)',
+                      transform: 'scaleX(0)',
+                      transition: 'transform 0.3s ease',
+                    }}
+                  />
 
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-1 bg-[--border]">
-                  {categoryProjects.map((project) => (
+                  {/* LIVE badge */}
+                  {project.homepage && (
                     <div
-                      key={project.name}
-                      className="project-card group bg-[--bg-surface]/95 backdrop-blur-sm p-6 relative overflow-hidden transition-all duration-300 hover:scale-[1.01] hover:shadow-lg hover:shadow-accent/5 hover:border-accent/30 border border-transparent anim-hidden"
+                      className="absolute top-3 right-3 flex items-center gap-1.5 px-2.5 py-1 rounded text-[10px] font-bold uppercase tracking-wider"
                       style={{
-                        clipPath: 'polygon(0 0, calc(100% - 16px) 0, 100% 16px, 100% 100%, 0 100%)'
+                        background: 'var(--accent)',
+                        color: '#fff',
                       }}
                     >
-                      {/* Corner accent */}
-                      <div className="absolute top-0 right-0 w-4 h-4 bg-gradient-to-br from-accent/30 to-accent/10" />
+                      <span
+                        className="inline-block w-1.5 h-1.5 rounded-full"
+                        style={{
+                          background: '#fff',
+                          animation: 'nfx-pulse 2s infinite',
+                        }}
+                      />
+                      LIVE
+                    </div>
+                  )}
 
-                      {/* Top accent line on hover */}
-                      <div className="absolute top-0 left-0 right-4 h-0.5 bg-accent transform scale-x-0 group-hover:scale-x-100 transition-transform origin-left duration-300" />
+                  <div className="flex flex-col flex-1 p-5">
+                    {/* Project name */}
+                    <h3
+                      className="text-base font-bold mb-2 line-clamp-1 transition-colors duration-200"
+                      style={{ color: 'var(--text-primary)' }}
+                    >
+                      {project.name}
+                    </h3>
 
-                      <div className="flex items-start justify-between mb-4">
+                    {/* Description */}
+                    <p
+                      className="text-sm leading-relaxed line-clamp-2 mb-4"
+                      style={{ color: 'var(--text-secondary)' }}
+                    >
+                      {project.desc}
+                    </p>
+
+                    {/* Language badge */}
+                    <div className="flex items-center gap-2 mb-3">
+                      <span
+                        className="inline-block w-3 h-3 rounded-full flex-shrink-0"
+                        style={{
+                          background: LANG_COLORS[project.lang] || '#888',
+                        }}
+                      />
+                      <span
+                        className="text-xs font-medium"
+                        style={{ color: 'var(--text-secondary)' }}
+                      >
+                        {project.lang}
+                      </span>
+                    </div>
+
+                    {/* Tags */}
+                    <div className="flex flex-wrap gap-1.5 mb-4">
+                      {project.tags.slice(0, 4).map((tag) => (
                         <span
-                          className="font-mono text-[10px] uppercase tracking-wider px-2 py-1 bg-accent/10 text-accent border border-accent/20"
-                          style={{ clipPath: 'polygon(4px 0, 100% 0, 100% 100%, 0 100%, 0 4px)' }}
+                          key={tag}
+                          className="text-[11px] px-2 py-0.5 rounded-full"
+                          style={{
+                            background: 'rgba(255,255,255,0.08)',
+                            color: 'var(--text-muted)',
+                          }}
                         >
-                          {project.lang}
+                          {tag}
                         </span>
-                        <div className="flex items-center gap-3 text-[--text-muted]">
-                          {project.commits > 0 && (
-                            <span className="flex items-center gap-1 text-xs font-mono" title="Commits">
-                              <GitCommit size={10} />
-                              {project.commits}
-                            </span>
-                          )}
-                          {project.stars > 0 && (
-                            <span className="flex items-center gap-1 text-xs font-mono" title="Stars">
-                              <Star size={10} />
-                              {project.stars}
-                            </span>
-                          )}
-                          {project.forks > 0 && (
-                            <span className="flex items-center gap-1 text-xs font-mono" title="Forks">
-                              <GitFork size={10} />
-                              {project.forks}
-                            </span>
-                          )}
-                        </div>
-                      </div>
+                      ))}
+                      {project.tags.length > 4 && (
+                        <span
+                          className="text-[11px] px-2 py-0.5 rounded-full"
+                          style={{ color: 'var(--accent)' }}
+                        >
+                          +{project.tags.length - 4}
+                        </span>
+                      )}
+                    </div>
 
-                      <h3 className="text-base font-bold mb-2 group-hover:text-accent transition-colors line-clamp-1">
-                        {project.name}
-                      </h3>
-                      <p className="text-sm text-[--text-secondary] mb-4 line-clamp-2 leading-relaxed">
-                        {project.desc}
-                      </p>
+                    {/* Stats row */}
+                    <div
+                      className="flex items-center gap-4 text-xs mb-5"
+                      style={{ color: 'var(--text-muted)' }}
+                    >
+                      {project.stars > 0 && (
+                        <span className="flex items-center gap-1" title="Stars">
+                          <Star size={13} />
+                          {project.stars}
+                        </span>
+                      )}
+                      {project.forks > 0 && (
+                        <span className="flex items-center gap-1" title="Forks">
+                          <GitFork size={13} />
+                          {project.forks}
+                        </span>
+                      )}
+                      {project.commits > 0 && (
+                        <span className="flex items-center gap-1" title="Commits">
+                          <GitCommit size={13} />
+                          {project.commits}
+                        </span>
+                      )}
+                    </div>
 
-                      <div className="flex flex-wrap gap-2 mb-4">
-                        {project.tags.slice(0, 3).map((tag) => (
-                          <span key={tag} className="text-[10px] font-mono text-[--text-muted] px-1.5 py-0.5 border border-[--border]">
-                            {tag}
-                          </span>
-                        ))}
-                        {project.tags.length > 3 && (
-                          <span className="text-[10px] font-mono text-accent">+{project.tags.length - 3}</span>
-                        )}
-                      </div>
+                    {/* Spacer */}
+                    <div className="flex-1" />
 
-                      {/* Action buttons */}
-                      <div className="flex items-center gap-3 pt-3 border-t border-[--border]">
+                    {/* Action buttons */}
+                    <div className="flex items-center gap-3">
+                      {project.homepage && (
                         <a
-                          href={project.url}
+                          href={project.homepage}
                           target="_blank"
                           rel="noopener noreferrer"
-                          className="inline-flex items-center gap-1.5 text-xs font-mono text-[--text-secondary] hover:text-accent transition-colors"
-                          aria-label={`Voir le code source de ${project.name} sur GitHub`}
+                          className="inline-flex items-center gap-2 px-4 py-2 rounded text-sm font-semibold transition-opacity duration-200 hover:opacity-80"
+                          style={{
+                            background: '#fff',
+                            color: '#141414',
+                          }}
                         >
-                          <Github size={12} />
-                          <span>{t('projects.code')}</span>
-                          <ArrowUpRight size={10} />
+                          <ExternalLink size={14} />
+                          {t('projects.demo')}
                         </a>
-                        {project.homepage && (
-                          <a
-                            href={project.homepage}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="inline-flex items-center gap-1.5 text-xs font-mono text-accent hover:text-highlight transition-colors"
-                            aria-label={`Voir la démo live de ${project.name}`}
-                          >
-                            <ExternalLink size={12} />
-                            <span>{t('projects.demo')}</span>
-                            <ArrowUpRight size={10} />
-                          </a>
-                        )}
-                        <a
-                          href={`${project.url}/archive/refs/heads/main.zip`}
-                          className="inline-flex items-center gap-1.5 text-xs font-mono text-[--text-secondary] hover:text-accent transition-colors ml-auto"
-                          aria-label={`Télécharger ${project.name}`}
-                        >
-                          <Download size={12} />
-                          <span>{t('projects.zip')}</span>
-                        </a>
-                      </div>
+                      )}
+                      <a
+                        href={project.url}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="inline-flex items-center gap-2 px-4 py-2 rounded text-sm font-semibold transition-all duration-200 hover:bg-white/10"
+                        style={{
+                          background: 'transparent',
+                          color: 'var(--text-secondary)',
+                          border: '1px solid var(--border)',
+                        }}
+                      >
+                        <Github size={14} />
+                        {t('projects.code')}
+                      </a>
                     </div>
-                  ))}
+                  </div>
                 </div>
-              </section>
-            ))}
-          </div>
-
-          {/* No results */}
-          {Object.keys(searchFilteredProjects).length === 0 && (
-            <div className="text-center py-20">
-              <p className="text-[--text-muted] mb-2">{t('projects.noResults')}</p>
-              <p className="text-sm text-[--text-muted]">{t('projects.tryAnother')}</p>
+              ))}
+            </div>
+          ) : (
+            /* ====== EMPTY STATE ====== */
+            <div className="flex flex-col items-center justify-center py-24">
+              <Search size={48} style={{ color: 'var(--text-muted)', opacity: 0.4 }} />
+              <p
+                className="text-lg font-semibold mt-6"
+                style={{ color: 'var(--text-secondary)' }}
+              >
+                {t('projects.noResults')}
+              </p>
+              <p
+                className="text-sm mt-2"
+                style={{ color: 'var(--text-muted)' }}
+              >
+                {t('projects.tryAnother')}
+              </p>
             </div>
           )}
 
-          {/* CTA Section */}
-          <section className="py-20 mt-12 border-t border-[--border]">
-            <div className="max-w-2xl mx-auto text-center">
-              <p className="text-caption mb-4">{t('projects.cta.caption')}</p>
-              <h2 className="text-headline mb-6">
-                {t('projects.cta.title').split('{accent}')[0]}<span className="accent-line">{t('projects.cta.accent')}</span>{t('projects.cta.title').split('{accent}')[1]}
-              </h2>
-              <p className="text-body-lg text-[--text-secondary] mb-10">
-                {t('projects.cta.description')}
-              </p>
-              <div className="flex flex-wrap justify-center gap-4">
-                <a href="/contact" className="btn btn-primary group">
-                  <Mail size={16} />
-                  {t('projects.cta.contact')}
-                  <ArrowUpRight size={16} className="transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
-                </a>
-                <a
-                  href={personalInfo.github}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="btn btn-outline"
-                >
-                  <Github size={16} />
-                  {t('projects.cta.github')}
-                  <ArrowUpRight size={16} />
-                </a>
-              </div>
-            </div>
-          </section>
+          {/* ====== FOOTER CTA ====== */}
+          <div
+            className="mt-16 pt-10 flex justify-center"
+            style={{ borderTop: '1px solid var(--border)' }}
+          >
+            <a
+              href="https://github.com/Adam-Blf"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-3 px-8 py-3.5 rounded text-sm font-bold uppercase tracking-wider transition-all duration-200 hover:opacity-90"
+              style={{
+                background: 'var(--accent)',
+                color: '#fff',
+              }}
+            >
+              <Github size={18} />
+              {t('projects.viewOnGithub')}
+              <ArrowUpRight size={16} />
+            </a>
+          </div>
         </div>
+
+        {/* Scoped Netflix styles */}
+        <style>{`
+          @keyframes nfx-pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.4; }
+          }
+
+          .nfx-card:hover {
+            transform: scale(1.05);
+            box-shadow: 0 8px 30px rgba(0,0,0,0.7);
+            border-color: var(--accent) !important;
+            z-index: 10;
+          }
+
+          .nfx-card:hover > div:first-child {
+            transform: scaleX(1) !important;
+          }
+
+          .nfx-card:hover h3 {
+            color: #fff !important;
+          }
+
+          .scrollbar-hide::-webkit-scrollbar {
+            display: none;
+          }
+          .scrollbar-hide {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+          }
+        `}</style>
       </main>
-    </>
+    </ErrorBoundary>
   )
 }

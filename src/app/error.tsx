@@ -116,7 +116,7 @@ export default function Error({
           <div className="flex-1 text-center">
             <span className="text-xs text-red-400 font-mono flex items-center justify-center gap-2">
               <Bug size={12} />
-              error_handler.sh — CRITICAL
+              error_handler.sh - CRITICAL
             </span>
           </div>
         </div>

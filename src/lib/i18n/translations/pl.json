@@ -76,7 +76,7 @@
       "caption": "Współpraca",
       "title": "Chcesz {accent}?",
       "accent": "współpracować",
-      "description": "Zawsze jestem otwarty na możliwości — staże, projekty open-source lub wymianę techniczną.",
+      "description": "Zawsze jestem otwarty na możliwości - staże, projekty open-source lub wymianę techniczną.",
       "contact": "Kontakt",
       "github": "Profil GitHub"
     },
@@ -87,7 +87,7 @@
   "timeline": {
     "caption": "Moja Droga",
     "title": "Doświadczenie i Edukacja",
-    "description": "Od Marynarki Wojennej przez szpitale po przewodnictwo BDE EFREI — każdy etap ukształtował moją unikalną wizję Data Engineering.",
+    "description": "Od Marynarki Wojennej przez szpitale po przewodnictwo BDE EFREI - każdy etap ukształtował moją unikalną wizję Data Engineering.",
     "filters": {
       "all": "Wszystko",
       "experience": "Doświadczenie",

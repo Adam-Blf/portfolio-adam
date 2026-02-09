@@ -28,14 +28,24 @@ const firaCode = Fira_Code({
 })
 
 export const metadata: Metadata = {
+  metadataBase: new URL('https://adam.beloucif.com'),
+  alternates: {
+    canonical: '/',
+  },
   title: {
-    default: 'Adam Beloucif — Data Engineer & Fullstack Developer',
+    default: 'Adam Beloucif | Data Engineer & Fullstack Developer - Portfolio',
     template: '%s | Adam Beloucif',
   },
-  description: 'Data Engineer & Fullstack Developer spécialisé en Python, Machine Learning, et développement web moderne. M1 Data Engineering & IA @ EFREI Paris. Transforme la data en décisions et le code en impact.',
-  keywords: ['Data Engineer', 'Fullstack Developer', 'Python', 'React', 'Next.js', 'Machine Learning', 'EFREI', 'Paris', 'IA', 'Portfolio', 'Développeur'],
-  authors: [{ name: 'Adam Beloucif', url: 'https://github.com/Adam-Blf' }],
+  description: 'Portfolio de Adam Beloucif, Data Engineer et Fullstack Developer specialise en Python, Machine Learning, React et Next.js. M1 Data Engineering et IA a EFREI Paris. Projets Data, IA et Fullstack.',
+  keywords: [
+    'Adam Beloucif', 'Data Engineer', 'Fullstack Developer', 'Python', 'React', 'Next.js',
+    'Machine Learning', 'EFREI Paris', 'IA', 'Portfolio', 'Developpeur', 'TypeScript',
+    'NLP', 'Deep Learning', 'Docker', 'AWS', 'Data Engineering', 'Paris',
+    'alternance', 'ingenieur data', 'developpeur fullstack',
+  ],
+  authors: [{ name: 'Adam Beloucif', url: 'https://adam.beloucif.com' }],
   creator: 'Adam Beloucif',
+  publisher: 'Adam Beloucif',
   manifest: '/manifest.json',
   verification: {
     google: 'g8ulSVAWYx-6It_gx-Olu5vTn3bsFlI0zBEV2g0DybU',
@@ -56,16 +66,17 @@ export const metadata: Metadata = {
     apple: '/favicon.svg',
   },
   openGraph: {
-    title: 'Adam Beloucif — Data Engineer & Fullstack Developer',
-    description: 'From Data to Decisions. From Code to Impact. Portfolio de projets Data, IA et Fullstack.',
+    title: 'Adam Beloucif | Data Engineer & Fullstack Developer',
+    description: 'From Data to Decisions. From Code to Impact. Portfolio de projets Data, IA et Fullstack. 35+ projets GitHub, Python, React, Machine Learning.',
     type: 'website',
     locale: 'fr_FR',
+    url: 'https://adam.beloucif.com',
     siteName: 'Adam Beloucif Portfolio',
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'Adam Beloucif — Data Engineer',
-    description: 'From Data to Decisions. From Code to Impact.',
+    title: 'Adam Beloucif | Data Engineer & Fullstack Developer',
+    description: 'From Data to Decisions. From Code to Impact. Portfolio Data, IA et Fullstack.',
   },
 }
 
@@ -115,38 +126,50 @@ export default function RootLayout({
                   name: 'Adam Beloucif',
                   jobTitle: 'Data Engineer & Fullstack Developer',
                   url: 'https://adam.beloucif.com',
+                  image: 'https://adam.beloucif.com/images/adam-photo.jpg',
                   sameAs: [
                     'https://github.com/Adam-Blf',
                     'https://linkedin.com/in/adambeloucif',
                   ],
                   email: 'adam.beloucif@efrei.net',
-                  alumniOf: {
-                    '@type': 'EducationalOrganization',
-                    name: 'EFREI Paris',
+                  address: {
+                    '@type': 'PostalAddress',
+                    addressLocality: 'Paris',
+                    addressCountry: 'FR',
+                  },
+                  alumniOf: [
+                    {
+                      '@type': 'EducationalOrganization',
+                      name: 'EFREI Paris',
+                      url: 'https://www.efrei.fr',
+                    },
+                    {
+                      '@type': 'EducationalOrganization',
+                      name: 'Universidad de Malaga',
+                    },
+                  ],
+                  worksFor: {
+                    '@type': 'Organization',
+                    name: 'GHT Psy Sud',
                   },
                   knowsAbout: [
-                    'Data Engineering',
-                    'Python',
-                    'Machine Learning',
-                    'React',
-                    'Next.js',
-                    'TypeScript',
-                    'SQL',
-                    'Docker',
-                    'NLP',
-                    'Deep Learning',
+                    'Data Engineering', 'Python', 'Machine Learning',
+                    'React', 'Next.js', 'TypeScript', 'SQL',
+                    'Docker', 'NLP', 'Deep Learning', 'AWS',
+                    'PostgreSQL', 'MongoDB',
                   ],
                 },
                 {
                   '@type': 'WebSite',
                   '@id': 'https://adam.beloucif.com/#website',
-                  name: 'Adam Beloucif — Portfolio',
+                  name: 'Adam Beloucif - Portfolio',
                   url: 'https://adam.beloucif.com',
                   description:
-                    'Portfolio de Adam Beloucif, Data Engineer & Fullstack Developer. Projets Data, IA et Fullstack.',
+                    'Portfolio de Adam Beloucif, Data Engineer et Fullstack Developer. Projets Data, IA et Fullstack.',
                   author: {
                     '@id': 'https://adam.beloucif.com/#person',
                   },
+                  inLanguage: 'fr-FR',
                 },
               ],
             }),

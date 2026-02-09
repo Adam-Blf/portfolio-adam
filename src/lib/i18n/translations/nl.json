@@ -76,7 +76,7 @@
       "caption": "Samenwerking",
       "title": "Wil je {accent}?",
       "accent": "samenwerken",
-      "description": "Ik sta altijd open voor kansen — stages, werkstudentschap, open-source projecten of technische uitwisseling.",
+      "description": "Ik sta altijd open voor kansen - stages, werkstudentschap, open-source projecten of technische uitwisseling.",
       "contact": "Contact",
       "github": "GitHub Profiel"
     },
@@ -87,7 +87,7 @@
   "timeline": {
     "caption": "Mijn Traject",
     "title": "Ervaring & Opleiding",
-    "description": "Van de Marine tot ziekenhuizen, via het voorzitterschap van de BDE EFREI — elke stap heeft mijn unieke visie op Data Engineering gevormd.",
+    "description": "Van de Marine tot ziekenhuizen, via het voorzitterschap van de BDE EFREI - elke stap heeft mijn unieke visie op Data Engineering gevormd.",
     "filters": {
       "all": "Alles",
       "experience": "Ervaring",

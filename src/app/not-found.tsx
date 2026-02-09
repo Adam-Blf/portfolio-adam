@@ -19,7 +19,7 @@ function GlitchText({ text, className = '' }: { text: string; className?: string
     const el = ref.current
     if (!el) return
 
-    const glitchChars = '!<>-_\\/[]{}—=+*^?#________'
+    const glitchChars = '!<>-_\\/[]{}=+*^?#________'
     let iteration = 0
     const originalText = text
     let interval: NodeJS.Timeout | null = null
@@ -169,7 +169,7 @@ export default function NotFound() {
             <div className="flex-1 text-center">
               <span className="text-xs text-[--text-muted] font-mono flex items-center justify-center gap-2">
                 <Terminal size={12} />
-                error_404.sh — adam@portfolio
+                error_404.sh - adam@portfolio
               </span>
             </div>
           </div>
