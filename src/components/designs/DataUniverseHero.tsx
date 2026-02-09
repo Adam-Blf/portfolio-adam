@@ -359,14 +359,14 @@ export default function DataUniverseHero() {
           {/* CTAs */}
           <div className="content-reveal opacity-0 flex items-center gap-6">
             <Link
-              href="/projets"
+              href="/pokedex"
               className="group flex items-center gap-2 px-6 py-3 bg-amber-500 text-black font-semibold text-sm rounded-full hover:bg-amber-400 transition-colors"
             >
               Explore Projects
               <ArrowRight size={16} className="group-hover:translate-x-1 transition-transform" />
             </Link>
             <Link
-              href="/contact"
+              href="/centre-pokemon"
               className="text-zinc-400 hover:text-amber-500 text-sm transition-colors"
             >
               Get in Touch

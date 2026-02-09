@@ -7,38 +7,33 @@ interface GradientBackgroundProps {
 export default function GradientBackground({ showGrid = false }: GradientBackgroundProps) {
   return (
     <div className="absolute inset-0 overflow-hidden">
-      {/* Base background */}
-      <div className="absolute inset-0 bg-[--bg-deep]" />
-
-      {/* Gradient orbs - subtle Netflix red tones */}
-      <div className="absolute top-0 -left-1/4 w-1/2 h-1/2 bg-[--accent] rounded-full opacity-[0.06] blur-[120px]" />
-      <div className="absolute top-1/4 -right-1/4 w-1/2 h-1/2 bg-[--accent] rounded-full opacity-[0.04] blur-[120px]" />
-      <div className="absolute -bottom-1/4 left-1/4 w-1/2 h-1/2 bg-[--accent] rounded-full opacity-[0.05] blur-[120px]" />
-
-      {/* Optional grid pattern */}
-      {showGrid && (
-        <div
-          className="absolute inset-0 opacity-[0.02]"
-          style={{
-            backgroundImage: `
-              linear-gradient(var(--accent) 1px, transparent 1px),
-              linear-gradient(90deg, var(--accent) 1px, transparent 1px)
-            `,
-            backgroundSize: '50px 50px',
-          }}
-        />
-      )}
-
-      {/* Subtle noise texture overlay */}
+      {/* Base red Pokedex background */}
       <div
-        className="absolute inset-0 opacity-[0.015] pointer-events-none"
+        className="absolute inset-0"
+        style={{ background: 'var(--pokedex-red)' }}
+      />
+
+      {/* Subtle diagonal line texture */}
+      <div
+        className="absolute inset-0 opacity-[0.06] pointer-events-none"
         style={{
-          backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E")`,
+          backgroundImage: `repeating-linear-gradient(
+            45deg,
+            transparent,
+            transparent 8px,
+            rgba(0,0,0,1) 8px,
+            rgba(0,0,0,1) 9px
+          )`,
         }}
       />
 
-      {/* Gradient overlay for text readability */}
-      <div className="absolute inset-0 bg-gradient-to-b from-transparent via-[--bg-deep]/50 to-[--bg-deep]" />
+      {/* Slight darker gradient at edges for depth */}
+      <div
+        className="absolute inset-0 pointer-events-none"
+        style={{
+          background: 'radial-gradient(ellipse at center, transparent 50%, rgba(0,0,0,0.15) 100%)',
+        }}
+      />
     </div>
   )
 }

@@ -9,39 +9,42 @@ interface GitHubStats {
   languageCount: number
 }
 
-interface StatItem {
-  value: number
+interface StatBarItem {
   label: string
-  suffix: string
+  value: number
+  displayValue: string
+  color: string
+  maxValue: number
   loading: boolean
 }
 
-function StatCard({ value, suffix, label, loading }: StatItem) {
+function StatBar({ label, value, displayValue, color, maxValue, loading }: StatBarItem) {
+  const percentage = Math.min((value / maxValue) * 100, 100)
   return (
-    <div className="text-center py-6 px-4" role="listitem">
-      <p
-        className="text-4xl md:text-5xl font-bold text-white leading-none"
-        aria-label={loading ? `Chargement ${label}` : `${value}${suffix} ${label}`}
-      >
-        {loading ? (
-          <span
-            className="inline-block w-16 h-10 rounded"
-            style={{ backgroundColor: 'var(--bg-surface, #1a1a1a)' }}
-            aria-hidden="true"
-          />
-        ) : (
-          <>
-            <span style={{ color: 'var(--accent, #E50914)' }}>{value}</span>
-            <span className="text-white">{suffix}</span>
-          </>
-        )}
-      </p>
-      <p
-        className="text-sm mt-2 uppercase tracking-wider font-medium"
-        style={{ color: 'var(--text-secondary, #B3B3B3)' }}
+    <div className="flex items-center gap-3" role="listitem">
+      <span
+        className="font-mono text-xs font-bold uppercase w-24 text-right shrink-0"
+        style={{ color: 'var(--pokedex-dark)' }}
       >
         {label}
-      </p>
+      </span>
+      <div className="flex-1 h-4 rounded overflow-hidden" style={{ backgroundColor: 'var(--pokedex-screen-dark)' }}>
+        {loading ? (
+          <div className="h-full w-1/2 skeleton" />
+        ) : (
+          <div
+            className="h-full rounded transition-all duration-1000 ease-out"
+            style={{ width: `${percentage}%`, backgroundColor: color }}
+          />
+        )}
+      </div>
+      <span
+        className="font-mono text-sm font-bold w-16 text-right shrink-0"
+        style={{ color: 'var(--pokedex-dark)' }}
+        aria-label={`${label}: ${displayValue}`}
+      >
+        {loading ? '...' : displayValue}
+      </span>
     </div>
   )
 }
@@ -141,38 +144,41 @@ export default function Stats() {
     fetchStats()
   }, [])
 
-  // Count unique volunteer roles
-  const volunteerRoles = new Set(volunteering.map(v => v.org)).size
-
-  const stats: StatItem[] = [
-    { value: githubStats.projectCount, label: 'Projets GitHub', suffix: '+', loading },
-    { value: certifications.length, label: 'Certifications', suffix: '', loading: false },
-    { value: staticMetrics.yearsExperience, label: 'Années d\'expérience', suffix: '+', loading: false },
-    { value: volunteerRoles, label: 'Rôles associatifs', suffix: '', loading: false },
+  const stats: StatBarItem[] = [
+    { label: 'PROJETS', value: githubStats.projectCount, displayValue: `${githubStats.projectCount}+`, color: '#F08030', maxValue: 60, loading },
+    { label: 'COMMITS', value: githubStats.totalCommits, displayValue: `${githubStats.totalCommits}+`, color: '#6890F0', maxValue: 1000, loading },
+    { label: 'TECHNOLOGIES', value: githubStats.languageCount, displayValue: `${githubStats.languageCount}+`, color: '#78C850', maxValue: 40, loading },
+    { label: 'EXP. (ANS)', value: staticMetrics.yearsExperience, displayValue: `${staticMetrics.yearsExperience}+`, color: '#F8D030', maxValue: 10, loading: false },
   ]
 
   return (
-    <section
-      className="py-12"
-      style={{
-        backgroundColor: 'var(--bg-surface, #1a1a1a)',
-        borderTop: '1px solid var(--border, rgba(255,255,255,0.1))',
-        borderBottom: '1px solid var(--border, rgba(255,255,255,0.1))',
-      }}
-      aria-labelledby="stats-heading"
-    >
-      <h2 id="stats-heading" className="sr-only">Statistiques en chiffres</h2>
+    <section className="py-6 md:py-10" aria-labelledby="stats-heading">
       <div className="container-wide">
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-8" role="list">
-          {stats.map((stat) => (
-            <StatCard
-              key={stat.label}
-              value={stat.value}
-              suffix={stat.suffix}
-              label={stat.label}
-              loading={stat.loading}
-            />
-          ))}
+        <div className="pokedex-shell p-4 md:p-6">
+          <div className="pokedex-screen p-4 md:p-6">
+            <h2
+              id="stats-heading"
+              className="font-mono font-bold text-sm uppercase tracking-widest mb-4"
+              style={{ color: 'var(--pokedex-dark)' }}
+            >
+              ── EXP. POINTS ──
+            </h2>
+            <div className="space-y-3" role="list">
+              {stats.map((stat) => (
+                <StatBar key={stat.label} {...stat} />
+              ))}
+            </div>
+
+            {/* Extra info row */}
+            <div className="flex flex-wrap gap-4 mt-4 pt-3" style={{ borderTop: '2px solid var(--pokedex-screen-dark)' }}>
+              <span className="font-mono text-xs" style={{ color: 'var(--pokedex-dark)' }}>
+                🏅 CERTIFICATIONS: <strong>{certifications.length}</strong>
+              </span>
+              <span className="font-mono text-xs" style={{ color: 'var(--pokedex-dark)' }}>
+                🤝 ROLES ASSOCIATIFS: <strong>{new Set(volunteering.map(v => v.org)).size}</strong>
+              </span>
+            </div>
+          </div>
         </div>
       </div>
     </section>

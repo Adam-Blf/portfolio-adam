@@ -33,7 +33,7 @@ export const metadata: Metadata = {
     canonical: '/',
   },
   title: {
-    default: 'Adam Beloucif | Data Engineer & Fullstack Developer - Portfolio',
+    default: 'Adam Beloucif | Pokedex Portfolio - Data Engineer & Fullstack Developer',
     template: '%s | Adam Beloucif',
   },
   description: 'Portfolio de Adam Beloucif, Data Engineer et Fullstack Developer specialise en Python, Machine Learning, React et Next.js. M1 Data Engineering et IA a EFREI Paris. Projets Data, IA et Fullstack.',
@@ -84,7 +84,7 @@ export const viewport: Viewport = {
   width: 'device-width',
   initialScale: 1,
   maximumScale: 5,
-  themeColor: '#141414',
+  themeColor: '#DC0A2D',
 }
 
 export default function RootLayout({

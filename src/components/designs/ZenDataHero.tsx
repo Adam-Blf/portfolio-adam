@@ -203,7 +203,7 @@ export default function ZenDataHero() {
             {/* CTAs - Minimal */}
             <div className="reveal-content opacity-0 flex items-center gap-8 pt-4">
               <Link
-                href="/projets"
+                href="/pokedex"
                 className="group flex items-center gap-3 text-amber-500 hover:text-amber-400 transition-colors"
               >
                 <span className="text-sm tracking-wide">View Work</span>
@@ -211,7 +211,7 @@ export default function ZenDataHero() {
               </Link>
 
               <Link
-                href="/contact"
+                href="/centre-pokemon"
                 className="text-stone-500 hover:text-stone-300 text-sm tracking-wide transition-colors"
               >
                 Contact

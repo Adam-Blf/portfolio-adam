@@ -1,12 +1,20 @@
 'use client'
 
-import { useEffect, useRef } from 'react'
+import { useRef } from 'react'
 import Link from 'next/link'
-import { ArrowUpRight, Github, ExternalLink, Download, ChevronRight } from 'lucide-react'
+import { Github, ExternalLink, ChevronRight } from 'lucide-react'
 import { projects } from '@/lib/data'
 
+const typeColorMap: Record<string, string> = {
+  'Python': 'type-water',
+  'TypeScript': 'type-psychic',
+  'JavaScript': 'type-electric',
+  'CSS/JS': 'type-fairy',
+  'HTML/JS': 'type-fire',
+  'C#': 'type-steel',
+}
+
 export default function FeaturedProjects() {
-  const sectionRef = useRef<HTMLElement>(null)
   const rowRef = useRef<HTMLDivElement>(null)
 
   const featuredNames = projects.featured
@@ -25,97 +33,129 @@ export default function FeaturedProjects() {
   }
 
   return (
-    <section ref={sectionRef} className="py-12 md:py-16">
+    <section className="py-6 md:py-10">
       <div className="container-wide">
-        {/* Header - Netflix row title */}
-        <div className="flex items-center justify-between mb-4">
-          <Link href="/projets" className="group flex items-center gap-2">
-            <h2 className="text-xl md:text-2xl font-bold text-white">
-              Projets
+        <div className="pokedex-shell p-4 md:p-6">
+          {/* Header */}
+          <div className="flex items-center justify-between mb-4">
+            <h2
+              className="font-mono font-bold text-sm uppercase tracking-widest"
+              style={{ color: 'var(--pokedex-white)' }}
+            >
+              ── DERNIERS POKEMON CAPTURES ──
             </h2>
-            <ChevronRight size={20} className="text-[--accent] opacity-0 group-hover:opacity-100 group-hover:translate-x-1 transition-all" />
-            <span className="text-sm text-[--accent] opacity-0 group-hover:opacity-100 transition-all">
-              Tout voir
-            </span>
-          </Link>
-        </div>
+            <Link
+              href="/pokedex"
+              className="pokedex-button text-xs gap-1"
+            >
+              Tout voir <ChevronRight size={12} />
+            </Link>
+          </div>
 
-        {/* Netflix-style horizontal scroll row */}
-        <div className="relative group/row">
-          {/* Scroll buttons */}
-          <button
-            onClick={() => scrollRow('left')}
-            className="absolute left-0 top-0 bottom-4 z-10 w-12 bg-gradient-to-r from-[#141414] to-transparent opacity-0 group-hover/row:opacity-100 transition-opacity flex items-center justify-center"
-            aria-label="Scroll left"
-          >
-            <ChevronRight size={28} className="text-white rotate-180" />
-          </button>
-          <button
-            onClick={() => scrollRow('right')}
-            className="absolute right-0 top-0 bottom-4 z-10 w-12 bg-gradient-to-l from-[#141414] to-transparent opacity-0 group-hover/row:opacity-100 transition-opacity flex items-center justify-center"
-            aria-label="Scroll right"
-          >
-            <ChevronRight size={28} className="text-white" />
-          </button>
+          {/* Horizontal scroll row */}
+          <div className="relative group/row">
+            {/* Scroll buttons */}
+            <button
+              onClick={() => scrollRow('left')}
+              className="absolute left-0 top-0 bottom-0 z-10 w-10 flex items-center justify-center opacity-0 group-hover/row:opacity-100 transition-opacity"
+              style={{ background: 'linear-gradient(to right, var(--pokedex-red), transparent)' }}
+              aria-label="Scroll left"
+            >
+              <ChevronRight size={24} className="rotate-180" style={{ color: 'var(--pokedex-white)' }} />
+            </button>
+            <button
+              onClick={() => scrollRow('right')}
+              className="absolute right-0 top-0 bottom-0 z-10 w-10 flex items-center justify-center opacity-0 group-hover/row:opacity-100 transition-opacity"
+              style={{ background: 'linear-gradient(to left, var(--pokedex-red), transparent)' }}
+              aria-label="Scroll right"
+            >
+              <ChevronRight size={24} style={{ color: 'var(--pokedex-white)' }} />
+            </button>
 
-          <div ref={rowRef} className="netflix-row">
-            {featuredProjects.map((project, i) => {
-              const homepage = project?.name ? projects.homepages[project.name] : null
-              const githubUrl = `https://github.com/Adam-Blf/${project?.name}`
+            <div ref={rowRef} className="pokedex-row">
+              {featuredProjects.map((project, i) => {
+                const homepage = project?.name ? projects.homepages[project.name] : null
+                const githubUrl = `https://github.com/Adam-Blf/${project?.name}`
+                const typeClass = typeColorMap[project?.lang || ''] || 'type-normal'
+                const entryNum = String(i + 1).padStart(3, '0')
 
-              return (
-                <div
-                  key={project?.name}
-                  className="netflix-row-item netflix-card group relative"
-                >
-                  {/* Card top accent */}
-                  <div className="h-1 bg-[--accent] w-0 group-hover:w-full transition-all duration-300" />
+                return (
+                  <div
+                    key={project?.name}
+                    className="pokedex-row-item pokedex-card group"
+                  >
+                    <div className="p-4">
+                      {/* Entry number & status */}
+                      <div className="flex justify-between items-center mb-2">
+                        <span className="pokedex-entry-number">{entryNum}</span>
+                        {homepage && (
+                          <span className="pokedex-led pokedex-led-green w-2.5 h-2.5" title="LIVE" />
+                        )}
+                      </div>
 
-                  <div className="p-5">
-                    {/* Header */}
-                    <div className="flex justify-between items-start mb-4">
-                      <span className="text-xs font-mono text-[--accent] font-bold">0{i + 1}</span>
-                      {homepage && (
-                        <span className="text-[10px] font-bold uppercase px-2 py-0.5 bg-[--success]/20 text-[--success] rounded-sm">
-                          LIVE
+                      {/* Pokemon name */}
+                      <h3
+                        className="font-mono font-bold text-base uppercase mb-1"
+                        style={{ color: 'var(--pokedex-dark)' }}
+                      >
+                        {project?.name}
+                      </h3>
+
+                      {/* Description */}
+                      <p className="text-xs mb-3 line-clamp-2" style={{ color: 'var(--text-secondary)' }}>
+                        {project?.desc}
+                      </p>
+
+                      {/* Type badge */}
+                      <div className="flex flex-wrap gap-1.5 mb-3">
+                        <span className={`type-badge ${typeClass}`} style={{ fontSize: '0.6rem', padding: '0.15rem 0.5rem' }}>
+                          {project?.lang}
                         </span>
-                      )}
-                    </div>
+                      </div>
 
-                    {/* Title */}
-                    <h3 className="text-base font-bold text-white mb-2 group-hover:text-[--accent] transition-colors">
-                      {project?.name}
-                    </h3>
-                    <p className="text-sm text-[--text-secondary] mb-4 line-clamp-2">
-                      {project?.desc}
-                    </p>
+                      {/* Ability tags */}
+                      <div className="flex flex-wrap gap-1 mb-3">
+                        {project?.tags.slice(0, 3).map((tag) => (
+                          <span
+                            key={tag}
+                            className="font-mono text-[10px] px-2 py-0.5 rounded-full"
+                            style={{
+                              backgroundColor: 'var(--pokedex-white)',
+                              color: 'var(--text-secondary)',
+                              border: '1px solid var(--pokedex-gray)',
+                            }}
+                          >
+                            {tag}
+                          </span>
+                        ))}
+                      </div>
 
-                    {/* Tags */}
-                    <div className="flex flex-wrap gap-1.5 mb-4">
-                      {project?.tags.slice(0, 3).map((tag) => (
-                        <span key={tag} className="text-[10px] font-mono px-2 py-0.5 bg-white/5 text-[--text-muted] rounded">
-                          {tag}
-                        </span>
-                      ))}
-                    </div>
-
-                    {/* Actions */}
-                    <div className="flex items-center gap-3 pt-3 border-t border-white/5">
-                      {homepage && (
-                        <a href={homepage} target="_blank" rel="noopener noreferrer"
-                          className="inline-flex items-center gap-1 text-xs font-bold text-[--accent] hover:text-white transition-colors">
-                          <ExternalLink size={11} /> Demo
+                      {/* Action buttons */}
+                      <div className="flex items-center gap-2 pt-2" style={{ borderTop: '1px solid var(--pokedex-gray)' }}>
+                        {homepage && (
+                          <a
+                            href={homepage}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="pokedex-button text-[10px] py-1 px-2 gap-1"
+                          >
+                            <ExternalLink size={10} /> Demo
+                          </a>
+                        )}
+                        <a
+                          href={githubUrl}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="pokedex-button text-[10px] py-1 px-2 gap-1"
+                        >
+                          <Github size={10} /> Code
                         </a>
-                      )}
-                      <a href={githubUrl} target="_blank" rel="noopener noreferrer"
-                        className="inline-flex items-center gap-1 text-xs text-[--text-muted] hover:text-white transition-colors">
-                        <Github size={11} /> Code
-                      </a>
+                      </div>
                     </div>
                   </div>
-                </div>
-              )
-            })}
+                )
+              })}
+            </div>
           </div>
         </div>
       </div>
