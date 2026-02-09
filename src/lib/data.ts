@@ -299,24 +299,6 @@ export const experiences = [
     ],
     tech: ["Logistique", "Gestion stocks", "Travail d'equipe"],
   },
-  {
-    id: 9,
-    title: "Preparation Militaire Marine (PMM) Kieffer",
-    company: "Marine Nationale",
-    location: "Villeneuve-Saint-Georges, Ile-de-France",
-    type: "Formation",
-    period: "Sept 2020 - Juil 2021",
-    startDate: "2020-09",
-    endDate: "2021-07",
-    current: false,
-    description: "Formation militaire sur 10 mois - Diplome obtenu Mention Assez Bien",
-    missions: [
-      "Apprentissage des bases de la Marine Nationale, tir, lutte incendie",
-      "Participation aux ceremonies militaires",
-      "Obtention Permis bateau cotier et PSC1 (Premiers Secours)",
-    ],
-    tech: ["Leadership", "Discipline", "Travail d'equipe", "Gestion du stress"],
-  },
 ]
 
 export const education = [
