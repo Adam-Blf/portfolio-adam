@@ -527,7 +527,7 @@ export const education = [
 
 export const certifications = [
   // 2027 - RNCP Master (en cours)
-  { name: "Expert en ingenierie de donnees (RNCP 40875)", issuer: "EFREI", year: "2027", date: "2027-07", level: "Niveau 7", rncp: "RNCP40875", url: "https://www.francecompetences.fr/recherche/rncp/40875/", pending: true },
+  { name: "Expert en ingenierie de donnees (RNCP 40875)", issuer: "EFREI", year: "2027", date: "2027-08", level: "Niveau 7", rncp: "RNCP40875", url: "https://www.francecompetences.fr/recherche/rncp/40875/", pending: true },
 
   // 2025 - RNCP Bachelor
   { name: "Chef de projets digitaux (RNCP 35541)", issuer: "EFREI", year: "2025", date: "2025-07", level: "Niveau 6", rncp: "RNCP35541", url: "https://www.francecompetences.fr/recherche/rncp/35541/" },
