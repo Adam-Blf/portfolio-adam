@@ -37,6 +37,9 @@ export const metadata: Metadata = {
   authors: [{ name: 'Adam Beloucif', url: 'https://github.com/Adam-Blf' }],
   creator: 'Adam Beloucif',
   manifest: '/manifest.json',
+  verification: {
+    google: 'g8ulSVAWYx-6It_gx-Olu5vTn3bsFlI0zBEV2g0DybU',
+  },
   robots: {
     index: true,
     follow: true,
