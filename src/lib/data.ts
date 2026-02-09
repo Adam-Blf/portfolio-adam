@@ -496,11 +496,13 @@ export const education = [
     endDate: "2024-02",
     level: "Semestre d'echange",
     current: false,
-    description: "Semestre Erasmus en Espagne. Cours en espagnol : Production Audiovisual, Ingles instrumental I y III, Analisis del discurso, Communication Commercial. Immersion complete dans la culture espagnole et perfectionnement linguistique.",
+    description: "Semestre Erasmus en Espagne. Cours en espagnol : Produccion Audiovisual, Ingles instrumental I, Ingles instrumental III, Analisis del discurso, Comunicacion Comercial. Immersion complete dans la culture espagnole et perfectionnement linguistique.",
     highlights: [
-      "Production Audiovisuelle",
-      "Analyse du discours",
-      "Communication Commerciale",
+      "Produccion Audiovisual",
+      "Ingles instrumental I",
+      "Ingles instrumental III",
+      "Analisis del discurso",
+      "Comunicacion Comercial",
       "Immersion culturelle totale",
     ],
     skills: [
@@ -872,10 +874,11 @@ export const formationCourses = {
     rncpTitle: null,
     years: {
       "Semestre (2023-2024)": [
-        { name: "Production Audiovisual", category: "design" },
-        { name: "Ingles instrumental I y III", category: "international" },
+        { name: "Produccion Audiovisual", category: "design" },
+        { name: "Ingles instrumental I", category: "international" },
+        { name: "Ingles instrumental III", category: "international" },
         { name: "Analisis del discurso", category: "communication" },
-        { name: "Communication Commercial", category: "marketing" },
+        { name: "Comunicacion Comercial", category: "marketing" },
       ],
     },
   },
