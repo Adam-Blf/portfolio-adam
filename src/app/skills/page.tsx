@@ -30,7 +30,7 @@ interface SkillCategory extends CachedCategory {
   icon: React.ReactNode
 }
 
-// Pokemon type colors per category
+// Type colors per category
 const categoryTypeColors: Record<string, { bg: string; text: string; label: string; light: string }> = {
   languages: { bg: '#A8A878', text: '#fff', label: 'NORMAL', light: '#C6C6A7' },
   frameworks: { bg: '#F8D030', text: '#333', label: 'ELECTRIC', light: '#FAE078' },
@@ -119,7 +119,7 @@ const categorizeSkill = (skill: string): string => {
   return 'other'
 }
 
-export default function Types() {
+export default function SkillsPage() {
   const [categories, setCategories] = useState<SkillCategory[]>([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
@@ -338,7 +338,7 @@ export default function Types() {
               className="text-2xl md:text-3xl font-bold tracking-widest uppercase"
               style={{ color: 'var(--pokedex-white)', textShadow: '0 2px 4px rgba(0,0,0,0.3)' }}
             >
-              TYPES
+              COMPETENCES
             </h1>
             <p className="text-sm mt-2" style={{ color: 'rgba(255,255,255,0.7)' }}>
               {totalSkills}+ technologies maitrisees - {totalRepos} repositories analyses
@@ -421,7 +421,7 @@ export default function Types() {
                           >
                             {skill.name}
                           </span>
-                          {/* Pokemon stat bar */}
+                          {/* Stat bar */}
                           <div className="flex-1 h-3 rounded-full overflow-hidden" style={{ background: 'rgba(0,0,0,0.15)' }}>
                             <div
                               className="h-full rounded-full transition-all duration-500"

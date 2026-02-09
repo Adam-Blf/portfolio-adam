@@ -5,6 +5,10 @@ User-agent: *
 Allow: /
 Disallow: /api/
 Disallow: /_next/
+Disallow: /pokedex
+Disallow: /evolution
+Disallow: /centre-pokemon
+Disallow: /types
 Disallow: /projets
 Disallow: /competences
 Disallow: /frise

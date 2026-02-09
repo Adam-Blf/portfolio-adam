@@ -10,7 +10,7 @@ import CallToAction from '@/components/sections/CallToAction'
 export default function Home() {
   return (
     <div className="pokedex-homepage">
-      {/* Pokédex Entry #001 — ADAM BELOUCIF */}
+      {/* Entry #001 — ADAM BELOUCIF */}
       <MinimalProHero />
       <Stats />
       <AboutPreview />

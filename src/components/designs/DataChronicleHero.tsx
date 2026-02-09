@@ -220,14 +220,14 @@ export default function DataChronicleHero() {
             {/* CTAs */}
             <div className="column-content opacity-0 flex flex-wrap gap-4 pt-4">
               <Link
-                href="/pokedex"
+                href="/projects"
                 className="group inline-flex items-center gap-2 px-6 py-3 bg-amber-500 text-black font-bold text-sm hover:bg-amber-400 transition-colors"
               >
                 View Projects
                 <ArrowUpRight size={16} className="group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" />
               </Link>
               <Link
-                href="/evolution"
+                href="/timeline"
                 className="inline-flex items-center gap-2 px-6 py-3 border border-zinc-700 text-zinc-300 font-medium text-sm hover:border-amber-500 hover:text-amber-500 transition-colors"
               >
                 View Timeline

@@ -12,11 +12,11 @@ export default function Footer() {
 
   const navItems = [
     { href: '/', key: 'home' },
-    { href: '/evolution', key: 'timeline' },
-    { href: '/pokedex', key: 'projects' },
-    { href: '/types', key: 'skills' },
+    { href: '/timeline', key: 'timeline' },
+    { href: '/projects', key: 'projects' },
+    { href: '/skills', key: 'skills' },
     { href: '/formation', key: 'formation' },
-    { href: '/centre-pokemon', key: 'contact' },
+    { href: '/contact', key: 'contact' },
   ]
 
   return (

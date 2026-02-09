@@ -3,6 +3,6 @@ import { useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 export default function ProjetsRedirect() {
   const router = useRouter()
-  useEffect(() => { router.replace('/pokedex') }, [router])
+  useEffect(() => { router.replace('/projects') }, [router])
   return null
 }

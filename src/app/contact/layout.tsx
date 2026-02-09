@@ -3,7 +3,7 @@ import type { Metadata } from 'next'
 export const metadata: Metadata = {
   title: 'Contact',
   description:
-    'Contactez Adam Beloucif pour des opportunites en Data Engineering, developpement Fullstack, alternance ou collaboration sur des projets tech.',
+    'Contactez Adam Beloucif : formulaire de contact pour opportunites en Data Engineering, developpement Fullstack ou collaboration tech.',
   openGraph: {
     title: 'Contact | Adam Beloucif',
     description:

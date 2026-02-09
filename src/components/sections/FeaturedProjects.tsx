@@ -42,10 +42,10 @@ export default function FeaturedProjects() {
               className="font-mono font-bold text-sm uppercase tracking-widest"
               style={{ color: 'var(--pokedex-white)' }}
             >
-              ── DERNIERS POKEMON CAPTURES ──
+              ── DERNIERS PROJETS ──
             </h2>
             <Link
-              href="/pokedex"
+              href="/projects"
               className="pokedex-button text-xs gap-1"
             >
               Tout voir <ChevronRight size={12} />
@@ -93,7 +93,7 @@ export default function FeaturedProjects() {
                         )}
                       </div>
 
-                      {/* Pokemon name */}
+                      {/* Project name */}
                       <h3
                         className="font-mono font-bold text-base uppercase mb-1"
                         style={{ color: 'var(--pokedex-dark)' }}

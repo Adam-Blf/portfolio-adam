@@ -20,7 +20,7 @@ export default function CallToAction({ variant = 'default' }: CallToActionProps)
                 Un projet en tête ? Discutons-en.
               </p>
               <div className="flex flex-wrap justify-center gap-3">
-                <Link href="/centre-pokemon" className="pokedex-button gap-2" style={{ backgroundColor: 'var(--pokedex-red)', color: 'white', borderColor: 'var(--pokedex-red-dark)' }}>
+                <Link href="/contact" className="pokedex-button gap-2" style={{ backgroundColor: 'var(--pokedex-red)', color: 'white', borderColor: 'var(--pokedex-red-dark)' }}>
                   ✉ Me contacter
                 </Link>
                 <a href={personalInfo.linkedin} target="_blank" rel="noopener noreferrer" className="pokedex-button gap-2">
@@ -50,7 +50,7 @@ export default function CallToAction({ variant = 'default' }: CallToActionProps)
                 Je suis toujours ouvert aux opportunités - stages, alternances, projets open-source, ou échanges techniques.
               </p>
               <div className="flex flex-wrap justify-center gap-3">
-                <Link href="/centre-pokemon" className="pokedex-button gap-2" style={{ backgroundColor: 'var(--pokedex-red)', color: 'white', borderColor: 'var(--pokedex-red-dark)' }}>
+                <Link href="/contact" className="pokedex-button gap-2" style={{ backgroundColor: 'var(--pokedex-red)', color: 'white', borderColor: 'var(--pokedex-red-dark)' }}>
                   <Mail size={14} /> Me contacter
                 </Link>
                 <a href={personalInfo.github} target="_blank" rel="noopener noreferrer" className="pokedex-button gap-2">
@@ -64,7 +64,7 @@ export default function CallToAction({ variant = 'default' }: CallToActionProps)
     )
   }
 
-  // Default variant — Centre Pokemon CTA
+  // Default variant — Contact CTA
   return (
     <section className="py-6 md:py-10">
       <div className="container-wide">
@@ -81,7 +81,7 @@ export default function CallToAction({ variant = 'default' }: CallToActionProps)
               className="font-mono text-xs font-bold uppercase tracking-widest mb-2"
               style={{ color: 'var(--pokedex-red)' }}
             >
-              CENTRE POKEMON
+              CONTACT
             </p>
             <h2
               className="font-mono font-bold text-xl md:text-2xl uppercase mb-3"
@@ -97,7 +97,7 @@ export default function CallToAction({ variant = 'default' }: CallToActionProps)
             </p>
             <div className="flex flex-wrap justify-center gap-3 mb-6">
               <Link
-                href="/centre-pokemon"
+                href="/contact"
                 className="pokedex-button gap-2"
                 style={{
                   backgroundColor: 'var(--pokedex-red)',
@@ -110,7 +110,7 @@ export default function CallToAction({ variant = 'default' }: CallToActionProps)
                 <Mail size={16} />
                 Discutons de votre projet
               </Link>
-              <Link href="/pokedex" className="pokedex-button gap-2">
+              <Link href="/projects" className="pokedex-button gap-2">
                 Voir mes réalisations
               </Link>
             </div>

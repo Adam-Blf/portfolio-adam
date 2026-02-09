@@ -28,7 +28,7 @@ const LANG_COLORS: Record<string, string> = {
   Multi: '#888888',
 }
 
-// Map languages to Pokemon type colors
+// Map languages to type colors
 const LANG_TYPE_COLORS: Record<string, { bg: string; text: string }> = {
   Python: { bg: '#A98FF3', text: '#fff' },
   TypeScript: { bg: '#3178C6', text: '#fff' },
@@ -71,14 +71,14 @@ const CATEGORY_MAP: Record<string, string> = {
   'Autres': 'Other',
 }
 
-// Map categories to Pokemon type styling
+// Map categories to type styling
 const CATEGORY_TYPE: Record<string, { bg: string; text: string; label: string }> = {
   'IA / Machine Learning': { bg: '#F95587', label: 'PSYCHIC', text: '#fff' },
   'Fullstack / Web': { bg: '#F8D030', label: 'ELECTRIC', text: '#333' },
   'Autres': { bg: '#A8A878', label: 'NORMAL', text: '#fff' },
 }
 
-export default function Pokedex() {
+export default function ProjectsPage() {
   const [projects, setProjects] = useState<ProcessedProject[]>([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
@@ -245,7 +245,7 @@ export default function Pokedex() {
     return Object.values(searchFilteredProjects).flat()
   }, [searchFilteredProjects])
 
-  // --- LOADING STATE: Pokedex SCANNING skeleton ---
+  // --- LOADING STATE: SCANNING skeleton ---
   if (loading) {
     return (
       <ErrorBoundary>
@@ -328,7 +328,7 @@ export default function Pokedex() {
       <main className="min-h-screen pt-28 pb-20" style={{ background: '#DC0A2D' }}>
         <div className="container-wide">
 
-          {/* ====== POKEDEX HEADER ====== */}
+          {/* ====== HEADER ====== */}
           <div className="text-center mb-8">
             <div className="inline-flex items-center gap-2 mb-3">
               <div className="pokedex-led pokedex-led-blue" style={{ width: 14, height: 14 }} />
@@ -339,14 +339,14 @@ export default function Pokedex() {
               className="text-2xl md:text-3xl font-bold tracking-widest uppercase"
               style={{ color: 'var(--pokedex-white)', textShadow: '0 2px 4px rgba(0,0,0,0.3)' }}
             >
-              POKEDEX
+              PROJETS
             </h1>
             <p className="text-sm mt-2" style={{ color: 'rgba(255,255,255,0.7)' }}>
               {t('projects.description', { count: totalProjects })}
             </p>
           </div>
 
-          {/* ====== SEARCH BAR (Pokedex screen style) ====== */}
+          {/* ====== SEARCH BAR ====== */}
           <div className="max-w-xl mx-auto mb-8">
             <div
               className="pokedex-screen flex items-center gap-3 px-4 py-3"
@@ -414,7 +414,7 @@ export default function Pokedex() {
             </p>
           )}
 
-          {/* ====== POKEDEX ENTRY CARDS GRID ====== */}
+          {/* ====== ENTRY CARDS GRID ====== */}
           {allFilteredProjects.length > 0 ? (
             <div className="pokedex-screen p-4 md:p-6">
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
@@ -455,7 +455,7 @@ export default function Pokedex() {
                       </div>
 
                       <div className="flex flex-col flex-1 p-4">
-                        {/* Pokemon Name (Project Name) */}
+                        {/* Project Name */}
                         <h3
                           className="text-base font-black uppercase tracking-wide mb-2 line-clamp-1"
                           style={{ color: 'var(--pokedex-dark, #333)' }}
@@ -622,7 +622,7 @@ export default function Pokedex() {
           </div>
         </div>
 
-        {/* Scoped Pokedex styles */}
+        {/* Scoped styles */}
         <style>{`
           .pokedex-card:hover {
             transform: translateY(-4px);

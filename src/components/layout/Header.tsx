@@ -9,11 +9,11 @@ import { useI18n, Locale } from '@/lib/i18n'
 
 const navKeys = [
   { href: '/', key: 'home' },
-  { href: '/evolution', key: 'timeline' },
-  { href: '/pokedex', key: 'projects' },
-  { href: '/types', key: 'skills' },
+  { href: '/timeline', key: 'timeline' },
+  { href: '/projects', key: 'projects' },
+  { href: '/skills', key: 'skills' },
   { href: '/formation', key: 'formation' },
-  { href: '/centre-pokemon', key: 'contact' },
+  { href: '/contact', key: 'contact' },
 ]
 
 export default function Header() {
@@ -105,7 +105,7 @@ export default function Header() {
                     className="hidden sm:inline text-sm md:text-base font-bold tracking-widest uppercase"
                     style={{ color: 'var(--pokedex-white)', textShadow: '0 1px 2px rgba(0,0,0,0.3)' }}
                   >
-                    Pokédex
+                    Portfolio
                   </span>
                 </Link>
               </div>

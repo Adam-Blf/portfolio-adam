@@ -66,8 +66,8 @@ export default function SkillsPreview() {
 
             {/* CTA */}
             <div className="pt-3" style={{ borderTop: '2px solid var(--pokedex-screen-dark)' }}>
-              <Link href="/types" className="pokedex-button text-xs gap-1">
-                ▶ Voir tous les types
+              <Link href="/skills" className="pokedex-button text-xs gap-1">
+                ▶ Voir toutes les competences
               </Link>
             </div>
           </div>

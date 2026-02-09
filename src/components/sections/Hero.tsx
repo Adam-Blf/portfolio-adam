@@ -491,7 +491,7 @@ export default function Hero() {
               <div className="flex flex-col sm:flex-row gap-4">
                 <MagneticElement
                   as={Link}
-                  href="/pokedex"
+                  href="/projects"
                   className="hero-cta btn btn-primary group relative overflow-hidden anim-hidden"
                 >
                   <span className="relative z-10 flex items-center gap-2">
@@ -503,7 +503,7 @@ export default function Hero() {
 
                 <MagneticElement
                   as={Link}
-                  href="/centre-pokemon"
+                  href="/contact"
                   className="hero-cta btn btn-outline group anim-hidden"
                 >
                   <span className="accent-underline">{t('hero.ctaSecondary')}</span>

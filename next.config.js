@@ -154,6 +154,15 @@ const nextConfig = {
   experimental: {
     optimizeCss: true,
   },
+
+  async redirects() {
+    return [
+      { source: '/pokedex', destination: '/projects', permanent: true },
+      { source: '/evolution', destination: '/timeline', permanent: true },
+      { source: '/centre-pokemon', destination: '/contact', permanent: true },
+      { source: '/types', destination: '/skills', permanent: true },
+    ]
+  },
 }
 
 module.exports = nextConfig

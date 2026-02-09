@@ -108,10 +108,10 @@ export default function MinimalProHero() {
 
           {/* Bottom buttons */}
           <div className="flex flex-wrap gap-3 mt-4 justify-center">
-            <Link href="/pokedex" className="pokedex-button gap-2">
+            <Link href="/projects" className="pokedex-button gap-2">
               ▶ {t('hero.exploreProjects')}
             </Link>
-            <Link href="/centre-pokemon" className="pokedex-button gap-2">
+            <Link href="/contact" className="pokedex-button gap-2">
               ✉ {t('hero.getInTouch')}
             </Link>
           </div>

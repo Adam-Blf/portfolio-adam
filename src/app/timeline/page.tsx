@@ -53,7 +53,7 @@ const getYear = (dateStr: string): string => {
   return dateStr.split('-')[0]
 }
 
-// ─── Pokemon type colors per event type ──────────────────
+// ─── Type colors per event type ──────────────────
 const eventConfig: Record<EventType, { color: string; bg: string; label: string; icon: typeof Briefcase }> = {
   experience:    { color: '#E74C3C', bg: '#FDEDEC', label: 'timeline.filters.experience', icon: Briefcase },
   education:     { color: '#3498DB', bg: '#EBF5FB', label: 'timeline.filters.education', icon: GraduationCap },
@@ -121,9 +121,10 @@ const buildTimeline = (): TimelineEvent[] => {
       type: 'certification',
       title: cert.name,
       subtitle: cert.issuer,
-      period: cert.year,
+      period: (cert as Record<string, unknown>).pending ? `${cert.year} (en cours)` : cert.year,
       startDate: cert.date || `${cert.year}-01`,
       endDate: null,
+      current: !!(cert as Record<string, unknown>).pending,
     })
   })
 
@@ -367,7 +368,7 @@ export default function EvolutionPage() {
             className="text-2xl md:text-3xl font-bold tracking-widest uppercase"
             style={{ color: 'var(--pokedex-white)', textShadow: '0 2px 4px rgba(0,0,0,0.3)' }}
           >
-            CHAINE D&apos;EVOLUTION
+            PARCOURS
           </h1>
           <p className="text-sm mt-3 max-w-lg mx-auto" style={{ color: 'rgba(255,255,255,0.7)' }}>
             {t('timeline.description')}
@@ -528,7 +529,7 @@ export default function EvolutionPage() {
               </p>
               <div className="flex flex-wrap justify-center gap-3">
                 <Link
-                  href="/centre-pokemon"
+                  href="/contact"
                   className="pokedex-button inline-flex items-center gap-2 px-6 py-2.5 rounded-full text-sm font-bold uppercase tracking-wider transition-all duration-200"
                   style={{
                     background: '#fff',
@@ -540,7 +541,7 @@ export default function EvolutionPage() {
                   <ArrowUpRight size={15} />
                 </Link>
                 <Link
-                  href="/pokedex"
+                  href="/projects"
                   className="pokedex-button inline-flex items-center gap-2 px-6 py-2.5 rounded-full text-sm font-bold uppercase tracking-wider transition-all duration-200"
                 >
                   {t('timeline.cta.projects')}

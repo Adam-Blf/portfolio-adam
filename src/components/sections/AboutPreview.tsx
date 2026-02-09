@@ -69,10 +69,10 @@ export default function AboutPreview() {
 
             {/* Navigation buttons */}
             <div className="flex flex-wrap gap-3 pt-3" style={{ borderTop: '2px solid var(--pokedex-screen-dark)' }}>
-              <Link href="/evolution" className="pokedex-button text-xs">
+              <Link href="/timeline" className="pokedex-button text-xs">
                 ▶ Voir l&apos;evolution
               </Link>
-              <Link href="/centre-pokemon" className="pokedex-button text-xs">
+              <Link href="/contact" className="pokedex-button text-xs">
                 ✉ Contact
               </Link>
             </div>

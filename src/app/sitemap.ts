@@ -12,19 +12,19 @@ export default function sitemap(): MetadataRoute.Sitemap {
       priority: 1.0,
     },
     {
-      url: `${baseUrl}/pokedex`,
+      url: `${baseUrl}/projects`,
       lastModified,
       changeFrequency: 'weekly',
       priority: 0.9,
     },
     {
-      url: `${baseUrl}/types`,
+      url: `${baseUrl}/skills`,
       lastModified,
       changeFrequency: 'monthly',
       priority: 0.8,
     },
     {
-      url: `${baseUrl}/evolution`,
+      url: `${baseUrl}/timeline`,
       lastModified,
       changeFrequency: 'monthly',
       priority: 0.7,
@@ -36,7 +36,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
       priority: 0.7,
     },
     {
-      url: `${baseUrl}/centre-pokemon`,
+      url: `${baseUrl}/contact`,
       lastModified,
       changeFrequency: 'monthly',
       priority: 0.6,
