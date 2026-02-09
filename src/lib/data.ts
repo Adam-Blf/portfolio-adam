@@ -4,11 +4,12 @@
 export const logoMap: Record<string, string> = {
   // Entreprises
   "Groupe Hospitalier Fondation Vallee - Paul Guiraud": "/logos/groupe_hospitalier_paul_guiraud_logo.jpg",
+  "Groupe Hospitalier Paul Guiraud": "/logos/groupe_hospitalier_paul_guiraud_logo.jpg",
   "GHT Psy Sud": "/logos/groupe_hospitalier_paul_guiraud_logo.jpg",
   "EPSM Lille-Metropole - GHT Psy NPdC": "/logos/epsm_lille_logo.jpg",
   "BNP Paribas": "/logos/bnp_paribas_logo.jpg",
   "Marine Nationale": "/logos/marine_nationale_logo.jpg",
-  "DE NOUVEL ARCHITECT POUR COMMUNICATION": "/logos/architecture_logo.svg",
+  "DE NOUVEL ARCHITECT POUR COMMUNICATION": "/logos/dnac_logo.png",
   "BONE iT": "/logos/boneit_logo.jpg",
   "McDonald's": "/logos/mcdonalds_corporation_logo.jpg",
 

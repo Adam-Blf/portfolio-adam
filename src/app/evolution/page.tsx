@@ -213,7 +213,7 @@ function EvolutionCard({
           <div className="flex items-start gap-3">
             {logo ? (
               <div className="relative w-10 h-10 flex-shrink-0 rounded-lg overflow-hidden bg-gray-50 border border-gray-200">
-                <Image src={logo} alt={event.subtitle} fill className="object-contain p-1" />
+                <Image src={logo} alt={event.subtitle} fill sizes="40px" className="object-contain p-1" />
               </div>
             ) : (
               <div
