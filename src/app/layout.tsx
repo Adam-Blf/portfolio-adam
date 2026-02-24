@@ -1,23 +1,16 @@
 import type { Metadata, Viewport } from 'next'
-import { Space_Grotesk, Inter, Fira_Code } from 'next/font/google'
+import { Inter, Fira_Code } from 'next/font/google'
 import './globals.css'
 import Header from '@/components/layout/Header'
 import Footer from '@/components/layout/Footer'
 import { ThemeProvider } from '@/components/providers/ThemeProvider'
 import { I18nProvider } from '@/lib/i18n'
 
-const spaceGrotesk = Space_Grotesk({
-  subsets: ['latin'],
-  weight: ['400', '500', '600', '700'],
-  display: 'swap',
-  variable: '--font-display',
-})
-
 const inter = Inter({
   subsets: ['latin'],
-  weight: ['300', '400', '500', '600'],
+  weight: ['300', '400', '500', '600', '700', '800'],
   display: 'swap',
-  variable: '--font-body',
+  variable: '--font-sans',
 })
 
 const firaCode = Fira_Code({
@@ -93,7 +86,7 @@ export default function RootLayout({
   children: React.ReactNode
 }) {
   return (
-    <html lang="fr" suppressHydrationWarning className={`${spaceGrotesk.variable} ${inter.variable} ${firaCode.variable}`}>
+    <html lang="fr" suppressHydrationWarning className={`${inter.variable} ${firaCode.variable}`}>
       <head>
         {/* DNS prefetch for external resources */}
         <link rel="dns-prefetch" href="https://api.github.com" />

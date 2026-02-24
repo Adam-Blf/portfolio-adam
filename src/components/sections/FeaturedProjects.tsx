@@ -2,17 +2,8 @@
 
 import { useRef } from 'react'
 import Link from 'next/link'
-import { Github, ExternalLink, ChevronRight } from 'lucide-react'
+import { Github, ExternalLink, ChevronRight, ChevronLeft } from 'lucide-react'
 import { projects } from '@/lib/data'
-
-const langColorMap: Record<string, string> = {
-  'Python': '#3776AB',
-  'TypeScript': '#3178C6',
-  'JavaScript': '#F7DF1E',
-  'CSS/JS': '#E44D26',
-  'HTML/JS': '#F16529',
-  'C#': '#68217A',
-}
 
 export default function FeaturedProjects() {
   const rowRef = useRef<HTMLDivElement>(null)
@@ -25,7 +16,7 @@ export default function FeaturedProjects() {
 
   const scrollRow = (direction: 'left' | 'right') => {
     if (!rowRef.current) return
-    const scrollAmount = 300
+    const scrollAmount = 400
     rowRef.current.scrollBy({
       left: direction === 'right' ? scrollAmount : -scrollAmount,
       behavior: 'smooth'
@@ -33,130 +24,78 @@ export default function FeaturedProjects() {
   }
 
   return (
-    <section className="py-6 md:py-10">
+    <section className="py-20 bg-[#f5f5f7] dark:bg-[#161617]">
       <div className="container-wide">
-        {/* Header */}
-        <div className="flex items-center justify-between mb-5">
-          <h2
-            className="font-mono font-bold text-sm uppercase tracking-widest"
-            style={{ color: 'var(--text-primary)' }}
-          >
-            DERNIERS PROJETS
+        {/* Header - Apple style clean header */}
+        <div className="flex items-baseline justify-between mb-12">
+          <h2 className="text-3xl md:text-4xl font-semibold tracking-tight">
+            Projets à la une.
           </h2>
           <Link
             href="/projects"
-            className="tech-border font-mono text-xs font-bold px-3 py-1.5 rounded-lg inline-flex items-center gap-1 transition-all"
-            style={{ color: 'var(--accent-cyan)', backgroundColor: 'var(--bg-surface)' }}
+            className="text-cta hover:underline font-medium flex items-center gap-1 group"
           >
-            Tout voir <ChevronRight size={12} />
+            Tout explorer
+            <ChevronRight size={18} className="transition-transform group-hover:translate-x-0.5" />
           </Link>
         </div>
 
-        {/* Horizontal scroll row */}
-        <div className="relative group/row">
-          {/* Scroll buttons */}
-          <button
-            onClick={() => scrollRow('left')}
-            className="absolute left-0 top-0 bottom-0 z-10 w-10 flex items-center justify-center opacity-0 group-hover/row:opacity-100 transition-opacity rounded-l-xl"
-            style={{ background: 'linear-gradient(to right, var(--bg-deep), transparent)' }}
-            aria-label="Scroll left"
-          >
-            <ChevronRight size={24} className="rotate-180" style={{ color: 'var(--text-primary)' }} />
-          </button>
-          <button
-            onClick={() => scrollRow('right')}
-            className="absolute right-0 top-0 bottom-0 z-10 w-10 flex items-center justify-center opacity-0 group-hover/row:opacity-100 transition-opacity rounded-r-xl"
-            style={{ background: 'linear-gradient(to left, var(--bg-deep), transparent)' }}
-            aria-label="Scroll right"
-          >
-            <ChevronRight size={24} style={{ color: 'var(--text-primary)' }} />
-          </button>
-
+        {/* Carousel Container */}
+        <div className="relative">
           <div
             ref={rowRef}
-            className="flex gap-4 overflow-x-auto pb-2"
-            style={{ scrollbarWidth: 'thin', scrollbarColor: 'var(--border) transparent' }}
+            className="flex gap-6 overflow-x-auto pb-8 snap-x no-scrollbar"
+            style={{ scrollbarWidth: 'none' }}
           >
-            {featuredProjects.map((project) => {
+            {featuredProjects.map((project, idx) => {
               const homepage = project?.name ? projects.homepages[project.name] : null
               const githubUrl = `https://github.com/Adam-Blf/${project?.name}`
-              const langColor = langColorMap[project?.lang || ''] || 'var(--accent-cyan)'
 
               return (
                 <div
                   key={project?.name}
-                  className="glass-card shrink-0 w-64 md:w-72 flex flex-col transition-all hover:scale-[1.02]"
+                  className="card shrink-0 w-[300px] md:w-[400px] snap-start flex flex-col p-0"
                 >
-                  <div className="p-4 flex flex-col flex-1">
-                    {/* Status indicator */}
-                    <div className="flex justify-between items-center mb-2">
+                  {/* Decorative Project Header or Image Placeholder */}
+                  <div className="h-48 md:h-64 bg-white dark:bg-black/20 flex items-center justify-center border-b border-black/5 dark:border-white/5 relative group-hover:bg-gray-50 dark:group-hover:bg-white/5 transition-colors">
+                    <span className="text-4xl opacity-10 font-bold">{idx + 1}</span>
+                  </div>
+
+                  <div className="p-8 flex flex-col flex-1">
+                    <div className="flex justify-between items-start mb-2">
+                      <h3 className="text-2xl font-semibold leading-tight text-primary">
+                        {project?.name}
+                      </h3>
                       {homepage && (
-                        <span
-                          className="w-2 h-2 rounded-full"
-                          title="LIVE"
-                          style={{ backgroundColor: 'var(--success)', boxShadow: '0 0 6px var(--success-glow)' }}
-                        />
+                        <span className="text-[10px] font-bold px-1.5 py-0.5 rounded border border-green-500/50 text-green-600 dark:text-green-400">
+                          LIVE
+                        </span>
                       )}
                     </div>
 
-                    {/* Project name */}
-                    <h3 className="font-mono font-bold text-base uppercase mb-1" style={{ color: 'var(--text-primary)' }}>
-                      {project?.name}
-                    </h3>
-
-                    {/* Description */}
-                    <p className="text-xs mb-3 line-clamp-2" style={{ color: 'var(--text-secondary)' }}>
+                    <p className="text-secondary text-base leading-relaxed mb-6 line-clamp-3">
                       {project?.desc}
                     </p>
 
-                    {/* Language dot + text */}
-                    <div className="flex items-center gap-1.5 mb-3">
-                      <span className="w-2.5 h-2.5 rounded-full" style={{ backgroundColor: langColor }} />
-                      <span className="font-mono text-[11px]" style={{ color: 'var(--text-muted)' }}>
-                        {project?.lang}
-                      </span>
-                    </div>
-
-                    {/* Tag pills */}
-                    <div className="flex flex-wrap gap-1 mb-3">
-                      {project?.tags.slice(0, 3).map((tag) => (
-                        <span
-                          key={tag}
-                          className="font-mono text-[10px] px-2 py-0.5 rounded-full"
-                          style={{
-                            color: 'var(--text-muted)',
-                            border: '1px solid var(--border)',
-                          }}
-                        >
-                          {tag}
-                        </span>
-                      ))}
-                    </div>
-
-                    {/* Action links */}
-                    <div className="flex items-center gap-3 mt-auto pt-3" style={{ borderTop: '1px solid var(--border)' }}>
+                    <div className="mt-auto flex items-center gap-6">
                       <a
                         href={githubUrl}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="font-mono text-[11px] inline-flex items-center gap-1 transition-colors"
-                        style={{ color: 'var(--text-secondary)' }}
-                        onMouseEnter={(e) => (e.currentTarget.style.color = 'var(--accent-cyan)')}
-                        onMouseLeave={(e) => (e.currentTarget.style.color = 'var(--text-secondary)')}
+                        className="text-cta hover:underline font-medium inline-flex items-center gap-1.5"
                       >
-                        <Github size={12} /> Code
+                        <Github size={18} />
+                        GitHub
                       </a>
                       {homepage && (
                         <a
                           href={homepage}
                           target="_blank"
                           rel="noopener noreferrer"
-                          className="font-mono text-[11px] inline-flex items-center gap-1 transition-colors"
-                          style={{ color: 'var(--text-secondary)' }}
-                          onMouseEnter={(e) => (e.currentTarget.style.color = 'var(--accent-cyan)')}
-                          onMouseLeave={(e) => (e.currentTarget.style.color = 'var(--text-secondary)')}
+                          className="text-cta hover:underline font-medium inline-flex items-center gap-1.5"
                         >
-                          <ExternalLink size={12} /> Demo
+                          <ExternalLink size={18} />
+                          Démo
                         </a>
                       )}
                     </div>
@@ -164,6 +103,24 @@ export default function FeaturedProjects() {
                 </div>
               )
             })}
+          </div>
+
+          {/* Minimal Float Controls */}
+          <div className="absolute -bottom-16 right-0 flex gap-2">
+            <button
+              onClick={() => scrollRow('left')}
+              className="p-2 rounded-full border border-black/10 dark:border-white/10 hover:bg-white dark:hover:bg-white/10 transition-colors"
+              aria-label="Previous"
+            >
+              <ChevronLeft size={24} />
+            </button>
+            <button
+              onClick={() => scrollRow('right')}
+              className="p-2 rounded-full border border-black/10 dark:border-white/10 hover:bg-white dark:hover:bg-white/10 transition-colors"
+              aria-label="Next"
+            >
+              <ChevronRight size={24} />
+            </button>
           </div>
         </div>
       </div>

@@ -106,3 +106,4 @@ lerna-debug.log*
 .vercel
 
 certificates
+.env*.local

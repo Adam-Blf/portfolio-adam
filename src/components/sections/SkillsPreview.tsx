@@ -1,6 +1,7 @@
 'use client'
 
 import Link from 'next/link'
+import { ChevronRight } from 'lucide-react'
 
 const technologies = [
   'Python', 'TypeScript', 'React', 'Next.js', 'Node.js',
@@ -10,42 +11,33 @@ const technologies = [
 
 export default function SkillsPreview() {
   return (
-    <section className="py-6 md:py-10">
+    <section className="py-24 bg-[#f5f5f7] dark:bg-[#161617]">
       <div className="container-wide">
-        <div className="glass-card p-5 md:p-8">
-          {/* Header */}
-          <h2 className="font-mono font-bold text-lg uppercase tracking-widest mb-1" style={{ color: 'var(--text-primary)' }}>
-            TECHNOLOGIES
+        <div className="text-center max-w-3xl mx-auto mb-16">
+          <h2 className="text-secondary text-sm font-bold uppercase tracking-widest mb-4">
+            Expertise
           </h2>
-          <div className="w-16 h-0.5 mb-5" style={{ backgroundColor: 'var(--accent-violet)' }} />
+          <h3 className="text-4xl md:text-5xl font-semibold tracking-tight text-primary">
+            Maîtrise technologique au service de l&apos;impact.
+          </h3>
+        </div>
 
-          {/* Tech pills */}
-          <div className="flex flex-wrap gap-2 mb-6">
-            {technologies.map((tech) => (
-              <span
-                key={tech}
-                className="font-mono text-xs px-3 py-1.5 rounded-full transition-colors"
-                style={{
-                  color: 'var(--text-secondary)',
-                  border: '1px solid var(--border)',
-                  backgroundColor: 'var(--bg-surface)',
-                }}
-              >
-                {tech}
-              </span>
-            ))}
-          </div>
-
-          {/* CTA */}
-          <div className="pt-4" style={{ borderTop: '1px solid var(--border)' }}>
-            <Link
-              href="/skills"
-              className="tech-border font-mono text-xs font-bold px-4 py-2 rounded-lg inline-flex items-center gap-2 transition-all"
-              style={{ color: 'var(--accent-cyan)', backgroundColor: 'var(--bg-surface)' }}
+        <div className="flex flex-wrap justify-center gap-4 mb-16">
+          {technologies.map((tech) => (
+            <span
+              key={tech}
+              className="px-6 py-3 rounded-full bg-white dark:bg-black/40 border border-black/5 dark:border-white/10 text-lg font-medium text-primary shadow-sm transition-transform hover:scale-105"
             >
-              Voir toutes les competences
-            </Link>
-          </div>
+              {tech}
+            </span>
+          ))}
+        </div>
+
+        <div className="text-center">
+          <Link href="/skills" className="btn-secondary group">
+            Voir toutes les compétences
+            <ChevronRight size={20} className="transition-transform group-hover:translate-x-0.5" />
+          </Link>
         </div>
       </div>
     </section>

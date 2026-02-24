@@ -10,60 +10,27 @@ const config: Config = {
   theme: {
     extend: {
       colors: {
-        // Synced with CSS variables from globals.css
-        background: {
-          deep: 'var(--bg-deep)',
-          surface: 'var(--bg-surface)',
-          elevated: 'var(--bg-elevated)',
-          hover: 'var(--bg-hover)',
-          card: 'var(--bg-card)',
-        },
-        accent: {
-          DEFAULT: 'var(--accent)',
-          muted: 'var(--accent-muted)',
-          glow: 'var(--accent-glow)',
-          dim: 'var(--accent-dim)',
-        },
-        highlight: {
-          DEFAULT: 'var(--highlight)',
-          muted: 'var(--highlight-muted)',
-          glow: 'var(--highlight-glow)',
-        },
-        tertiary: {
-          DEFAULT: 'var(--tertiary)',
-          muted: 'var(--tertiary-muted)',
-        },
-        success: {
-          DEFAULT: 'var(--success)',
-          glow: 'var(--success-glow)',
-        },
-        text: {
-          primary: 'var(--text-primary)',
-          secondary: 'var(--text-secondary)',
-          muted: 'var(--text-muted)',
-          inverse: 'var(--text-inverse)',
-        },
-        border: {
-          DEFAULT: 'var(--border)',
-          accent: 'var(--border-accent)',
-        },
+        background: 'var(--color-background)',
+        primary: 'var(--color-primary)',
+        secondary: 'var(--color-secondary)',
+        cta: 'var(--color-cta)',
+        text: 'var(--color-text)',
       },
       fontFamily: {
-        display: ['Space Grotesk', 'sans-serif'],
-        sans: ['Inter', 'sans-serif'],
-        mono: ['Fira Code', 'monospace'],
+        display: ['var(--font-display)', 'sans-serif'],
+        sans: ['var(--font-body)', 'sans-serif'],
+        mono: ['var(--font-mono)', 'monospace'],
       },
       boxShadow: {
         sm: 'var(--shadow-sm)',
         md: 'var(--shadow-md)',
         lg: 'var(--shadow-lg)',
-        glow: 'var(--shadow-glow)',
+        xl: 'var(--shadow-xl)',
       },
       animation: {
         'fade-in': 'fadeIn 0.5s ease-out forwards',
         'fade-up': 'fadeUp 0.7s cubic-bezier(0.16, 1, 0.3, 1) forwards',
         'slide-in': 'slideIn 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards',
-        'pulse-dot': 'pulse-dot 2s ease-in-out infinite',
       },
       keyframes: {
         fadeIn: {
@@ -78,13 +45,6 @@ const config: Config = {
           '0%': { opacity: '0', transform: 'translate3d(-20px, 0, 0)' },
           '100%': { opacity: '1', transform: 'translate3d(0, 0, 0)' },
         },
-        'pulse-dot': {
-          '0%, 100%': { opacity: '1', transform: 'scale(1)' },
-          '50%': { opacity: '0.7', transform: 'scale(1.1)' },
-        },
-      },
-      spacing: {
-        'unit': 'var(--space-unit)',
       },
     },
   },

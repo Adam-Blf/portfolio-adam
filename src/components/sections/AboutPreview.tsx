@@ -1,71 +1,58 @@
 'use client'
 
 import Link from 'next/link'
+import { ChevronRight } from 'lucide-react'
 
 const highlights = [
-  { label: 'Formation', value: 'M1 Data Engineering & IA - EFREI Paris' },
-  { label: 'Alternance', value: 'Data Engineer @ GHT Psy Sud' },
-  { label: 'Leadership', value: 'Ex-President BDE EFREI (5700+ etudiants)' },
+  { label: 'Formation', value: 'M1 Data Engineering & IA — EFREI Paris' },
+  { label: 'Expérience', value: 'Data Engineer Alternant @ GHT Psy Sud' },
+  { label: 'Leadership', value: 'Ex-Président BDE EFREI (5700+ Étudiants)' },
   { label: 'International', value: 'Erasmus @ Universidad de Malaga' },
 ]
 
 export default function AboutPreview() {
   return (
-    <section className="py-6 md:py-10">
+    <section className="py-24 bg-white dark:bg-black">
       <div className="container-wide">
-        <div className="glass-card p-5 md:p-8">
-          {/* Header */}
-          <h2 className="font-mono font-bold text-lg uppercase tracking-widest mb-1" style={{ color: 'var(--text-primary)' }}>
-            A PROPOS
+        <div className="max-w-3xl">
+          <h2 className="text-secondary text-sm font-bold uppercase tracking-widest mb-4">
+            À propos
           </h2>
-          <div className="w-16 h-0.5 mb-5" style={{ backgroundColor: 'var(--accent-cyan)' }} />
+          <h3 className="text-4xl md:text-5xl font-semibold tracking-tight mb-8 text-primary">
+            Curiosité technique et excellence humaine.
+          </h3>
 
-          {/* Bio text */}
-          <div className="font-mono text-sm leading-relaxed mb-6" style={{ color: 'var(--text-secondary)' }}>
-            <p className="mb-3">
-              Passionne par la data et l&apos;innovation, je construis des systemes
-              intelligents qui transforment les donnees en decisions strategiques.
+          <div className="text-xl md:text-2xl text-secondary leading-relaxed mb-12 space-y-6">
+            <p>
+              Passionné par la data et l&apos;innovation, je construis des systèmes
+              intelligents qui transforment les données en décisions stratégiques.
             </p>
             <p>
-              Mon parcours unique combine{' '}
-              <strong style={{ color: 'var(--text-primary)' }}>expertise technique</strong>{' '}
-              (Data Engineering, IA, Fullstack) et{' '}
-              <strong style={{ color: 'var(--text-primary)' }}>competences humaines</strong>{' '}
-              (leadership associatif, formation militaire).
+              Mon parcours combine une <span className="text-primary font-medium">expertise technique</span> de pointe
+              et des <span className="text-primary font-medium">compétences humaines</span> forgées par le leadership associatif et la rigueur.
             </p>
           </div>
 
-          {/* Highlights */}
-          <ul className="space-y-2 mb-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-12">
             {highlights.map((item) => (
-              <li
-                key={item.label}
-                className="flex items-start gap-2.5 font-mono text-xs"
-                style={{ color: 'var(--text-secondary)' }}
-              >
-                <span className="mt-1 w-1.5 h-1.5 rounded-full shrink-0" style={{ backgroundColor: 'var(--accent-cyan)' }} />
-                <span>
-                  <strong className="uppercase" style={{ color: 'var(--text-primary)' }}>{item.label}:</strong> {item.value}
-                </span>
-              </li>
+              <div key={item.label} className="border-t border-black/5 dark:border-white/10 pt-4">
+                <p className="text-xs font-bold uppercase tracking-wider text-secondary mb-1">
+                  {item.label}
+                </p>
+                <p className="text-lg font-medium text-primary">
+                  {item.value}
+                </p>
+              </div>
             ))}
-          </ul>
+          </div>
 
-          {/* CTA buttons */}
-          <div className="flex flex-wrap gap-3 pt-4" style={{ borderTop: '1px solid var(--border)' }}>
-            <Link
-              href="/timeline"
-              className="tech-border font-mono text-xs font-bold px-4 py-2 rounded-lg inline-flex items-center gap-2 transition-all"
-              style={{ color: 'var(--accent-cyan)', backgroundColor: 'var(--bg-surface)' }}
-            >
-              Voir l&apos;evolution
+          <div className="flex flex-wrap gap-4">
+            <Link href="/timeline" className="btn-primary">
+              Mon Parcours
             </Link>
-            <Link
-              href="/contact"
-              className="tech-border font-mono text-xs font-bold px-4 py-2 rounded-lg inline-flex items-center gap-2 transition-all"
-              style={{ color: 'var(--text-primary)', backgroundColor: 'var(--bg-surface)' }}
-            >
-              Contact
+            <Link href="/contact" className="btn-secondary group">
+              Me contacter
+              <ChevronRight size={20} className="transition-transform group-hover:translate-x-0.5" />
             </Link>
           </div>
         </div>

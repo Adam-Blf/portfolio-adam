@@ -4,97 +4,53 @@ import Link from 'next/link'
 import Image from 'next/image'
 import { useI18n } from '@/lib/i18n'
 
-const domains = [
-  { label: 'DATA', color: 'var(--accent-cyan)' },
-  { label: 'FULLSTACK', color: 'var(--accent-violet)' },
-  { label: 'IA', color: 'var(--accent-warm)' },
-]
-
 export default function MinimalProHero() {
   const { t } = useI18n()
 
   return (
-    <section className="py-8 md:py-16">
-      <div className="container-wide">
-        <div className="glass-card p-6 md:p-10">
-          <div className="flex flex-col md:flex-row gap-6 md:gap-10 items-center md:items-start">
-            {/* Photo */}
-            <div className="shrink-0">
-              <div
-                className="w-36 h-36 md:w-44 md:h-44 rounded-full overflow-hidden relative"
-                style={{
-                  border: '3px solid var(--border)',
-                  boxShadow: '0 0 30px rgba(0, 240, 255, 0.15)',
-                }}
-              >
-                <Image
-                  src="/images/adam-photo.jpg"
-                  alt="Adam Beloucif"
-                  fill
-                  className="object-cover object-top"
-                  priority
-                />
-              </div>
+    <section className="pt-24 pb-16 md:pt-32 md:pb-24 overflow-hidden">
+      <div className="container-wide text-center">
+        <div className="animate-fadeUp">
+          {/* Profile Photo - Apple Style subtle circle */}
+          <div className="flex justify-center mb-8">
+            <div className="relative w-24 h-24 md:w-32 md:h-32 rounded-full overflow-hidden border border-black/5 dark:border-white/10 shadow-sm">
+              <Image
+                src="/images/adam-photo.jpg"
+                alt="Adam Beloucif"
+                fill
+                className="object-cover object-top"
+                priority
+              />
             </div>
+          </div>
 
-            {/* Info */}
-            <div className="flex-1 text-center md:text-left">
-              <h1
-                className="font-mono font-black text-2xl md:text-4xl uppercase tracking-wide mb-1"
-                style={{ color: 'var(--text-primary)' }}
-              >
-                ADAM BELOUCIF
-              </h1>
-              <p className="font-mono text-sm md:text-base mb-4" style={{ color: 'var(--text-secondary)' }}>
-                {t('hero.role')}
-              </p>
+          <h1 className="text-hero mb-4">
+            ADAM BELOUCIF
+          </h1>
 
-              {/* Domain pills */}
-              <div className="flex flex-wrap gap-2 justify-center md:justify-start mb-4">
-                {domains.map((d) => (
-                  <span
-                    key={d.label}
-                    className="font-mono text-xs font-bold px-3 py-1 rounded-full"
-                    style={{
-                      color: d.color,
-                      border: `1px solid ${d.color}`,
-                      backgroundColor: `color-mix(in srgb, ${d.color} 10%, transparent)`,
-                    }}
-                  >
-                    {d.label}
-                  </span>
-                ))}
-              </div>
+          <p className="text-xl md:text-2xl font-medium text-secondary max-w-2xl mx-auto mb-10">
+            {t('hero.role')}
+          </p>
 
-              {/* Availability */}
-              <div className="flex items-center gap-2 justify-center md:justify-start mb-6">
-                <span
-                  className="w-2.5 h-2.5 rounded-full"
-                  style={{ backgroundColor: 'var(--success)', boxShadow: '0 0 8px var(--success-glow)' }}
-                />
-                <span className="font-mono text-xs font-bold uppercase tracking-wider" style={{ color: 'var(--text-secondary)' }}>
-                  {t('hero.status')}
-                </span>
-              </div>
+          <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
+            <Link href="/projects" className="btn-primary">
+              {t('hero.exploreProjects')}
+            </Link>
+            <Link href="/contact" className="btn-secondary">
+              {t('hero.getInTouch')}{' '}
+              <span className="text-xl">→</span>
+            </Link>
+          </div>
 
-              {/* CTA buttons */}
-              <div className="flex flex-wrap gap-3 justify-center md:justify-start">
-                <Link
-                  href="/projects"
-                  className="glass-card font-mono text-sm font-bold px-5 py-2.5 inline-flex items-center gap-2 rounded-lg transition-all hover:shadow-lg"
-                  style={{ color: 'var(--accent-cyan)', borderColor: 'var(--border-accent)' }}
-                >
-                  {t('hero.exploreProjects')}
-                </Link>
-                <Link
-                  href="/contact"
-                  className="glass-card font-mono text-sm font-bold px-5 py-2.5 inline-flex items-center gap-2 rounded-lg transition-all hover:shadow-lg"
-                  style={{ color: 'var(--text-primary)', borderColor: 'var(--border)' }}
-                >
-                  {t('hero.getInTouch')}
-                </Link>
-              </div>
-            </div>
+          {/* Availability badge - Apple subtle style */}
+          <div className="mt-12 flex items-center justify-center gap-2 text-sm font-medium text-secondary">
+            <span className="relative flex h-2 w-2">
+              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"></span>
+              <span className="relative inline-flex rounded-full h-2 w-2 bg-green-500"></span>
+            </span>
+            <span className="uppercase tracking-widest text-xs">
+              {t('hero.status')}
+            </span>
           </div>
         </div>
       </div>
