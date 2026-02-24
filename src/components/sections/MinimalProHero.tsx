@@ -24,15 +24,15 @@ export default function MinimalProHero() {
             </div>
           </div>
 
-          <h1 className="text-apple-hero mb-6 tracking-tight">
+          <h1 className="text-apple-hero mt-1 tracking-tight">
             ADAM BELOUCIF
           </h1>
 
-          <p className="text-2xl md:text-3xl font-medium text-secondary max-w-3xl mx-auto mb-12">
+          <p className="text-2xl md:text-3xl font-medium text-secondary max-w-3xl mx-auto mt-[6px] mb-0">
             {t('hero.role')}
           </p>
 
-          <div className="flex flex-col sm:flex-row gap-6 justify-center items-center">
+          <div className="flex flex-col sm:flex-row gap-6 justify-center items-center mt-[19px]">
             <Link href="/projects" className="btn-apple-primary">
               {t('hero.exploreProjects')}
             </Link>

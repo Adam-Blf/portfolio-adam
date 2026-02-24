@@ -8,8 +8,10 @@
     --color-background: #ffffff;
     --color-text: #1d1d1f;
     --color-primary: #1d1d1f;
-    --color-secondary: #86868b;
-    --color-cta: #0066cc;
+    --color-secondary: #6e6e73;
+    /* Official Apple secondary text */
+    --color-cta: #0071e3;
+    /* Official Apple Blue */
     --color-surface: #f5f5f7;
 
     --shadow-sm: 0 2px 4px rgba(0, 0, 0, 0.05);
@@ -17,7 +19,8 @@
     --shadow-lg: 0 12px 24px rgba(0, 0, 0, 0.12);
     --shadow-xl: 0 20px 40px rgba(0, 0, 0, 0.15);
 
-    --nav-height: 48px;
+    --nav-height: 44px;
+    /* Official Apple nav height */
   }
 
   .dark {
@@ -88,7 +91,7 @@
   .btn-apple-primary {
     background-color: var(--color-cta);
     color: #ffffff;
-    padding: 10px 20px;
+    padding: 11px 21px;
     border-radius: 980px;
     /* Official pill shape */
     font-weight: 500;
@@ -171,10 +174,14 @@
 
 @layer utilities {
   .text-apple-hero {
-    font-size: clamp(40px, 10vw, 80px);
-    line-height: 1.05;
-    font-weight: 700;
-    letter-spacing: -0.025em;
+    font-size: clamp(40px, 10vw, 56px);
+    /* Precise 56px desktop limit */
+    line-height: 1.07143;
+    /* Official line-height ratio */
+    font-weight: 600;
+    /* Official Semi-bold */
+    letter-spacing: -0.015em;
+    /* Precision tracking */
   }
 
   .text-apple-headline {
