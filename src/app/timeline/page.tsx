@@ -57,10 +57,48 @@ const eventIcons: Record<EventType, typeof Briefcase> = {
 
 const buildTimeline = (): TimelineEvent[] => {
   const events: TimelineEvent[] = []
-  experiences.forEach(exp => events.push({ ...exp, id: `exp-${exp.id}`, type: 'experience', subtitle: exp.company, startDate: exp.startDate || '' }))
-  education.forEach(edu => events.push({ ...edu, id: `edu-${edu.id}`, type: 'education', title: edu.degree, subtitle: edu.school, startDate: edu.startDate || '' }))
-  volunteering.forEach((vol, idx) => events.push({ id: `vol-${idx}`, type: 'volunteering', title: vol.role, subtitle: vol.org, period: vol.period, startDate: vol.startDate || '', description: vol.scope }))
-  certifications.slice(0, 10).forEach((cert, idx) => events.push({ id: `cert-${idx}`, type: 'certification', title: cert.name, subtitle: cert.issuer, period: cert.year, startDate: cert.year + '-01', endDate: null }))
+  experiences.forEach(exp => events.push({
+    id: `exp-${exp.id}`,
+    type: 'experience',
+    title: exp.title,
+    subtitle: exp.company,
+    period: exp.period,
+    startDate: exp.startDate || '',
+    endDate: exp.endDate || null,
+    description: exp.description,
+    current: exp.current,
+    location: exp.location
+  }))
+  education.forEach(edu => events.push({
+    id: `edu-${edu.id}`,
+    type: 'education',
+    title: edu.degree,
+    subtitle: edu.school,
+    period: edu.period,
+    startDate: edu.startDate || '',
+    endDate: edu.endDate || null,
+    description: edu.description,
+    current: edu.current
+  }))
+  volunteering.forEach((vol, idx) => events.push({
+    id: `vol-${idx}`,
+    type: 'volunteering',
+    title: vol.role,
+    subtitle: vol.org,
+    period: vol.period,
+    startDate: vol.startDate || '',
+    endDate: vol.endDate || null,
+    description: vol.scope
+  }))
+  certifications.slice(0, 10).forEach((cert, idx) => events.push({
+    id: `cert-${idx}`,
+    type: 'certification',
+    title: cert.name,
+    subtitle: cert.issuer,
+    period: cert.year,
+    startDate: cert.year + '-01',
+    endDate: null
+  }))
   return events.sort((a, b) => parseDate(b.startDate) - parseDate(a.startDate))
 }
 
