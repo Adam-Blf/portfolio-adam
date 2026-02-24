@@ -24,27 +24,27 @@ export default function FeaturedProjects() {
   }
 
   return (
-    <section className="py-20 bg-[#f5f5f7] dark:bg-[#161617]">
-      <div className="container-wide">
+    <section className="py-24 bg-white dark:bg-black overflow-hidden relative border-t border-black/5 dark:border-white/5">
+      <div className="container-apple">
         {/* Header - Apple style clean header */}
-        <div className="flex items-baseline justify-between mb-12">
-          <h2 className="text-3xl md:text-4xl font-semibold tracking-tight">
-            Projets à la une.
+        <div className="flex items-baseline justify-between mb-16">
+          <h2 className="text-apple-headline">
+            Projets à la une
           </h2>
           <Link
             href="/projects"
-            className="text-cta hover:underline font-medium flex items-center gap-1 group"
+            className="text-cta hover:underline font-medium text-sm flex items-center gap-1 group"
           >
             Tout explorer
-            <ChevronRight size={18} className="transition-transform group-hover:translate-x-0.5" />
+            <span className="opacity-70 group-hover:translate-x-0.5 transition-transform">›</span>
           </Link>
         </div>
 
         {/* Carousel Container */}
-        <div className="relative">
+        <div className="relative group/carousel">
           <div
             ref={rowRef}
-            className="flex gap-6 overflow-x-auto pb-8 snap-x no-scrollbar"
+            className="flex gap-8 overflow-x-auto pb-12 snap-x no-scrollbar"
             style={{ scrollbarWidth: 'none' }}
           >
             {featuredProjects.map((project, idx) => {
@@ -54,37 +54,39 @@ export default function FeaturedProjects() {
               return (
                 <div
                   key={project?.name}
-                  className="card shrink-0 w-[300px] md:w-[400px] snap-start flex flex-col p-0"
+                  className="card-apple shrink-0 w-[320px] md:w-[440px] snap-start flex flex-col p-0 border-none bg-surface/50 dark:bg-surface/30"
                 >
-                  {/* Decorative Project Header or Image Placeholder */}
-                  <div className="h-48 md:h-64 bg-white dark:bg-black/20 flex items-center justify-center border-b border-black/5 dark:border-white/5 relative group-hover:bg-gray-50 dark:group-hover:bg-white/5 transition-colors">
-                    <span className="text-4xl opacity-10 font-bold">{idx + 1}</span>
+                  {/* Decorative Project Header */}
+                  <div className="h-56 md:h-72 bg-gradient-to-br from-[#f2f2f2] to-[#e8e8e8] dark:from-[#1a1a1c] dark:to-[#111112] flex items-center justify-center relative">
+                    <span className="text-6xl md:text-8xl opacity-[0.03] font-bold select-none">{idx + 1}</span>
+                    <div className="absolute inset-x-8 bottom-8">
+                      <div className="px-3 py-1 rounded-full bg-white/60 dark:bg-black/40 backdrop-blur-md w-fit text-[10px] font-bold text-cta border border-black/5 dark:border-white/5 uppercase tracking-wider">
+                        {project?.lang}
+                      </div>
+                    </div>
                   </div>
 
-                  <div className="p-8 flex flex-col flex-1">
-                    <div className="flex justify-between items-start mb-2">
-                      <h3 className="text-2xl font-semibold leading-tight text-primary">
+                  <div className="p-8 md:p-10 flex flex-col flex-1">
+                    <div className="flex justify-between items-start mb-3">
+                      <h3 className="text-2xl md:text-3xl font-semibold leading-tight tracking-tight text-primary">
                         {project?.name}
                       </h3>
                       {homepage && (
-                        <span className="text-[10px] font-bold px-1.5 py-0.5 rounded border border-green-500/50 text-green-600 dark:text-green-400">
-                          LIVE
-                        </span>
+                        <div className="flex h-2 w-2 rounded-full bg-green-500 shadow-[0_0_8px_rgba(34,197,94,0.6)]" title="En ligne" />
                       )}
                     </div>
 
-                    <p className="text-secondary text-base leading-relaxed mb-6 line-clamp-3">
+                    <p className="text-secondary text-base md:text-lg leading-relaxed mb-10 line-clamp-3 font-normal opacity-90">
                       {project?.desc}
                     </p>
 
-                    <div className="mt-auto flex items-center gap-6">
+                    <div className="mt-auto flex items-center gap-8">
                       <a
                         href={githubUrl}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="text-cta hover:underline font-medium inline-flex items-center gap-1.5"
+                        className="text-cta hover:underline font-medium text-sm inline-flex items-center gap-1.5"
                       >
-                        <Github size={18} />
                         GitHub
                       </a>
                       {homepage && (
@@ -92,9 +94,8 @@ export default function FeaturedProjects() {
                           href={homepage}
                           target="_blank"
                           rel="noopener noreferrer"
-                          className="text-cta hover:underline font-medium inline-flex items-center gap-1.5"
+                          className="text-cta hover:underline font-medium text-sm inline-flex items-center gap-1.5"
                         >
-                          <ExternalLink size={18} />
                           Démo
                         </a>
                       )}
@@ -105,21 +106,20 @@ export default function FeaturedProjects() {
             })}
           </div>
 
-          {/* Minimal Float Controls */}
-          <div className="absolute -bottom-16 right-0 flex gap-2">
+          {/* Minimal Float Controls - Only visible on hover/scrolling */}
+          <div className="flex justify-center md:justify-end gap-3 mt-4">
             <button
               onClick={() => scrollRow('left')}
-              className="p-2 rounded-full border border-black/10 dark:border-white/10 hover:bg-white dark:hover:bg-white/10 transition-colors"
-              aria-label="Previous"
+              className="p-3 rounded-full bg-surface dark:bg-surface/50 border border-black/5 dark:border-white/5 text-secondary hover:text-primary transition-all active:scale-95"
+              aria-label="Précédent"
             >
-              <ChevronLeft size={24} />
+              <ChevronLeft size={20} />
             </button>
             <button
               onClick={() => scrollRow('right')}
-              className="p-2 rounded-full border border-black/10 dark:border-white/10 hover:bg-white dark:hover:bg-white/10 transition-colors"
-              aria-label="Next"
+              className="p-3 rounded-full bg-surface dark:bg-surface/50 border border-black/5 dark:border-white/5 text-secondary hover:text-primary transition-all active:scale-95"
             >
-              <ChevronRight size={24} />
+              <ChevronRight size={20} />
             </button>
           </div>
         </div>

@@ -10,7 +10,14 @@ const inter = Inter({
   subsets: ['latin'],
   weight: ['300', '400', '500', '600', '700', '800'],
   display: 'swap',
-  variable: '--font-sans',
+  variable: '--font-display',
+})
+
+const interBody = Inter({
+  subsets: ['latin'],
+  weight: ['400', '500'],
+  display: 'swap',
+  variable: '--font-body',
 })
 
 const firaCode = Fira_Code({
@@ -169,7 +176,7 @@ export default function RootLayout({
           }}
         />
       </head>
-      <body className="noise" suppressHydrationWarning>
+      <body className={`${inter.variable} ${interBody.variable} ${firaCode.variable} font-sans noise`} suppressHydrationWarning>
         <ThemeProvider>
           <I18nProvider>
             {/* Skip link for accessibility */}

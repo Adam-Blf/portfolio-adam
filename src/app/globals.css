@@ -4,26 +4,27 @@
 
 @layer base {
   :root {
-    /* Apple Light Colors */
-    --color-background: #f5f5f7;
+    /* Apple Official Palette - Precise Hex Codes */
+    --color-background: #ffffff;
     --color-text: #1d1d1f;
     --color-primary: #1d1d1f;
     --color-secondary: #86868b;
     --color-cta: #0066cc;
-    --color-surface: #ffffff;
+    --color-surface: #f5f5f7;
 
-    --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.05);
-    --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.05);
-    --shadow-lg: 0 10px 15px rgba(0, 0, 0, 0.08);
-    --shadow-xl: 0 20px 25px rgba(0, 0, 0, 0.1);
+    --shadow-sm: 0 2px 4px rgba(0, 0, 0, 0.05);
+    --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.08);
+    --shadow-lg: 0 12px 24px rgba(0, 0, 0, 0.12);
+    --shadow-xl: 0 20px 40px rgba(0, 0, 0, 0.15);
+
+    --nav-height: 48px;
   }
 
   .dark {
-    /* Apple Dark Colors */
     --color-background: #000000;
     --color-text: #f5f5f7;
     --color-primary: #f5f5f7;
-    --color-secondary: #86868b;
+    --color-secondary: #a1a1a6;
     --color-cta: #2997ff;
     --color-surface: #1d1d1f;
   }
@@ -37,9 +38,24 @@
   body {
     background-color: var(--color-background);
     color: var(--color-text);
-    font-family: var(--font-body), -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    font-family: var(--font-body), -apple-system, BlinkMacSystemFont, "SF Pro Text", "SF Pro Display", "Inter", "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
     line-height: 1.47059;
     letter-spacing: -0.011em;
+    position: relative;
+  }
+
+  /* Global Noise Texture Overlay */
+  body::before {
+    content: "";
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    opacity: 0.03;
+    z-index: 9999;
+    pointer-events: none;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
   }
 
   h1,
@@ -48,7 +64,7 @@
   h4,
   h5,
   h6 {
-    font-family: var(--font-display), -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    font-family: var(--font-display), -apple-system, BlinkMacSystemFont, "SF Pro Display", "Inter", "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
     letter-spacing: -0.015em;
     font-weight: 600;
   }
@@ -61,13 +77,20 @@
 
 @layer components {
 
+  /* Apple Official Structural Container */
+  .container-apple {
+    max-width: 1024px;
+    margin: 0 auto;
+    padding: 0 22px;
+  }
+
   /* Apple-Style Buttons */
-  .btn-primary {
+  .btn-apple-primary {
     background-color: var(--color-cta);
     color: #ffffff;
-    padding: 12px 24px;
+    padding: 10px 20px;
     border-radius: 980px;
-    /* Apple pill shape */
+    /* Official pill shape */
     font-weight: 500;
     font-size: 17px;
     transition: all 400ms cubic-bezier(0.4, 0, 0.25, 1);
@@ -76,19 +99,20 @@
     align-items: center;
     justify-content: center;
     gap: 8px;
+    border: 1px solid transparent;
   }
 
-  .btn-primary:hover {
+  .btn-apple-primary:hover {
     filter: brightness(1.1);
     transform: scale(1.02);
   }
 
-  .btn-secondary {
+  .btn-apple-secondary {
     background-color: transparent;
     color: var(--color-cta);
-    padding: 12px 24px;
+    padding: 10px 20px;
     border-radius: 980px;
-    font-weight: 500;
+    font-weight: 400;
     font-size: 17px;
     transition: all 400ms cubic-bezier(0.4, 0, 0.25, 1);
     cursor: pointer;
@@ -98,86 +122,74 @@
     gap: 6px;
   }
 
-  .btn-secondary:hover {
+  .btn-apple-secondary:hover {
     text-decoration: underline;
   }
 
   /* Apple Cards */
-  .card {
+  .card-apple {
     background-color: var(--color-surface);
     border-radius: 20px;
     padding: 32px;
-    box-shadow: var(--shadow-md);
-    transition: all 500ms cubic-bezier(0.4, 0, 0.25, 1);
+    box-shadow: var(--shadow-sm);
+    transition: transform 500ms cubic-bezier(0.4, 0, 0.25, 1), box-shadow 500ms ease;
     cursor: pointer;
     overflow: hidden;
+    border: 1px solid rgba(0, 0, 0, 0.05);
   }
 
-  .card:hover {
+  .dark .card-apple {
+    border-color: rgba(255, 255, 255, 0.05);
+  }
+
+  .card-apple:hover {
     box-shadow: var(--shadow-xl);
-    transform: scale(1.01);
+    transform: scale(1.02);
   }
 
-  /* Structural Classes */
-  .container-wide {
-    max-width: 1024px;
-    /* Apple content width */
-    margin: 0 auto;
-    padding: 0 22px;
-  }
-
-  /* Navigation */
-  .nav-glass {
-    background-color: rgba(245, 245, 247, 0.8);
+  /* Navigation Blur */
+  .nav-blur {
+    background-color: rgba(255, 255, 255, 0.8);
     backdrop-filter: saturate(180%) blur(20px);
     -webkit-backdrop-filter: saturate(180%) blur(20px);
+    border-bottom: 1px solid rgba(0, 0, 0, 0.1);
   }
 
-  .dark .nav-glass {
+  .dark .nav-blur {
     background-color: rgba(0, 0, 0, 0.8);
-  }
-
-  /* Accessibility Focus Rings */
-  *:focus-visible {
-    outline: 2px solid var(--color-cta);
-    outline-offset: 2px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
   }
 }
 
 @layer utilities {
-  .text-hero {
-    font-size: clamp(48px, 8vw, 96px);
+  .text-apple-hero {
+    font-size: clamp(40px, 10vw, 80px);
     line-height: 1.05;
     font-weight: 700;
-    letter-spacing: -0.02em;
+    letter-spacing: -0.025em;
   }
 
-  .animate-fadeUp {
-    animation: fadeUp 0.8s cubic-bezier(0.4, 0, 0.25, 1) forwards;
+  .text-apple-headline {
+    font-size: clamp(24px, 5vw, 40px);
+    line-height: 1.1;
+    font-weight: 600;
+    letter-spacing: -0.015em;
   }
 
-  .delay-1 {
-    animation-delay: 0.1s;
-  }
-
-  .delay-2 {
-    animation-delay: 0.2s;
-  }
-
-  .delay-3 {
-    animation-delay: 0.3s;
+  .animate-apple-reveal {
+    animation: appleReveal 1s cubic-bezier(0.4, 0, 0.2, 1) forwards;
   }
 }
 
-@keyframes fadeUp {
+@keyframes appleReveal {
   from {
     opacity: 0;
-    transform: translateY(20px);
+    transform: scale(0.95) translateY(20px);
   }
 
   to {
     opacity: 1;
-    transform: translateY(0);
+    transform: scale(1) translateY(0);
   }
 }
 

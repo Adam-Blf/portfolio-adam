@@ -17,8 +17,8 @@ const config: Config = {
         text: 'var(--color-text)',
       },
       fontFamily: {
-        display: ['var(--font-display)', 'sans-serif'],
-        sans: ['var(--font-body)', 'sans-serif'],
+        display: ['var(--font-display)', 'Inter', 'sans-serif'],
+        sans: ['var(--font-body)', 'Inter', 'sans-serif'],
         mono: ['var(--font-mono)', 'monospace'],
       },
       boxShadow: {

@@ -43,11 +43,11 @@ export default function Header() {
   return (
     <>
       <header
-        className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 nav-glass border-b ${isScrolled ? 'border-black/5 dark:border-white/10' : 'border-transparent'
+        className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 nav-blur ${isScrolled ? 'shadow-sm' : 'border-transparent'
           }`}
       >
-        <div className="container-wide">
-          <nav className="flex items-center justify-between h-12 md:h-14">
+        <div className="container-apple">
+          <nav className="flex items-center justify-between h-[var(--nav-height)]">
             {/* Left: Logo */}
             <div className="flex items-center gap-3">
               <Link href="/" className="group flex items-center gap-2">
@@ -56,7 +56,7 @@ export default function Header() {
                   alt="Adam Beloucif"
                   width={24}
                   height={24}
-                  className="h-5 w-auto opacity-80 group-hover:opacity-100 transition-opacity"
+                  className="h-5 w-auto opacity-90 group-hover:opacity-100 transition-opacity"
                 />
               </Link>
             </div>
@@ -67,8 +67,8 @@ export default function Header() {
                 <Link
                   key={item.href}
                   href={item.href}
-                  className={`px-4 py-1 text-xs font-medium transition-colors rounded-full ${pathname === item.href
-                      ? 'text-primary'
+                  className={`px-4 py-1 text-xs font-normal tracking-wide transition-colors rounded-full ${pathname === item.href
+                      ? 'text-primary font-medium'
                       : 'text-secondary hover:text-primary'
                     }`}
                   aria-current={pathname === item.href ? 'page' : undefined}
@@ -81,16 +81,16 @@ export default function Header() {
               <div className="relative ml-2" ref={langMenuRef}>
                 <button
                   onClick={() => setShowLangMenu(!showLangMenu)}
-                  className="flex items-center gap-1.5 px-3 py-1 text-xs font-medium text-secondary hover:text-primary transition-colors"
+                  className="flex items-center gap-1.5 px-3 py-1 text-[10px] font-medium text-secondary hover:text-primary transition-colors tracking-widest"
                   aria-label="Change language"
                 >
-                  <Globe size={14} />
+                  <Globe size={13} />
                   <span className="uppercase">{locale}</span>
                 </button>
 
                 {showLangMenu && (
                   <div
-                    className="absolute right-0 top-full mt-2 py-2 px-1 rounded-xl shadow-xl bg-surface border border-black/5 dark:border-white/10 min-w-[140px] animate-fadeUp"
+                    className="absolute right-0 top-full mt-2 py-2 px-1 rounded-2xl shadow-xl bg-surface border border-black/5 dark:border-white/10 min-w-[140px] animate-apple-reveal"
                   >
                     {[
                       { value: 'fr', label: 'Français' },
@@ -104,7 +104,7 @@ export default function Header() {
                           setLocale(lang.value as Locale)
                           setShowLangMenu(false)
                         }}
-                        className={`flex items-center w-full px-4 py-2 text-sm rounded-lg transition-colors ${locale === lang.value
+                        className={`flex items-center w-full px-4 py-2 text-sm rounded-xl transition-colors ${locale === lang.value
                             ? 'bg-black/5 dark:bg-white/10 text-primary font-medium'
                             : 'text-secondary hover:bg-black/5 dark:hover:bg-white/5'
                           }`}
@@ -121,10 +121,10 @@ export default function Header() {
             <div className="flex items-center md:hidden">
               <button
                 onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-                className="p-2 text-primary"
+                className="p-2 text-primary opacity-80"
                 aria-label="Toggle menu"
               >
-                {isMobileMenuOpen ? <X size={22} /> : <Menu size={22} />}
+                {isMobileMenuOpen ? <X size={20} /> : <Menu size={20} />}
               </button>
             </div>
           </nav>

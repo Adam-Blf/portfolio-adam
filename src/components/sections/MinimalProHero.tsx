@@ -8,12 +8,12 @@ export default function MinimalProHero() {
   const { t } = useI18n()
 
   return (
-    <section className="pt-24 pb-16 md:pt-32 md:pb-24 overflow-hidden">
-      <div className="container-wide text-center">
-        <div className="animate-fadeUp">
-          {/* Profile Photo - Apple Style subtle circle */}
-          <div className="flex justify-center mb-8">
-            <div className="relative w-24 h-24 md:w-32 md:h-32 rounded-full overflow-hidden border border-black/5 dark:border-white/10 shadow-sm">
+    <section className="pt-32 pb-24 md:pt-48 md:pb-32 bg-white dark:bg-black overflow-hidden relative">
+      <div className="container-apple text-center relative z-10">
+        <div className="animate-apple-reveal">
+          {/* Profile Photo - Apple Style minimal circle */}
+          <div className="flex justify-center mb-10">
+            <div className="relative w-28 h-28 md:w-40 md:h-40 rounded-full overflow-hidden border border-black/5 dark:border-white/10 shadow-sm">
               <Image
                 src="/images/adam-photo.jpg"
                 alt="Adam Beloucif"
@@ -24,31 +24,30 @@ export default function MinimalProHero() {
             </div>
           </div>
 
-          <h1 className="text-hero mb-4">
+          <h1 className="text-apple-hero mb-6 tracking-tight">
             ADAM BELOUCIF
           </h1>
 
-          <p className="text-xl md:text-2xl font-medium text-secondary max-w-2xl mx-auto mb-10">
+          <p className="text-2xl md:text-3xl font-medium text-secondary max-w-3xl mx-auto mb-12">
             {t('hero.role')}
           </p>
 
-          <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
-            <Link href="/projects" className="btn-primary">
+          <div className="flex flex-col sm:flex-row gap-6 justify-center items-center">
+            <Link href="/projects" className="btn-apple-primary">
               {t('hero.exploreProjects')}
             </Link>
-            <Link href="/contact" className="btn-secondary">
-              {t('hero.getInTouch')}{' '}
-              <span className="text-xl">→</span>
+            <Link href="/contact" className="btn-apple-secondary">
+              {t('hero.getInTouch')} <span className="ml-1 opacity-70">›</span>
             </Link>
           </div>
 
-          {/* Availability badge - Apple subtle style */}
-          <div className="mt-12 flex items-center justify-center gap-2 text-sm font-medium text-secondary">
-            <span className="relative flex h-2 w-2">
-              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"></span>
-              <span className="relative inline-flex rounded-full h-2 w-2 bg-green-500"></span>
+          {/* Availability badge - Apple minimalist style */}
+          <div className="mt-16 flex items-center justify-center gap-3 text-sm font-medium text-secondary opacity-80">
+            <span className="relative flex h-2.5 w-2.5">
+              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-blue-400 opacity-60"></span>
+              <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-blue-500"></span>
             </span>
-            <span className="uppercase tracking-widest text-xs">
+            <span className="uppercase tracking-[0.2em] text-[10px] sm:text-xs">
               {t('hero.status')}
             </span>
           </div>
