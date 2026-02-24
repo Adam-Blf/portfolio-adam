@@ -159,6 +159,14 @@
     background-color: rgba(0, 0, 0, 0.8);
     border-bottom: 1px solid rgba(255, 255, 255, 0.1);
   }
+
+  .logo-apple {
+    transition: filter 400ms ease;
+  }
+
+  .dark .logo-apple {
+    filter: invert(1) brightness(2);
+  }
 }
 
 @layer utilities {

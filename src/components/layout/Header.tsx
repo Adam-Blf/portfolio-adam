@@ -56,7 +56,7 @@ export default function Header() {
                   alt="Adam Beloucif"
                   width={24}
                   height={24}
-                  className="h-5 w-auto opacity-90 group-hover:opacity-100 transition-opacity"
+                  className="h-5 w-auto opacity-90 group-hover:opacity-100 transition-opacity logo-apple"
                 />
               </Link>
             </div>
@@ -68,8 +68,8 @@ export default function Header() {
                   key={item.href}
                   href={item.href}
                   className={`px-4 py-1 text-xs font-normal tracking-wide transition-colors rounded-full ${pathname === item.href
-                      ? 'text-primary font-medium'
-                      : 'text-secondary hover:text-primary'
+                    ? 'text-primary font-medium'
+                    : 'text-secondary hover:text-primary'
                     }`}
                   aria-current={pathname === item.href ? 'page' : undefined}
                 >
@@ -105,8 +105,8 @@ export default function Header() {
                           setShowLangMenu(false)
                         }}
                         className={`flex items-center w-full px-4 py-2 text-sm rounded-xl transition-colors ${locale === lang.value
-                            ? 'bg-black/5 dark:bg-white/10 text-primary font-medium'
-                            : 'text-secondary hover:bg-black/5 dark:hover:bg-white/5'
+                          ? 'bg-black/5 dark:bg-white/10 text-primary font-medium'
+                          : 'text-secondary hover:bg-black/5 dark:hover:bg-white/5'
                           }`}
                       >
                         {lang.label}

@@ -4,8 +4,8 @@
   "description": "Data Engineer & Fullstack Developer - Portfolio de Adam Beloucif",
   "start_url": "/",
   "display": "standalone",
-  "background_color": "#141414",
-  "theme_color": "#141414",
+  "background_color": "#ffffff",
+  "theme_color": "#ffffff",
   "orientation": "portrait-primary",
   "icons": [
     {
@@ -15,6 +15,10 @@
       "purpose": "any maskable"
     }
   ],
-  "categories": ["portfolio", "technology", "development"],
+  "categories": [
+    "portfolio",
+    "technology",
+    "development"
+  ],
   "lang": "fr"
 }
